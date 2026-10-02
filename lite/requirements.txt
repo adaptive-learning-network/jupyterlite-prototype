@@ -1,0 +1,11 @@
+# Build-time tooling for the JupyterLite site (pinned minor versions).
+jupyterlab>=4.2,<4.5
+jupyterlite-core>=0.8,<0.9
+jupyterlite-pyodide-kernel>=0.8,<0.9
+jupyterlite-xeus>=4.5,<5
+hatchling>=1.5
+hatch-jupyter-builder>=0.5
+hatch-nodejs-version>=0.3.2
+rdflib==7.6.0
+pyshacl==0.40.1
+editables>=0.5

@@ -1,0 +1,16 @@
+node_modules/
+lib/
+.venv/
+*.tsbuildinfo
+al_engine/labextension/
+al_engine/_version.py
+dist/
+_output/
+.jupyterlite.doit.db
+.ipynb_checkpoints/
+__pycache__/
+test-results/
+playwright-report/
+lib-test/
+.tools/
+.yarn/

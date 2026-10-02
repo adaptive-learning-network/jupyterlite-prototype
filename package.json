@@ -1,0 +1,63 @@
+{
+  "name": "jupyterlite-al-engine",
+  "version": "0.1.0",
+  "description": "Ontology-driven adaptive-learning engine for JupyterLite (al: upper ontology), language-neutral across Jupyter kernels.",
+  "license": "Apache-2.0",
+  "keywords": [
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab-extension",
+    "jupyterlite",
+    "adaptive-learning",
+    "ontology"
+  ],
+  "files": [
+    "lib/**/*.{d.ts,js,js.map}",
+    "style/**/*.{css,js}",
+    "content/al/catalog.json"
+  ],
+  "main": "lib/extension/index.js",
+  "types": "lib/extension/index.d.ts",
+  "style": "style/index.css",
+  "sideEffects": [
+    "style/*.css",
+    "style/index.js"
+  ],
+  "styleModule": "style/index.js",
+  "scripts": {
+    "build": "jlpm build:lib && jlpm build:labextension:dev",
+    "build:prod": "jlpm clean && jlpm build:lib && jlpm build:labextension",
+    "build:lib": "tsc",
+    "build:labextension": "jupyter labextension build .",
+    "build:labextension:dev": "jupyter labextension build --development True .",
+    "clean": "rimraf lib tsconfig.tsbuildinfo al_engine/labextension lib-test",
+    "test": "tsc -p tsconfig.test.json && node --test lib-test/test/",
+    "test:export": "jlpm test && .venv/bin/python scripts/validate_export.py test-results/learner-export.nq",
+    "build:site": "scripts/build_site.sh",
+    "test:ui": "playwright test",
+    "test:checks": ".venv/bin/python scripts/test_checks.py",
+    "setup": "scripts/setup.sh",
+    "test:all": "jlpm test:export && jlpm test:checks && jlpm test:ui"
+  },
+  "dependencies": {
+    "@jupyterlab/application": "^4.2.0",
+    "@jupyterlab/apputils": "^4.3.0",
+    "@jupyterlab/docmanager": "^4.2.0",
+    "@jupyterlab/notebook": "^4.2.0",
+    "@jupyterlab/services": "^7.2.0",
+    "@jupyterlab/ui-components": "^4.2.0",
+    "@lumino/signaling": "^2.1.0",
+    "@lumino/widgets": "^2.3.0"
+  },
+  "devDependencies": {
+    "@jupyterlab/builder": "^4.2.0",
+    "@playwright/test": "~1.48.0",
+    "@types/node": "^20.11.0",
+    "rimraf": "^5.0.0",
+    "typescript": "~5.5.4"
+  },
+  "jupyterlab": {
+    "extension": true,
+    "outputDir": "al_engine/labextension"
+  }
+}

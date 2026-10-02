@@ -1,0 +1,248 @@
+{
+  "schema": "al-catalog-projection/0.1",
+  "sourceDigest": "2d838861f82d3cabbaa96e85e7ff3647c22b06fca4f439b4b298c66ad4f935b0",
+  "framework": {
+    "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#framework",
+    "title": "Introductory outbreak analysis",
+    "scale": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#scale"
+  },
+  "levels": [
+    {
+      "iri": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#novice",
+      "notation": "novice",
+      "label": "Novice",
+      "ordinal": 1
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#advanced-beginner",
+      "notation": "advanced-beginner",
+      "label": "Advanced beginner",
+      "ordinal": 2
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent",
+      "notation": "competent",
+      "label": "Competent",
+      "ordinal": 3
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#proficient",
+      "notation": "proficient",
+      "label": "Proficient",
+      "ordinal": 4
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#expert",
+      "notation": "expert",
+      "label": "Expert",
+      "ordinal": 5
+    }
+  ],
+  "capabilities": [
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-frequency",
+      "notation": "frequency",
+      "label": "Count cases by exposure",
+      "ordinal": 1,
+      "prerequisites": []
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-attack-rate",
+      "notation": "attack-rate",
+      "label": "Calculate attack rates",
+      "ordinal": 2,
+      "prerequisites": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-frequency"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-risk-ratio",
+      "notation": "risk-ratio",
+      "label": "Calculate a risk ratio",
+      "ordinal": 3,
+      "prerequisites": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-attack-rate"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-interpret-rr",
+      "notation": "interpret-risk-ratio",
+      "label": "Interpret a risk ratio",
+      "ordinal": 4,
+      "prerequisites": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-risk-ratio"
+      ]
+    }
+  ],
+  "audiences": [
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#aud-intro",
+      "label": "Introductory analysis learners"
+    }
+  ],
+  "targets": [
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#t-attack-rate",
+      "audiences": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#aud-intro"
+      ],
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-attack-rate",
+      "level": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent",
+      "critical": false
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#t-frequency",
+      "audiences": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#aud-intro"
+      ],
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-frequency",
+      "level": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent",
+      "critical": false
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#t-interpret-rr",
+      "audiences": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#aud-intro"
+      ],
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-interpret-rr",
+      "level": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent",
+      "critical": false
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#t-risk-ratio",
+      "audiences": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#aud-intro"
+      ],
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-risk-ratio",
+      "level": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent",
+      "critical": true
+    }
+  ],
+  "activities": [
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-frequency",
+      "title": "Count cases by exposure",
+      "ordinal": 1,
+      "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
+      "capabilities": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-frequency"
+      ],
+      "notebooks": {
+        "r": "exercises/r/01-frequency.ipynb",
+        "python": "exercises/python/01-frequency.ipynb"
+      },
+      "rules": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-frequency"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-attack-rate",
+      "title": "Calculate attack rates",
+      "ordinal": 2,
+      "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
+      "capabilities": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-attack-rate"
+      ],
+      "notebooks": {
+        "python": "exercises/python/02-attack-rate.ipynb",
+        "r": "exercises/r/02-attack-rate.ipynb"
+      },
+      "rules": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-attack-rate"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-risk-ratio",
+      "title": "Calculate a risk ratio",
+      "ordinal": 3,
+      "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
+      "capabilities": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-risk-ratio"
+      ],
+      "notebooks": {
+        "r": "exercises/r/03-risk-ratio.ipynb",
+        "python": "exercises/python/03-risk-ratio.ipynb"
+      },
+      "rules": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-risk-ratio"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-interpret-rr",
+      "title": "Interpret a risk ratio",
+      "ordinal": 4,
+      "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
+      "capabilities": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-interpret-rr"
+      ],
+      "notebooks": {
+        "r": "exercises/r/04-interpret-risk-ratio.ipynb",
+        "python": "exercises/python/04-interpret-risk-ratio.ipynb"
+      },
+      "rules": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-interpret-rr"
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-attack-rate",
+      "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-attack-rate",
+      "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-attack-rate",
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-attack-rate",
+      "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
+      "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
+      "acceptedOutcomes": [
+        "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Correct"
+      ],
+      "maximumGuidance": 2
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-frequency",
+      "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-frequency",
+      "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-frequency",
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-frequency",
+      "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
+      "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
+      "acceptedOutcomes": [
+        "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Correct"
+      ],
+      "maximumGuidance": 2
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-interpret-rr",
+      "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-interpret-rr",
+      "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-interpret-rr",
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-interpret-rr",
+      "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
+      "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
+      "acceptedOutcomes": [
+        "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Correct"
+      ],
+      "maximumGuidance": 2
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-risk-ratio",
+      "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-risk-ratio",
+      "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-risk-ratio",
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-risk-ratio",
+      "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
+      "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
+      "acceptedOutcomes": [
+        "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Correct"
+      ],
+      "maximumGuidance": 2
+    }
+  ],
+  "policy": {
+    "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#policy",
+    "version": "prototype-0.1",
+    "ceilings": {
+      "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Completion": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#novice",
+      "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#KnowledgeCheck": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#advanced-beginner",
+      "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#ReviewedPractice": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#expert",
+      "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SelfReport": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#advanced-beginner",
+      "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent"
+    }
+  }
+}

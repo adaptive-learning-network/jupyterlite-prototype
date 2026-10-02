@@ -1,0 +1,8 @@
+# Jupyter kernels compiled to WebAssembly for the JupyterLite site (jupyterlite-xeus).
+# The Python exercises use the Pyodide Jupyter kernel (jupyterlite-pyodide-kernel).
+name: xeus-kernels
+channels:
+  - https://repo.prefix.dev/emscripten-forge-dev
+  - https://repo.prefix.dev/conda-forge
+dependencies:
+  - xeus-r

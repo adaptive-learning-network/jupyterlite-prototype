@@ -1,0 +1,123 @@
+name: Build, test, and publish
+
+# Builds the JupyterLite site against the al: ontology, runs every test suite,
+# and publishes the site to GitHub Pages from main when the repository
+# variable PAGES_ENABLED is 'true' (Pages needs a public repository or a paid plan).
+#
+# The ontology repository is checked out next to this one, matching the local
+# layout (../adaptive-learning-ontology). Override its ref with the
+# AL_ONTOLOGY_REF repository variable or the workflow_dispatch input. For a
+# private ontology repository, add a read-only token as secret AL_ONTOLOGY_TOKEN.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      ontology_ref:
+        description: Ontology repository ref (branch, tag, or SHA)
+        required: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  AL_ONTOLOGY_DIR: ${{ github.workspace }}/adaptive-learning-ontology
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: jupyterlite-prototype
+    steps:
+      - name: Check out prototype
+        uses: actions/checkout@v4
+        with:
+          path: jupyterlite-prototype
+
+      - name: Check out al ontology
+        uses: actions/checkout@v4
+        with:
+          repository: adaptive-learning-network/adaptive-learning-ontology
+          ref: ${{ inputs.ontology_ref || vars.AL_ONTOLOGY_REF || 'main' }}
+          token: ${{ secrets.AL_ONTOLOGY_TOKEN || github.token }}
+          path: adaptive-learning-ontology
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: jupyterlite-prototype/lite/requirements.txt
+
+      - name: Set up R (Python/R check parity test)
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Cache node modules, micromamba packages, and Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: |
+            jupyterlite-prototype/node_modules
+            jupyterlite-prototype/.tools/mamba-root/pkgs
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-al-${{ hashFiles('jupyterlite-prototype/yarn.lock', 'jupyterlite-prototype/environment.yml', 'jupyterlite-prototype/package.json') }}
+
+      - name: Validate the ontology itself
+        working-directory: adaptive-learning-ontology
+        run: |
+          python -m pip install --quiet -r requirements.txt
+          python scripts/validate.py
+
+      - name: Set up toolchain
+        run: scripts/setup.sh
+
+      - name: Build site (catalog, exercises, engine tests, export validation, extension, JupyterLite)
+        run: .venv/bin/jlpm build:site
+
+      - name: Python/R check parity
+        run: .venv/bin/jlpm test:checks
+
+      - name: Browser end-to-end tests
+        run: .venv/bin/jlpm test:ui
+
+      - name: Upload test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            jupyterlite-prototype/test-results/
+            jupyterlite-prototype/content/al/catalog.json
+          if-no-files-found: ignore
+
+      - name: Upload site for Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.PAGES_ENABLED == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: jupyterlite-prototype/_output
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.PAGES_ENABLED == 'true'
+    needs: build-test
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
