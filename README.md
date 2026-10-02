@@ -122,6 +122,10 @@ environment.yml                  emscripten-forge env for the xeus-r Jupyter ker
 lite/requirements.txt            pinned build tooling
 ```
 
+## Design documents
+
+- [Capability packs](docs/design/capability-packs.md): versioned, downloadable packs of adaptive-learning content, a pack catalog per programme, and the runtime changes needed to install them.
+
 ## Known limits (prototype)
 
 - **Self-checks can be spoofed.** Checks run in the learner's own Jupyter kernel
