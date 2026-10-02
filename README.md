@@ -6,6 +6,11 @@ evidence, estimates capabilities, and recommends what to do next. The curriculum
 targets, evidence rules, and estimator policy are data in the `al:` upper
 ontology (`../adaptive-learning-ontology`). Everything runs in the browser.
 
+**Try it:** <https://adaptive-learning-network.github.io/jupyterlite-prototype/>
+([first Python exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/01-frequency.ipynb),
+[first R exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/r/01-frequency.ipynb)).
+The site is rebuilt and published by CI on every push to `main`.
+
 ## How it works
 
 ```text
