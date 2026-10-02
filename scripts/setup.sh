@@ -10,6 +10,8 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 PYTHON=${PYTHON:-python3}
+# Nested package scripts call jlpm/jupyter by name; resolve them from .venv.
+export PATH="$PWD/.venv/bin:$PATH"
 
 echo "==> Python tooling (.venv)"
 [ -x .venv/bin/python ] || "$PYTHON" -m venv .venv

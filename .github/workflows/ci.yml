@@ -81,7 +81,10 @@ jobs:
           python scripts/validate.py
 
       - name: Set up toolchain
-        run: scripts/setup.sh
+        run: |
+          scripts/setup.sh
+          echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
+          echo "$PWD/.tools/bin" >> "$GITHUB_PATH"
 
       - name: Build site (catalog, exercises, engine tests, export validation, extension, JupyterLite)
         run: .venv/bin/jlpm build:site
