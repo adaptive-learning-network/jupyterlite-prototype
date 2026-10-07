@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { test } from 'node:test';
 
@@ -69,5 +69,6 @@ test('a linked record exports issuer, subject, and consent, and nothing personal
   const nq = await exportNQuads(catalog, record, assess(catalog, record), { generatedAt: NOW });
   assert.ok(nq.includes('#IdentityBinding>') && nq.includes('#ConsentDirective>') && nq.includes(ISSUER));
   assert.doesNotMatch(nq, /email|schema\.org\/name|id_token|access_token/i);
+  mkdirSync(join(ROOT, 'test-results'), { recursive: true });
   writeFileSync(join(ROOT, 'test-results/learner-export-identity.nq'), nq);
 });
