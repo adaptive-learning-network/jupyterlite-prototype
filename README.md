@@ -15,7 +15,22 @@ ontology (`../adaptive-learning-ontology`). Everything runs in the browser.
 **Try it:** <https://adaptive-learning-network.github.io/jupyterlite-prototype/>
 ([first Python exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/01-data-or-information.ipynb),
 [first R exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/r/01-data-or-information.ipynb)).
-The site is rebuilt and published by CI on every push to `main`.
+The site is rebuilt and published by CI on every push to `main` on GitHub and
+GitLab. The GitLab Pages site is available to members with project access at
+<https://jupyterlite-prototype-4a4d87.gitpages.cdc.gov/>.
+
+A [Python-only DHIS2 adapter pilot](docs/design/dhis2-adapter-pilot.md) adds a
+generated notebook at `content/exercises/python/07-dhis2-query.ipynb`. It uses
+synthetic case events and a browser-local, read-only API-shaped adapter. This
+pilot is available in the Python exercises as notebook 07.
+
+The unscored final notebook, `content/exercises/python/08-my-learning-record.ipynb`,
+reads a `learner-record.nq` export from the Learning panel. It shows attempts,
+evidence, capability estimates, gaps, and recommendations. Upload successive
+exports beside the notebook to see how the learner graph changes after retries.
+For a ready-made synthetic retry sequence, run `jlpm demo:dhis2-graph` and upload
+the four `.tools/dhis2-graph-demo/learner-record-*.nq` files to that notebook's
+folder. These demonstration files are kept out of version control.
 
 ## How it works
 
@@ -85,6 +100,20 @@ Jupyter kernel downloads Pyodide from a CDN at first use. For fully offline use,
 configure a local Pyodide distribution (see the jupyterlite-pyodide-kernel
 documentation).
 
+On this Windows workspace, the local Node and Chromium installs live under
+`.tools/`. The full R build requires the separate micromamba setup. For the
+Python-only browser scenarios, use these commands in PowerShell from the repo root:
+
+```powershell
+$env:Path="$(Resolve-Path .tools/node-v22.23.3-win-x64);$(Resolve-Path .venv/Scripts);$env:Path"
+$env:PLAYWRIGHT_BROWSERS_PATH=(Resolve-Path .tools/ms-playwright).Path
+$env:NODE_USE_SYSTEM_CA='1'
+$site=".tools/site-$(Get-Date -Format yyyyMMdd-HHmmss)"
+jupyter-lite build --output-dir=$site --disable-addons=jupyterlite-xeus
+$env:JUPYTERLITE_TEST_SITE=$site
+node scripts/run_dhis2_browser.cjs
+```
+
 ## Tests
 
 `jlpm test:all` runs everything below.
@@ -95,6 +124,7 @@ documentation).
 | `jlpm test:export` | The exported learner graph conforms to the `al:` SHACL shapes |
 | `jlpm test:checks` | Python and R checks agree on correct / incorrect / unanswered inputs (needs `Rscript`) |
 | `jlpm test:ui` | Playwright end to end in Chromium against `_output/`: both Jupyter kernels, plus sign-in against a mock OpenID Connect provider |
+| `jlpm test:dhis2` | Scripted DHIS2 notebook retries, learner-record assertions, hint ceiling, and changing recommendations; no manual cell editing |
 
 ## Continuous integration
 

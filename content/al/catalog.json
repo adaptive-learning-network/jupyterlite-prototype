@@ -1,6 +1,6 @@
 {
   "schema": "al-catalog-projection/0.1",
-  "sourceDigest": "192c26bf6e999e55480e75f93b452ab5ef5f57f5d165b62c6a135409a57bb5d6",
+  "sourceDigest": "672fe7d0461e60a59b5f4021264c76739cbe644fc1ef731c2a33bd8220dbcfe1",
   "framework": {
     "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#framework",
     "title": "Public health informatics, Unit 3: Using informatics to get information faster",
@@ -163,8 +163,8 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-data-vs-information"
       ],
       "notebooks": {
-        "r": "exercises/r/01-data-or-information.ipynb",
-        "python": "exercises/python/01-data-or-information.ipynb"
+        "python": "exercises/python/01-data-or-information.ipynb",
+        "r": "exercises/r/01-data-or-information.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-data-or-information"
@@ -179,8 +179,8 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-explore-dataset"
       ],
       "notebooks": {
-        "r": "exercises/r/02-explore-dataset.ipynb",
-        "python": "exercises/python/02-explore-dataset.ipynb"
+        "python": "exercises/python/02-explore-dataset.ipynb",
+        "r": "exercises/r/02-explore-dataset.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-explore-dataset"
@@ -211,8 +211,8 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-combine-variables"
       ],
       "notebooks": {
-        "r": "exercises/r/04-coverage.ipynb",
-        "python": "exercises/python/04-coverage.ipynb"
+        "python": "exercises/python/04-coverage.ipynb",
+        "r": "exercises/r/04-coverage.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-coverage"
@@ -227,8 +227,8 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-machine-readable"
       ],
       "notebooks": {
-        "r": "exercises/r/05-machine-readable.ipynb",
-        "python": "exercises/python/05-machine-readable.ipynb"
+        "python": "exercises/python/05-machine-readable.ipynb",
+        "r": "exercises/r/05-machine-readable.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-machine-readable"
@@ -266,6 +266,21 @@
       "notebooks": {},
       "rules": [],
       "url": "https://forms.gle/Y4yG5gMbFznczrBd9"
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-dhis2-query",
+      "title": "Explore synthetic case events through a DHIS2 adapter",
+      "ordinal": 8,
+      "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
+      "capabilities": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-explore-dataset"
+      ],
+      "notebooks": {
+        "python": "exercises/python/07-dhis2-query.ipynb"
+      },
+      "rules": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-dhis2-query"
+      ]
     }
   ],
   "rules": [
@@ -298,6 +313,18 @@
       "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-data-or-information",
       "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-data-or-information",
       "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-data-vs-information",
+      "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
+      "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
+      "acceptedOutcomes": [
+        "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Correct"
+      ],
+      "maximumGuidance": 2
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-dhis2-query",
+      "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-dhis2-query",
+      "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-explore-dataset",
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-explore-dataset",
       "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
       "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
       "acceptedOutcomes": [

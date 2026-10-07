@@ -76,6 +76,12 @@ g:activities {
       al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-case-vs-aggregate ;
       al:usesAsset ex:nb-case-or-aggregate-python, ex:nb-case-or-aggregate-r ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-case-or-aggregate .
 
+  # Python-only pilot: query a synthetic case dataset through a browser-local
+  # adapter. Reuses the dataset-exploration criterion; no server or PHI.
+  ex:act-dhis2-query a al:LearningActivity ; dcterms:title "Explore synthetic case events through a DHIS2 adapter"@en ; al:ordinal 8 ;
+      al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-explore-dataset ;
+      al:usesAsset ex:nb-dhis2-query-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-dhis2-query .
+
   # Knowledge check (Google Forms quiz), launched from the learning panel. Its
   # results are not returned to the learner record, so it has no evidence rule.
   ex:act-unit-03-quiz a al:LearningActivity ; dcterms:title "Unit 3 knowledge check"@en ; al:ordinal 7 ;
@@ -85,6 +91,7 @@ g:activities {
 
   ex:nb-case-or-aggregate-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/06-case-or-aggregate.ipynb" .
   ex:nb-case-or-aggregate-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/06-case-or-aggregate.ipynb" .
+  ex:nb-dhis2-query-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/07-dhis2-query.ipynb" .
   ex:nb-data-or-information-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/01-data-or-information.ipynb" .
   ex:nb-data-or-information-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/01-data-or-information.ipynb" .
   ex:nb-explore-dataset-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/02-explore-dataset.ipynb" .
@@ -110,6 +117,8 @@ g:activities {
   ex:rule-data-or-information a al:EvidenceRule ; al:supportsCriterion ex:crit-data-or-information ; al:evidenceStage al:Simulation ;
       al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
   ex:rule-explore-dataset a al:EvidenceRule ; al:supportsCriterion ex:crit-explore-dataset ; al:evidenceStage al:Simulation ;
+      al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
+  ex:rule-dhis2-query a al:EvidenceRule ; al:supportsCriterion ex:crit-explore-dataset ; al:evidenceStage al:Simulation ;
       al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
   ex:rule-filter-records a al:EvidenceRule ; al:supportsCriterion ex:crit-filter-records ; al:evidenceStage al:Simulation ;
       al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .

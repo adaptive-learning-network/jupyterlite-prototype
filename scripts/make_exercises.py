@@ -450,6 +450,12 @@ def main() -> None:
         (checks / f"{ex['check']}.py").write_text(python_check(ex["variables"]))
         (checks / f"{ex['check']}.R").write_text(r_check(ex["variables"]))
     print(f"wrote {len(EXERCISES) * 2} notebooks and {len(EXERCISES) * 2} checks; register has {len(REGISTER)} records")
+    # Separate Python-only pilot requested for the DHIS2 adapter. The existing
+    # paired Python/R exercise spec stays unchanged until the R pilot is built.
+    from make_dhis2_pilot import main as make_dhis2_pilot
+    make_dhis2_pilot()
+    from make_learning_record_notebook import main as make_learning_record_notebook
+    make_learning_record_notebook()
 
 
 if __name__ == "__main__":

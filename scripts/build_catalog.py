@@ -105,7 +105,7 @@ def project(graph: Graph, source_digest: str) -> dict:
                           key=lambda t: t["iri"]),
         "activities": sorted(({"iri": a["iri"], "title": a["title"], "ordinal": int(a["ordinal"]), "kind": a["kind"],
                                "capabilities": cap_by_activity.get(a["iri"], []),
-                               "notebooks": {n["language"]: n["path"] for n in notebooks if n["activity"] == a["iri"]},
+                               "notebooks": {n["language"]: n["path"] for n in sorted(notebooks, key=lambda n: n["language"]) if n["activity"] == a["iri"]},
                                "rules": rules_by_activity.get(a["iri"], []),
                                **({"url": a["url"]} if a["url"] else {})} for a in activities), key=lambda a: a["ordinal"]),
         "rules": sorted(({"iri": r["iri"], "activity": r["activity"], "criterion": r["criterion"], "capability": r["capability"],

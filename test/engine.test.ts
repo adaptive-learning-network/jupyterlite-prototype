@@ -84,6 +84,28 @@ test('incorrect attempts are not negative evidence', () => {
   assert.ok(rec.reasons.includes(REASON.insufficientIndependentEvidence));
 });
 
+test('DHIS2 retries stay in the record and only success changes the recommendation', () => {
+  const attempts: Observation[] = [];
+  for (const outcome of [OUTCOME.incomplete, OUTCOME.incorrect, OUTCOME.incorrect]) {
+    attempts.push(obs('act-dhis2-query', outcome));
+    const a = assess(catalog, record(attempts));
+    assert.equal(a.evidence.length, 0);
+    assert.equal(gapOf(a, 'cap-explore-dataset').state, GAP.unknown);
+    const rec = a.recommendations.find(r => r.capability === EX + 'cap-explore-dataset')!;
+    assert.equal(rec.activity, EX + 'act-explore-dataset');
+    assert.ok(rec.reasons.includes(REASON.insufficientIndependentEvidence));
+    assert.ok(!a.recommendations.some(r => r.capability === EX + 'cap-filter-records'));
+  }
+
+  attempts.push(obs('act-dhis2-query', OUTCOME.correct));
+  const afterSuccess = assess(catalog, record(attempts));
+  assert.equal(attempts.length, 4, 'all attempts remain in the learner record');
+  assert.equal(afterSuccess.evidence.length, 1);
+  assert.equal(gapOf(afterSuccess, 'cap-explore-dataset').state, GAP.achieved);
+  assert.ok(!afterSuccess.recommendations.some(r => r.capability === EX + 'cap-explore-dataset'));
+  assert.ok(afterSuccess.recommendations.some(r => r.capability === EX + 'cap-filter-records'));
+});
+
 test('guidance above the rule ceiling excludes the evidence', () => {
   const a = assess(catalog, record([obs('act-explore-dataset', OUTCOME.correct), obs('act-filter-records', OUTCOME.correct, 3)]));
   const estimate = a.estimates.find(e => e.capability === EX + 'cap-filter-records')!;

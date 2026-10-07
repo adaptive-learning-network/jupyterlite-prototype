@@ -35,6 +35,8 @@
     "test:export": "jlpm test && .venv/bin/python scripts/validate_export.py test-results/learner-export.nq && .venv/bin/python scripts/validate_export.py test-results/learner-export-identity.nq",
     "build:site": "scripts/build_site.sh",
     "test:ui": "playwright test",
+    "test:dhis2": "node scripts/run_dhis2_browser.cjs",
+    "demo:dhis2-graph": "node scripts/make_dhis2_graph_snapshots.cjs",
     "test:checks": ".venv/bin/python scripts/test_checks.py",
     "setup": "scripts/setup.sh",
     "test:all": "jlpm test:export && jlpm test:checks && jlpm test:ui"
