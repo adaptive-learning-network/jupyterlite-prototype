@@ -8,7 +8,6 @@ publish-jupyterlite:
   variables:
     AL_ONTOLOGY_DIR: "$CI_PROJECT_DIR/.tools/ontology"
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.tools/pip-cache"
-    NODE_EXTRA_CA_CERTS: /etc/ssl/certs/ca-certificates.crt
   before_script:
     - apt-get update -qq && apt-get install -y -qq --no-install-recommends python3 python3-venv python3-pip r-base curl bzip2 git
     - mkdir -p .tools
@@ -25,7 +24,6 @@ publish-jupyterlite:
         git clone --quiet "https://$CI_SERVER_HOST/adaptive-learning/adaptive-learning-ontology.git" "$AL_ONTOLOGY_DIR"
   script:
     - SKIP_PLAYWRIGHT=1 scripts/setup.sh
-    - NODE_TLS_REJECT_UNAUTHORIZED=0 npx playwright install --with-deps chromium
     - .venv/bin/python "$AL_ONTOLOGY_DIR/scripts/validate.py"
     - .venv/bin/jlpm build:site
     - .venv/bin/jlpm test:checks
