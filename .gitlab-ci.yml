@@ -6,7 +6,7 @@ publish-jupyterlite:
     - docker
   stage: deploy
   variables:
-    AL_ONTOLOGY_DIR: "$CI_PROJECT_DIR/../adaptive-learning-ontology"
+    AL_ONTOLOGY_DIR: "$CI_PROJECT_DIR/.tools/ontology"
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.tools/pip-cache"
     NODE_EXTRA_CA_CERTS: /etc/ssl/certs/ca-certificates.crt
   before_script:
