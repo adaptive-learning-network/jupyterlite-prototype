@@ -24,7 +24,8 @@ publish-jupyterlite:
       GIT_ASKPASS="$PWD/.tools/git-askpass.sh" GIT_TERMINAL_PROMPT=0 \
         git clone --quiet "https://$CI_SERVER_HOST/adaptive-learning/adaptive-learning-ontology.git" "$AL_ONTOLOGY_DIR"
   script:
-    - scripts/setup.sh
+    - SKIP_PLAYWRIGHT=1 scripts/setup.sh
+    - NODE_TLS_REJECT_UNAUTHORIZED=0 npx playwright install --with-deps chromium
     - .venv/bin/python "$AL_ONTOLOGY_DIR/scripts/validate.py"
     - .venv/bin/jlpm build:site
     - .venv/bin/jlpm test:checks
