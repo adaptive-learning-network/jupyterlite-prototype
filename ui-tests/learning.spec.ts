@@ -1,6 +1,6 @@
 import { expect, Page, test } from '@playwright/test';
 
-// Drive real exercises in both Jupyter kernels and check that the
+// Drive real Unit 3 exercises in both Jupyter kernels and check that the
 // adaptive-learning engine records observations and adapts recommendations.
 
 async function openNotebook(page: Page, path: string): Promise<void> {
@@ -23,30 +23,55 @@ async function runCell(page: Page, index: number, source?: string): Promise<void
 
 const panel = (page: Page) => page.locator('#al-engine-learning');
 
-test('Python: a correct answer becomes evidence and unlocks the next activity', async ({ page }) => {
-  await openNotebook(page, 'exercises/python/01-frequency.ipynb');
-  await expect(panel(page).locator('.al-rec-title').first()).toHaveText('1. Count cases by exposure');
+test('Python: exploring the register becomes evidence and unlocks filtering', async ({ page }) => {
+  await openNotebook(page, 'exercises/python/02-explore-dataset.ipynb');
+  await expect(panel(page).locator('.al-rec-title').first()).toHaveText('1. Data or information?');
 
-  await runCell(page, 1);
-  await runCell(page, 2); // placeholder untouched
+  await runCell(page, 1); // loads pandas and the register
+  await runCell(page, 2); // placeholders untouched
   await expect(panel(page).locator('.al-feedback')).toContainText('Not finished yet');
 
-  await runCell(page, 2, 'ill_exposed = 29');
+  await runCell(page, 2, [
+    'n_records = len(register)',
+    "first_date = register['date_given'].min()",
+    "last_date = register['date_given'].min()",
+    "n_locations = register['location'].nunique()",
+    "age_min = int(register['age'].min())",
+    "age_max = int(register['age'].max())"
+  ].join('\n'));
   await expect(panel(page).locator('.al-feedback')).toContainText('Not yet correct');
 
-  await runCell(page, 2, 'ill_exposed = sum(a == 1 and i == 1 for a, i in zip(ate_salad, ill))');
+  await runCell(page, 2, [
+    'n_records = len(register)',
+    "first_date = register['date_given'].min()",
+    "last_date = register['date_given'].max()",
+    "n_locations = register['location'].nunique()",
+    "age_min = int(register['age'].min())",
+    "age_max = int(register['age'].max())"
+  ].join('\n'));
   await expect(panel(page).locator('.al-feedback')).toContainText('Correct. Recorded as evidence.');
-  await expect(panel(page).locator('.al-rec-title').first()).toHaveText('1. Calculate attack rates');
-  await expect(panel(page).locator('.al-gap.al-achieved')).toContainText('Count cases by exposure');
+  await expect(panel(page).locator('.al-rec-title')).toContainText(['1. Data or information?', '2. Filter the records you need']);
+  await expect(panel(page).locator('.al-gap.al-achieved')).toContainText('Explore a dataset with software');
 });
 
-test('R: hints within the ceiling count; the same engine serves the R Jupyter kernel', async ({ page }) => {
-  await openNotebook(page, 'exercises/r/01-frequency.ipynb');
+test('R: coverage after a hint counts; the same engine serves the R Jupyter kernel', async ({ page }) => {
+  await openNotebook(page, 'exercises/r/04-coverage.ipynb');
   await panel(page).getByRole('button', { name: 'Show a hint' }).click();
   await expect(panel(page).locator('.al-hint')).toContainText('Hint 1');
 
   await runCell(page, 1);
-  await runCell(page, 2, 'ill_exposed <- sum(ate_salad == 1 & ill == 1)');
+  await runCell(page, 2,
+    'coverage_x <- sum(register$vaccine_type == "MMR" & register$dose == 1 & register$location == "District X" & register$age < 5) / ' +
+    'population$population_under5[population$location == "District X"]');
   await expect(panel(page).locator('.al-feedback')).toContainText('Correct. Recorded as evidence.');
-  await expect(panel(page).locator('.al-rec-title').first()).toHaveText('1. Calculate attack rates');
+  await expect(panel(page).locator('.al-gap.al-achieved')).toContainText('Combine variables to produce information');
+});
+
+test('the Unit 3 knowledge check opens from the learning panel', async ({ page, context }) => {
+  await context.route('https://forms.gle/**', route => route.fulfill({ contentType: 'text/html', body: '<title>Quiz</title>' }));
+  await openNotebook(page, 'exercises/python/01-data-or-information.ipynb');
+  const popup = page.waitForEvent('popup');
+  await panel(page).getByRole('button', { name: 'Open: Unit 3 knowledge check' }).click();
+  expect((await popup).url()).toBe('https://forms.gle/Y4yG5gMbFznczrBd9');
+  await expect(panel(page).locator('.al-quizzes')).toContainText('not yet recorded');
 });

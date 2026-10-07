@@ -18,15 +18,21 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from make_exercises import EXERCISES, SETUP, placeholder  # noqa: E402
+from make_exercises import EXERCISES, placeholder  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 
 
 def literal(language: str, value) -> str:
+    if isinstance(value, list):
+        inner = ", ".join(json.dumps(v) for v in value)
+        return f"[{inner}]" if language == "python" else f"c({inner})"
     if isinstance(value, str):
         return json.dumps(value)
     return repr(value)
+
+
+WRONG = {"choice": "z", "set": ["a"], "date": "1999-01-01"}
 
 
 def answers(language: str, variables: dict, mode: str) -> str:
@@ -35,7 +41,12 @@ def answers(language: str, variables: dict, mode: str) -> str:
     op = "=" if language == "python" else "<-"
     lines = []
     for name, (kind, expected) in variables.items():
-        value = expected if mode == "correct" else ("z" if kind == "choice" else expected + 1)
+        if mode == "correct":
+            value = expected
+        elif kind in WRONG:
+            value = WRONG[kind]
+        else:
+            value = expected + 1  # count and rate
         lines.append(f"{name} {op} {literal(language, value)}")
     return "\n".join(lines) + "\n"
 
@@ -68,7 +79,7 @@ def main() -> int:
             got = {}
             for language, ext, runner in (("python", "py", run_python), ("r", "R", run_r)):
                 check = (ROOT / "content/checks" / f"{ex['check']}.{ext}").read_text()
-                got[language] = runner(SETUP[language] + "\n" + answers(language, ex["variables"], mode) + check)
+                got[language] = runner(ex["setup"][language] + "\n" + answers(language, ex["variables"], mode) + check)
             ok = got["python"] == got["r"] == want
             failures += not ok
             print(f"  {'ok  ' if ok else 'FAIL'}  {ex['check']:<22} {mode:<12} python={got['python']:<10} r={got['r']}")

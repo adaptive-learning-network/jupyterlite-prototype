@@ -8,6 +8,8 @@ import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
 import { Widget } from '@lumino/widgets';
 
 import { assess, Assessment, Catalog, exportNQuads, GAP, REASON, STATUS } from '../engine';
+import { CONSENT_TEXT, IdentityBindingError, newBinding, reverify } from '../identity/binding';
+import { OidcConfig, OidcError, signIn } from './oidc';
 import { ExerciseContext, INotebookGuide } from './guide';
 import { exerciseMetadata, ExerciseObserver, kernelLanguage, ObserverEvent } from './observer';
 import { LearnerStore } from './store';
@@ -42,6 +44,8 @@ export class LearningPanel extends Widget {
   private exercise: ExerciseContext | null = null;
   private revealed: { level: number; text: string }[] = [];
   private lastEvent: ObserverEvent | null = null;
+  private signInAbort: AbortController | null = null;
+  private identityMessage: { text: string; ok: boolean } | null = null;
 
   constructor(
     private readonly catalog: Catalog,
@@ -49,7 +53,8 @@ export class LearningPanel extends Widget {
     tracker: INotebookTracker,
     private readonly docManager: IDocumentManager,
     private readonly guide: INotebookGuide,
-    observer: ExerciseObserver
+    observer: ExerciseObserver,
+    private readonly oidc: OidcConfig | null
   ) {
     super();
     this.id = 'al-engine-learning';
@@ -129,6 +134,86 @@ export class LearningPanel extends Widget {
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
+  }
+
+  private async linkOrVerify(): Promise<void> {
+    if (!this.oidc || this.signInAbort) return;
+    const existing = this.store.record.identity;
+    if (!existing) {
+      const consent = await showDialog({
+        title: 'Link your sign-in to this learning record?',
+        body: CONSENT_TEXT,
+        buttons: [Dialog.cancelButton(), Dialog.okButton({ label: 'I agree, sign in' })]
+      });
+      if (!consent.button.accept) return;
+    }
+    this.signInAbort = new AbortController();
+    this.identityMessage = { text: 'Waiting for sign-in in the pop-up window…', ok: true };
+    this.render();
+    try {
+      const verified = await signIn(this.oidc, this.signInAbort.signal);
+      const now = new Date().toISOString();
+      const binding = existing
+        ? reverify(existing, verified.issuer, verified.subject, now)
+        : newBinding(verified.issuer, verified.subject, now, {
+            binding: `urn:uuid:${globalThis.crypto.randomUUID()}`,
+            consent: `urn:uuid:${globalThis.crypto.randomUUID()}`
+          });
+      this.identityMessage = { text: existing ? 'Sign-in verified again.' : 'Sign-in linked to this record.', ok: true };
+      this.signInAbort = null;
+      this.store.setIdentity(binding);
+    } catch (error) {
+      const known = error instanceof OidcError || error instanceof IdentityBindingError;
+      this.identityMessage = { text: known ? (error as Error).message.replace(/^[A-Z_]+: /, '') : 'Sign-in failed.', ok: false };
+      if (!known) console.error('al-engine: sign-in failed', error);
+      this.signInAbort = null;
+      this.render();
+    }
+  }
+
+  private async unlink(): Promise<void> {
+    const result = await showDialog({
+      title: 'Unlink sign-in?',
+      body: 'The link to your organisation sign-in is removed from this record. Your learning progress is kept.',
+      buttons: [Dialog.cancelButton(), Dialog.warnButton({ label: 'Unlink' })]
+    });
+    if (!result.button.accept) return;
+    this.identityMessage = { text: 'Sign-in unlinked.', ok: true };
+    this.store.setIdentity(undefined);
+  }
+
+  private renderIdentity(): HTMLElement | '' {
+    if (!this.oidc) return '';
+    const identity = this.store.record.identity;
+    const section = el('section', { className: 'al-section al-identity' }, el('h3', {}, 'Identity'));
+    if (identity) {
+      const host = new URL(identity.issuer).host;
+      section.append(
+        el('div', { className: 'al-identity-status' }, `Linked to ${host}`),
+        el('div', { className: 'al-meta' }, `Previously verified ${new Date(identity.verifiedAt).toLocaleString()}`)
+      );
+    } else {
+      section.append(el('div', { className: 'al-identity-status' }, 'Not linked. Your record is anonymous.'));
+    }
+    if (this.identityMessage) {
+      section.append(el('div', { className: `al-identity-message ${this.identityMessage.ok ? '' : 'al-warning'}` }, this.identityMessage.text));
+    }
+    if (this.signInAbort) {
+      const cancel = el('button', { className: 'jp-Button' }, 'Cancel sign-in');
+      cancel.onclick = () => this.signInAbort?.abort();
+      section.append(cancel);
+    } else {
+      const label = identity ? 'Verify again' : this.oidc.label ?? 'Link organisation sign-in';
+      const link = el('button', { className: 'jp-Button al-identity-link' }, label);
+      link.onclick = () => void this.linkOrVerify();
+      section.append(link);
+      if (identity) {
+        const unlink = el('button', { className: 'jp-Button' }, 'Unlink');
+        unlink.onclick = () => void this.unlink();
+        section.append(unlink);
+      }
+    }
+    return section;
   }
 
   private async reset(): Promise<void> {
@@ -219,6 +304,21 @@ export class LearningPanel extends Widget {
     }
     progress.append(list);
     node.append(progress);
+
+    // Knowledge checks (quizzes) declared in the catalog with a URL.
+    const quizzes = catalog.activities.filter(a => a.url && a.kind.endsWith('#Assessment'));
+    if (quizzes.length) {
+      const section = el('section', { className: 'al-section al-quizzes' }, el('h3', {}, 'Knowledge checks'));
+      for (const quiz of quizzes) {
+        const open = el('button', { className: 'jp-Button al-quiz-open' }, `Open: ${quiz.title}`);
+        open.onclick = () => window.open(quiz.url, '_blank', 'noopener');
+        section.append(open);
+      }
+      section.append(el('div', { className: 'al-meta' }, 'Opens in a new tab. Quiz results are not yet recorded in your learning record.'));
+      node.append(section);
+    }
+
+    node.append(this.renderIdentity());
 
     // Record controls.
     const exportButton = el('button', { className: 'jp-Button' }, 'Export record');

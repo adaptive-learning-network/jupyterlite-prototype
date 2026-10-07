@@ -2,19 +2,25 @@
 
 A JupyterLite site in which learners work through exercises in **Python or R**
 while an **ontology-driven adaptive-learning engine** observes results, builds
-evidence, estimates capabilities, and recommends what to do next. The curriculum,
+evidence, estimates capabilities, and recommends what to do next.
+
+The current exercises convert **Public Health Informatics for FETP, Unit 3:
+Using Informatics to Get Information Faster** (Version 3 course materials, used
+with permission). Each notebook follows the unit's slides and ends with
+references to the original guide, slides, quiz, and Excel How-To Scribes. The
+unit's quiz opens from the Learning panel. The curriculum,
 targets, evidence rules, and estimator policy are data in the `al:` upper
 ontology (`../adaptive-learning-ontology`). Everything runs in the browser.
 
 **Try it:** <https://adaptive-learning-network.github.io/jupyterlite-prototype/>
-([first Python exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/01-frequency.ipynb),
-[first R exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/r/01-frequency.ipynb)).
+([first Python exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/01-data-or-information.ipynb),
+[first R exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/r/01-data-or-information.ipynb)).
 The site is rebuilt and published by CI on every push to `main`.
 
 ## How it works
 
 ```text
-catalog/outbreak-analysis.trig  ──build_catalog.py (SHACL-validated)──▶  content/al/catalog.json
+catalog/informatics-unit-03.trig ──build_catalog.py (SHACL-validated)──▶  content/al/catalog.json
 scripts/make_exercises.py       ──▶  content/exercises/{python,r}/*.ipynb + content/checks/*.{py,R}
 
 JupyterLite page
@@ -47,6 +53,9 @@ observations. It never runs in a Jupyter kernel.
   assessment in Python and in R.
 - **Exports are validated.** The exported learner graph conforms to the `al:`
   SHACL shapes.
+- **Optional sign-in.** OpenID Connect (PKCE, public client) links an issuer and an
+  opaque subject to the record under recorded consent. Names, emails, and tokens
+  are never stored.
 
 ## Setup
 
@@ -68,7 +77,7 @@ installs the Playwright browser. Use `SKIP_PLAYWRIGHT=1` to skip the browser.
 ```bash
 jlpm build:site          # catalog → exercises → engine tests → extension → _output/
 python -m http.server 8765 --directory _output
-# open http://127.0.0.1:8765/lab/index.html?path=exercises/python/01-frequency.ipynb
+# open http://127.0.0.1:8765/lab/index.html?path=exercises/python/01-data-or-information.ipynb
 ```
 
 The site is about 150 MB, mostly the R runtime and its packages. The Python
@@ -85,7 +94,7 @@ documentation).
 | `jlpm test` | Engine unit tests (Node): prerequisites, guidance ceiling, dependence, language neutrality, order independence, fail-closed input |
 | `jlpm test:export` | The exported learner graph conforms to the `al:` SHACL shapes |
 | `jlpm test:checks` | Python and R checks agree on correct / incorrect / unanswered inputs (needs `Rscript`) |
-| `jlpm test:ui` | Playwright end to end in Chromium against `_output/`, with both Jupyter kernels |
+| `jlpm test:ui` | Playwright end to end in Chromium against `_output/`: both Jupyter kernels, plus sign-in against a mock OpenID Connect provider |
 
 ## Continuous integration
 
@@ -112,7 +121,7 @@ Repository settings:
 ## Layout
 
 ```text
-catalog/outbreak-analysis.trig   curriculum in al: (source of truth)
+catalog/informatics-unit-03.trig  Unit 3 curriculum in al: (source of truth)
 content/                         site contents: catalog projection, notebooks, checks
 src/engine/                      adaptive-learning engine (no JupyterLab dependency)
 src/extension/                   JupyterLab/JupyterLite plugin: observer, panel, store, guide
@@ -125,6 +134,7 @@ lite/requirements.txt            pinned build tooling
 ## Design documents
 
 - [Capability packs](docs/design/capability-packs.md): versioned, downloadable packs of adaptive-learning content, a pack catalog per programme, and the runtime changes needed to install them.
+- [Learner identity](docs/design/learner-identity.md): optional OpenID Connect sign-in that links an issuer and an opaque subject to the anonymous learner record. To enable it, configure `lite/oidc.json`.
 
 ## Known limits (prototype)
 

@@ -21,6 +21,7 @@ The first catalog serves Field Epidemiology Training Programs (FETP):
 | FETP core (shared foundation) | Planned, required by the other FETP packs |
 | Public health informatics | First content pack (15 units) |
 | GIS for epidemiologists | Future pack |
+| Pack authoring (for programme implementers) | Planned: teaches implementers to create and update packs in VS Code and GitHub, and to maintain the ontologies |
 
 ## 2. Terms
 

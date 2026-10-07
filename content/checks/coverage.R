@@ -1,9 +1,9 @@
 local({
   outcome <- tryCatch({
     result <- "correct"
-    if (!exists("risk_ratio", envir = globalenv()) || is.null(get("risk_ratio", envir = globalenv()))) {
+    if (!exists("coverage_x", envir = globalenv()) || is.null(get("coverage_x", envir = globalenv()))) {
       result <- "incomplete"
-    } else if (result == "correct" && !isTRUE(abs(as.numeric(risk_ratio) - 3.0) < 1e-6)) {
+    } else if (result == "correct" && !isTRUE(abs(as.numeric(coverage_x) - 0.92) < 1e-6)) {
       result <- "incorrect"
     }
     result

@@ -1,10 +1,10 @@
 import json as _al_json
 def _al_check():
     g = globals()
-    if g.get('ill_exposed') is None:
+    if g.get('aggregate_tables') is None:
         return 'incomplete'
     try:
-        if not (int(g['ill_exposed']) == 30):
+        if not (sorted({str(x).strip().lower() for x in g['aggregate_tables']}) == ['b', 'c', 'e']):
             return 'incorrect'
     except (TypeError, ValueError):
         return 'incorrect'

@@ -33,6 +33,8 @@ export interface CatalogActivity {
   /** Jupyter kernel language name (lower case) -> notebook path. */
   notebooks: Record<string, string>;
   rules: string[];
+  /** External location, e.g. a quiz form launched from the learning panel. */
+  url?: string;
 }
 
 export interface CatalogRule {
@@ -75,6 +77,17 @@ export interface Observation {
   language?: string;
 }
 
+/** Consented link to an external identity: issuer and opaque subject only. */
+export interface IdentityBinding {
+  iri: string;
+  issuer: string;
+  subject: string;
+  boundAt: string;
+  /** Most recent successful verification with the issuer. */
+  verifiedAt: string;
+  consent: { iri: string; purpose: string; revision: string; consentedAt: string };
+}
+
 export interface LearnerRecord {
   schema: 'al-learner-record/0.1';
   learner: string;
@@ -82,6 +95,8 @@ export interface LearnerRecord {
   observations: Observation[];
   /** Highest facilitation-ladder level revealed per activity. */
   guidance: Record<string, number>;
+  /** Present only after the learner consents to link an external identity. */
+  identity?: IdentityBinding;
 }
 
 export interface EvidenceAssertion {

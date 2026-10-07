@@ -6,6 +6,7 @@ import { LabIcon } from '@jupyterlab/ui-components';
 import { Catalog } from '../engine';
 import { StaticHintGuide } from './guide';
 import { ExerciseObserver } from './observer';
+import { readOidcConfig } from './oidc';
 import { LearningPanel } from './panel';
 import { LearnerStore } from './store';
 
@@ -39,7 +40,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     }
     const store = new LearnerStore(catalog.audiences[0].iri);
     const observer = new ExerciseObserver(catalog, store, tracker, app.serviceManager.contents);
-    const panel = new LearningPanel(catalog, store, tracker, docManager, new StaticHintGuide(), observer);
+    const panel = new LearningPanel(catalog, store, tracker, docManager, new StaticHintGuide(), observer, readOidcConfig());
     panel.title.icon = learningIcon;
     shell.add(panel, 'right', { rank: 50 });
     app.restored.then(() => shell.activateById(panel.id));

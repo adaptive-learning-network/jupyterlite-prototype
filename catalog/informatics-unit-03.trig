@@ -1,0 +1,133 @@
+@prefix al:      <https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#> .
+@prefix dreyfus: <https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#> .
+@prefix ex:      <https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#> .
+@prefix g:       <https://adaptive-learning-network.github.io/jupyterlite-prototype/graph/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema:  <https://schema.org/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+
+# Prototype curriculum: Public Health Informatics for FETP, Unit 3
+# "Using Informatics to Get Information Faster" (Version 3 course materials,
+# used with permission). Exercises follow the unit's slides: data versus
+# information, exploring a dataset with software, combining variables into
+# information, machine-readable datasets, and case-based versus aggregate data. Every activity has a Python and an R
+# notebook bound to the same al: capability.
+#
+# This file is the source of truth. scripts/build_catalog.py validates it with
+# the al: shapes and projects it to content/al/catalog.json for the browser.
+# It will become the unit module of the informatics capability pack.
+
+g:catalog {
+  ex:framework a al:CapabilityFramework ;
+      dcterms:title "Public health informatics, Unit 3: Using informatics to get information faster"@en ;
+      al:usesScale dreyfus:scale ;
+      al:hasCapability ex:cap-data-vs-information, ex:cap-explore-dataset, ex:cap-filter-records,
+                       ex:cap-combine-variables, ex:cap-machine-readable, ex:cap-case-vs-aggregate .
+
+  ex:cap-data-vs-information a al:Capability ; skos:inScheme ex:framework ; skos:notation "data-vs-information" ; al:ordinal 1 ;
+      skos:prefLabel "Distinguish data from information"@en .
+  ex:cap-explore-dataset a al:Capability ; skos:inScheme ex:framework ; skos:notation "explore-dataset" ; al:ordinal 2 ;
+      skos:prefLabel "Explore a dataset with software"@en .
+  ex:cap-filter-records a al:Capability ; skos:inScheme ex:framework ; skos:notation "filter-records" ; al:ordinal 3 ;
+      skos:prefLabel "Filter records to answer a question"@en ; al:prerequisite ex:cap-explore-dataset .
+  ex:cap-combine-variables a al:Capability ; skos:inScheme ex:framework ; skos:notation "combine-variables" ; al:ordinal 4 ;
+      skos:prefLabel "Combine variables to produce information"@en ;
+      al:prerequisite ex:cap-filter-records, ex:cap-data-vs-information .
+  ex:cap-machine-readable a al:Capability ; skos:inScheme ex:framework ; skos:notation "machine-readable" ; al:ordinal 5 ;
+      skos:prefLabel "Recognise machine-readable dataset structure"@en ; al:prerequisite ex:cap-explore-dataset .
+  ex:cap-case-vs-aggregate a al:Capability ; skos:inScheme ex:framework ; skos:notation "case-vs-aggregate" ; al:ordinal 6 ;
+      skos:prefLabel "Distinguish case-based and aggregate datasets"@en ; al:prerequisite ex:cap-machine-readable .
+
+  ex:aud-fetp-trainee a al:Audience ; rdfs:label "FETP trainees"@en .
+
+  ex:t-data-vs-information a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-data-vs-information ;
+      al:targetLevel dreyfus:competent ; al:isCritical false .
+  ex:t-explore-dataset a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-explore-dataset ;
+      al:targetLevel dreyfus:competent ; al:isCritical false .
+  ex:t-filter-records a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-filter-records ;
+      al:targetLevel dreyfus:competent ; al:isCritical false .
+  ex:t-combine-variables a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-combine-variables ;
+      al:targetLevel dreyfus:competent ; al:isCritical true .
+  ex:t-machine-readable a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-machine-readable ;
+      al:targetLevel dreyfus:competent ; al:isCritical false .
+  ex:t-case-vs-aggregate a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-case-vs-aggregate ;
+      al:targetLevel dreyfus:competent ; al:isCritical false .
+}
+
+g:activities {
+  ex:act-data-or-information a al:LearningActivity ; dcterms:title "Data or information?"@en ; al:ordinal 1 ;
+      al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-data-vs-information ;
+      al:usesAsset ex:nb-data-or-information-python, ex:nb-data-or-information-r ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-data-or-information .
+  ex:act-explore-dataset a al:LearningActivity ; dcterms:title "Explore the immunisation register"@en ; al:ordinal 2 ;
+      al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-explore-dataset ;
+      al:usesAsset ex:nb-explore-dataset-python, ex:nb-explore-dataset-r ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-explore-dataset .
+  ex:act-filter-records a al:LearningActivity ; dcterms:title "Filter the records you need"@en ; al:ordinal 3 ;
+      al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-filter-records ;
+      al:usesAsset ex:nb-filter-records-python, ex:nb-filter-records-r ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-filter-records .
+  ex:act-coverage a al:LearningActivity ; dcterms:title "Turn data into information: vaccination coverage"@en ; al:ordinal 4 ;
+      al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-combine-variables ;
+      al:usesAsset ex:nb-coverage-python, ex:nb-coverage-r ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-coverage .
+  ex:act-machine-readable a al:LearningActivity ; dcterms:title "Machine-readable or human-readable?"@en ; al:ordinal 5 ;
+      al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-machine-readable ;
+      al:usesAsset ex:nb-machine-readable-python, ex:nb-machine-readable-r ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-machine-readable .
+
+  ex:act-case-or-aggregate a al:LearningActivity ; dcterms:title "Case-based or aggregate?"@en ; al:ordinal 6 ;
+      al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-case-vs-aggregate ;
+      al:usesAsset ex:nb-case-or-aggregate-python, ex:nb-case-or-aggregate-r ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-case-or-aggregate .
+
+  # Knowledge check (Google Forms quiz), launched from the learning panel. Its
+  # results are not returned to the learner record, so it has no evidence rule.
+  ex:act-unit-03-quiz a al:LearningActivity ; dcterms:title "Unit 3 knowledge check"@en ; al:ordinal 7 ;
+      al:activityKind al:Assessment ; schema:url <https://forms.gle/Y4yG5gMbFznczrBd9> ;
+      al:assessesCapability ex:cap-data-vs-information, ex:cap-explore-dataset, ex:cap-filter-records,
+                            ex:cap-combine-variables, ex:cap-machine-readable, ex:cap-case-vs-aggregate .
+
+  ex:nb-case-or-aggregate-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/06-case-or-aggregate.ipynb" .
+  ex:nb-case-or-aggregate-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/06-case-or-aggregate.ipynb" .
+  ex:nb-data-or-information-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/01-data-or-information.ipynb" .
+  ex:nb-data-or-information-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/01-data-or-information.ipynb" .
+  ex:nb-explore-dataset-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/02-explore-dataset.ipynb" .
+  ex:nb-explore-dataset-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/02-explore-dataset.ipynb" .
+  ex:nb-filter-records-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/03-filter-records.ipynb" .
+  ex:nb-filter-records-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/03-filter-records.ipynb" .
+  ex:nb-coverage-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/04-coverage.ipynb" .
+  ex:nb-coverage-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/04-coverage.ipynb" .
+  ex:nb-machine-readable-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/05-machine-readable.ipynb" .
+  ex:nb-machine-readable-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/05-machine-readable.ipynb" .
+
+  ex:rubric a al:Rubric ; dcterms:title "Exercise result matches the expected value"@en ;
+      al:criterion ex:crit-data-or-information, ex:crit-explore-dataset, ex:crit-filter-records, ex:crit-coverage, ex:crit-machine-readable, ex:crit-case-or-aggregate .
+  ex:crit-data-or-information a al:RubricCriterion ; al:criterionCapability ex:cap-data-vs-information .
+  ex:crit-explore-dataset a al:RubricCriterion ; al:criterionCapability ex:cap-explore-dataset .
+  ex:crit-filter-records a al:RubricCriterion ; al:criterionCapability ex:cap-filter-records .
+  ex:crit-coverage a al:RubricCriterion ; al:criterionCapability ex:cap-combine-variables .
+  ex:crit-machine-readable a al:RubricCriterion ; al:criterionCapability ex:cap-machine-readable .
+  ex:crit-case-or-aggregate a al:RubricCriterion ; al:criterionCapability ex:cap-case-vs-aggregate .
+
+  # A correct result validated in the learner's own Jupyter kernel is
+  # simulation-stage evidence, provided no more than ladder level 2 was used.
+  ex:rule-data-or-information a al:EvidenceRule ; al:supportsCriterion ex:crit-data-or-information ; al:evidenceStage al:Simulation ;
+      al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
+  ex:rule-explore-dataset a al:EvidenceRule ; al:supportsCriterion ex:crit-explore-dataset ; al:evidenceStage al:Simulation ;
+      al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
+  ex:rule-filter-records a al:EvidenceRule ; al:supportsCriterion ex:crit-filter-records ; al:evidenceStage al:Simulation ;
+      al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
+  ex:rule-coverage a al:EvidenceRule ; al:supportsCriterion ex:crit-coverage ; al:evidenceStage al:Simulation ;
+      al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
+  ex:rule-machine-readable a al:EvidenceRule ; al:supportsCriterion ex:crit-machine-readable ; al:evidenceStage al:Simulation ;
+      al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
+  ex:rule-case-or-aggregate a al:EvidenceRule ; al:supportsCriterion ex:crit-case-or-aggregate ; al:evidenceStage al:Simulation ;
+      al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
+}
+
+g:governance {
+  ex:policy a al:EstimatorPolicy ; al:policyVersion "prototype-0.1" ;
+      rdfs:comment "Prototype fixture: correct evidence supports the stage ceiling level. Not validated parameters."@en ;
+      al:hasStageCeiling ex:ceil-self, ex:ceil-completion, ex:ceil-check, ex:ceil-sim, ex:ceil-practice .
+  ex:ceil-self a al:StageCeiling ; al:ceilingStage al:SelfReport ; al:ceilingLevel dreyfus:advanced-beginner .
+  ex:ceil-completion a al:StageCeiling ; al:ceilingStage al:Completion ; al:ceilingLevel dreyfus:novice .
+  ex:ceil-check a al:StageCeiling ; al:ceilingStage al:KnowledgeCheck ; al:ceilingLevel dreyfus:advanced-beginner .
+  ex:ceil-sim a al:StageCeiling ; al:ceilingStage al:Simulation ; al:ceilingLevel dreyfus:competent .
+  ex:ceil-practice a al:StageCeiling ; al:ceilingStage al:ReviewedPractice ; al:ceilingLevel dreyfus:expert .
+}

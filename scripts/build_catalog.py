@@ -26,7 +26,7 @@ from pyshacl import validate
 from rdflib import Dataset, Graph
 
 ROOT = Path(__file__).resolve().parent.parent
-CATALOG = ROOT / "catalog/outbreak-analysis.trig"
+CATALOG = ROOT / "catalog/informatics-unit-03.trig"
 OUTPUT = ROOT / "content/al/catalog.json"
 
 PREFIXES = """
@@ -61,8 +61,9 @@ def project(graph: Graph, source_digest: str) -> dict:
     targets = rows(graph, """SELECT ?iri ?audience ?capability ?level ?critical WHERE {
         ?iri a al:CapabilityTarget ; al:forAudience ?audience ; al:targetCapability ?capability ; al:targetLevel ?level .
         OPTIONAL { ?iri al:isCritical ?critical } }""")
-    activities = rows(graph, """SELECT ?iri ?title ?ordinal ?kind WHERE {
-        ?iri a al:LearningActivity ; dcterms:title ?title ; al:ordinal ?ordinal ; al:activityKind ?kind }""")
+    activities = rows(graph, """SELECT ?iri ?title ?ordinal ?kind ?url WHERE {
+        ?iri a al:LearningActivity ; dcterms:title ?title ; al:ordinal ?ordinal ; al:activityKind ?kind .
+        OPTIONAL { ?iri schema:url ?url } }""")
     assesses = rows(graph, "SELECT ?activity ?capability WHERE { ?activity a al:LearningActivity ; al:assessesCapability ?capability }")
     notebooks = rows(graph, """SELECT ?activity ?language ?path WHERE {
         ?activity al:usesAsset ?asset . ?asset schema:programmingLanguage ?language ; schema:contentUrl ?path }""")
@@ -105,7 +106,8 @@ def project(graph: Graph, source_digest: str) -> dict:
         "activities": sorted(({"iri": a["iri"], "title": a["title"], "ordinal": int(a["ordinal"]), "kind": a["kind"],
                                "capabilities": cap_by_activity.get(a["iri"], []),
                                "notebooks": {n["language"]: n["path"] for n in notebooks if n["activity"] == a["iri"]},
-                               "rules": rules_by_activity.get(a["iri"], [])} for a in activities), key=lambda a: a["ordinal"]),
+                               "rules": rules_by_activity.get(a["iri"], []),
+                               **({"url": a["url"]} if a["url"] else {})} for a in activities), key=lambda a: a["ordinal"]),
         "rules": sorted(({"iri": r["iri"], "activity": r["activity"], "criterion": r["criterion"], "capability": r["capability"],
                           "stage": r["stage"], "requiredAction": r["action"], "acceptedOutcomes": outcomes_by_rule[r["iri"]],
                           "maximumGuidance": int(r["maxGuidance"])} for r in unique_rules.values()), key=lambda r: r["iri"]),

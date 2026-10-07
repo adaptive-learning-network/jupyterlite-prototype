@@ -16,4 +16,5 @@ python scripts/validate_export.py test-results/learner-export.nq
 jlpm build                                # compile extension and labextension
 rm -rf _output .jupyterlite.doit.db
 jupyter lite build                        # site in _output/ (Pyodide + xeus-r Jupyter kernels)
+python scripts/configure_site.py          # sign-in callback page; lite/oidc.json → alOidc (if present)
 echo "Site built in _output/. Serve with: python -m http.server 8765 --directory _output"

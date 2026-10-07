@@ -23,3 +23,5 @@
 .al-warning { color: var(--jp-warn-color1); }
 .al-meta, .al-language-label { color: var(--jp-ui-font-color3); font-size: var(--jp-ui-font-size0); }
 .al-LearningPanel .jp-Button { padding: 2px 10px; border: 1px solid var(--jp-border-color1); border-radius: 3px; background: var(--jp-layout-color2); cursor: pointer; }
+.al-identity button { margin-right: 6px; margin-top: 4px; }
+.al-identity-message { margin: 4px 0; }

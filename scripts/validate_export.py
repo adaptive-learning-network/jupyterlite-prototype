@@ -33,7 +33,7 @@ def main() -> int:
     shapes = Graph().parse(args.ontology / "shapes/al-core.shacl.ttl")
 
     dataset = Dataset(default_union=True)
-    dataset.parse(ROOT / "catalog/outbreak-analysis.trig", format="trig")
+    dataset.parse(ROOT / "catalog/informatics-unit-03.trig", format="trig")
     dataset.parse(args.export, format="nquads")
     data = Graph()
     for triple in dataset.triples((None, None, None)):

@@ -146,7 +146,10 @@ export function assess(catalog: Catalog, record: LearnerRecord): Assessment {
   const recommendations: Recommendation[] = [];
   for (const capability of candidates) {
     if (recommendations.length >= MAX_RECOMMENDATIONS) break;
-    const activity = catalog.activities.find(a => a.capabilities.includes(capability.iri));
+    // Prefer activities that produce evidence in the notebook (they have rules).
+    const activity =
+      catalog.activities.find(a => a.capabilities.includes(capability.iri) && a.rules.length > 0) ??
+      catalog.activities.find(a => a.capabilities.includes(capability.iri));
     if (!activity) continue;
     const gap = gapByCapability.get(capability.iri)!;
     const reasons: string[] = [];
@@ -178,6 +181,9 @@ function validateInputs(catalog: Catalog, record: LearnerRecord): void {
   if (record.schema !== 'al-learner-record/0.1') throw new EngineInputError('RECORD_SCHEMA', 'unsupported learner record');
   if (!/^urn:uuid:[0-9a-f-]{36}$/.test(record.learner)) throw new EngineInputError('LEARNER_IRI', 'learner must be an opaque urn:uuid');
   if (!catalog.audiences.some(a => a.iri === record.audience)) throw new EngineInputError('UNKNOWN_AUDIENCE', record.audience);
+  if (record.identity && (!/^https:\/\//.test(record.identity.issuer) || /@/.test(record.identity.subject))) {
+    throw new EngineInputError('IDENTITY_BINDING', 'binding must be an https issuer and an opaque subject');
+  }
   const activities = new Set(catalog.activities.map(a => a.iri));
   const seen = new Set<string>();
   for (const obs of record.observations) {

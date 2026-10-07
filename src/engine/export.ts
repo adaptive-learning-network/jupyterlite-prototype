@@ -36,6 +36,21 @@ export async function exportNQuads(catalog: Catalog, record: LearnerRecord, asse
   // Learner and observations (evidence graph).
   add(evidenceGraph, record.learner, RDF_TYPE, iri(al('Learner')));
   add(evidenceGraph, record.learner, al('hasAudience'), iri(record.audience));
+  if (record.identity) {
+    const b = record.identity;
+    add(evidenceGraph, b.iri, RDF_TYPE, iri(al('IdentityBinding')));
+    add(evidenceGraph, b.iri, al('learner'), iri(record.learner));
+    add(evidenceGraph, b.iri, al('identityIssuer'), iri(b.issuer));
+    add(evidenceGraph, b.iri, al('externalSubject'), lit(b.subject, XSD + 'string'));
+    add(evidenceGraph, b.iri, al('boundAt'), lit(b.boundAt, XSD + 'dateTime'));
+    add(evidenceGraph, b.iri, al('verifiedAt'), lit(b.verifiedAt, XSD + 'dateTime'));
+    add(evidenceGraph, b.iri, al('underConsent'), iri(b.consent.iri));
+    add(evidenceGraph, b.consent.iri, RDF_TYPE, iri(al('ConsentDirective')));
+    add(evidenceGraph, b.consent.iri, al('learner'), iri(record.learner));
+    add(evidenceGraph, b.consent.iri, al('consentPurpose'), lit(b.consent.purpose, XSD + 'string'));
+    add(evidenceGraph, b.consent.iri, al('consentRevision'), lit(b.consent.revision, XSD + 'string'));
+    add(evidenceGraph, b.consent.iri, al('consentedAt'), lit(b.consent.consentedAt, XSD + 'dateTime'));
+  }
   for (const obs of record.observations) {
     add(evidenceGraph, obs.iri, RDF_TYPE, iri(al('Observation')));
     add(evidenceGraph, obs.iri, al('learner'), iri(record.learner));

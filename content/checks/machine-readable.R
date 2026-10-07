@@ -3,7 +3,7 @@ local({
     result <- "correct"
     if (!exists("answer", envir = globalenv()) || is.null(get("answer", envir = globalenv()))) {
       result <- "incomplete"
-    } else if (result == "correct" && !isTRUE(tolower(trimws(as.character(answer))) == "b")) {
+    } else if (result == "correct" && !isTRUE(tolower(trimws(as.character(answer))) == "c")) {
       result <- "incorrect"
     }
     result

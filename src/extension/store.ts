@@ -6,7 +6,7 @@
 
 import { ISignal, Signal } from '@lumino/signaling';
 
-import { LearnerRecord, Observation } from '../engine';
+import { IdentityBinding, LearnerRecord, Observation } from '../engine';
 
 const KEY = 'al-engine:learner-record:v0.1';
 const LANGUAGE_KEY = 'al-engine:preferred-language';
@@ -83,6 +83,14 @@ export class LearnerStore {
   recordGuidance(activity: string, level: number): void {
     if (level <= this.guidanceFor(activity)) return;
     this.update({ ...this._record, guidance: { ...this._record.guidance, [activity]: level } });
+  }
+
+  /** Link, re-verify, or (with undefined) unlink an external identity. */
+  setIdentity(identity: IdentityBinding | undefined): void {
+    const next = { ...this._record };
+    if (identity) next.identity = identity;
+    else delete next.identity;
+    this.update(next);
   }
 
   reset(): void {

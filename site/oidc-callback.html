@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Signing in</title>
+</head>
+<body>
+  <p>Finishing sign-in. This window closes automatically.</p>
+  <script>
+    // Return the authorization response to the JupyterLite window that opened
+    // this popup (same origin only), then remove it from this window's history.
+    (function () {
+      var url = window.location.href;
+      history.replaceState(null, '', window.location.pathname);
+      var message = { type: 'al-oidc-callback', url: url };
+      // BroadcastChannel works even if the provider severed window.opener (COOP).
+      try { var channel = new BroadcastChannel('al-oidc-callback'); channel.postMessage(message); channel.close(); } catch (e) {}
+      try { if (window.opener) window.opener.postMessage(message, window.location.origin); } catch (e) {}
+      window.close();
+    })();
+  </script>
+</body>
+</html>
