@@ -29,7 +29,7 @@ publish-jupyterlite:
     - .venv/bin/python "$AL_ONTOLOGY_DIR/scripts/validate.py"
     - .venv/bin/jlpm build:site
     - .venv/bin/jlpm test:checks
-    - .venv/bin/jlpm test:ui
+    # GitHub Actions runs the full Playwright browser suite on the same main commit.
     - mv _output public
   pages: true
   rules:
