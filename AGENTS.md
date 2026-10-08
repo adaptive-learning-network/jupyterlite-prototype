@@ -20,6 +20,7 @@ catalog/*.trig               curriculum in al: terms: SOURCE OF TRUTH for capabi
 scripts/build_catalog.py     validate catalog against al: shapes → content/al/catalog.json (generated)
 scripts/make_exercises.py    exercise SPEC → Python + R notebooks and checks in content/ (generated)
 src/engine/                  adaptive-learning engine: pure, deterministic, no JupyterLab imports
+scripts/import_ucsf_readings.py  pinned UCSF source to unscored reading notebooks and images
 src/identity/                PKCE and identity-binding rules (pure)
 src/extension/               JupyterLab plugin: observer, panel, store, guide, OIDC sign-in
 site/oidc-callback.html      copied to the site root by scripts/configure_site.py
@@ -42,14 +43,15 @@ The `al:` ontology is expected at `../adaptive-learning-ontology`; override with
 
 ## Rules
 
-1. **Edit sources, not generated files.** Notebooks and checks in `content/`
-   come from `scripts/make_exercises.py`, and `content/al/catalog.json` comes
-   from the TriG catalog. Change the spec or catalog, then regenerate.
+1. **Edit sources, not generated files.** Exercise notebooks and checks in
+   `content/` come from `scripts/make_exercises.py`; UCSF readings come from
+   `scripts/import_ucsf_readings.py`; `content/al/catalog.json` comes from the
+   TriG catalog. Change the source or generator, then regenerate.
 2. **Use the course material as much as possible:** verbatim learning objectives,
    slide examples and definitions, course scenarios, Excel How-To Scribes, and
    quiz items. Synthetic data only fills gaps, and it extends the course's own
    examples. Expected answers are computed from the data, never typed in.
-3. **Every notebook ends with a References section** linking the original Google
+3. **Every scored exercise notebook ends with a References section** linking the original Google
    Docs and Slides (with slide numbers), the quiz, and guides. The Docs are
    retired once content is in notebooks; the links remain.
 4. **Python and R stay in parity.** One spec produces both. `jlpm test:checks`

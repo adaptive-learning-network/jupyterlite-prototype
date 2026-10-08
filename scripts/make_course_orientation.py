@@ -47,11 +47,12 @@ Select the next cell and press **Shift+Enter**. It is a practice cell and does n
     run = "print('Ready to investigate with Laila.')"
     next_steps = """## Where to go next
 
-1. Open **`u03-n01-data-or-information.ipynb`** in this folder for Notebook 01 in Python. The matching R notebook is in `exercises/r`.
-2. Run the setup cell, enter an answer in the exercise cell, and run it. The **Learning** panel records the attempt and offers hints or a next activity.
-3. After a few attempts, export your record from the Learning panel. The unscored **`08-my-learning-record.ipynb`** notebook in this folder can show how observations, estimates, and recommendations changed.
+1. Browse the UCSF Unit 1 and Unit 2 source readings in **`readings/ucsf/u00-n01-reading-index.ipynb`**. They include the course narrative, case questions, and diagrams. Reading them does not add observations.
+2. Open **`u03-n01-data-or-information.ipynb`** in this folder for Notebook 01 in Python. The matching R notebook is in `exercises/r`.
+3. Run the setup cell, enter an answer in the exercise cell, and run it. The **Learning** panel records the attempt and offers hints or a next activity.
+4. After a few attempts, export your record from the Learning panel. The unscored **`08-my-learning-record.ipynb`** notebook in this folder can show how observations, estimates, and recommendations changed.
 
-Notebook 00 is an orientation, so it has no scored exercise. The current runnable exercises cover **Unit 3**. Units 1 and 2 are planned but do not yet have local notebooks.
+Notebook 00 is an orientation, so it has no scored exercise. The current runnable exercises cover **Unit 3**. Units 1 and 2 have source readings; their local scored exercises are still planned.
 """
     references = """## Course sources
 

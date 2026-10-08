@@ -24,7 +24,13 @@ Notebook 00 is an unscored orientation with the course cast and slide visuals.
 The Notebook 01 pilot uses `u03-n01-data-or-information.ipynb` in both language
 folders: `uNN-nNN-topic.ipynb` means unit number, notebook number, and topic.
 The remaining existing exercise filenames will be converted after this pilot.
-Units 1 and 2 are planned in the [course notebook inventory](../fetp-phi-course/docs/notebook-inventory.md).
+The [UCSF Unit 1 and Unit 2 reading index](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb)
+opens 18 unscored source pages with the original case text, questions, and seven
+local images. They were imported from pinned UCSF revision `7eca2ec9` by
+`scripts/import_ucsf_readings.py`; external slides, forms, and videos remain
+links. UCSF's unit numbering differs from the local Version 3 plan, so each
+reading states its topic alignment. Local scored exercises for Units 1 and 2
+are still planned in the [course notebook inventory](../fetp-phi-course/docs/notebook-inventory.md).
 
 A [Python-only DHIS2 adapter pilot](docs/design/dhis2-adapter-pilot.md) adds a
 generated notebook at `content/exercises/python/07-dhis2-query.ipynb`. It uses
