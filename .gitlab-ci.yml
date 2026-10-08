@@ -1,5 +1,6 @@
 stages:
   - deploy
+  - test
 publish-jupyterlite:
   image: node:20-bookworm
   tags:
@@ -30,5 +31,29 @@ publish-jupyterlite:
     # GitHub Actions runs the full Playwright browser suite on the same main commit.
     - mv _output public
   pages: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+diagnose-dhis2-browser:
+  image: mcr.microsoft.com/playwright:v1.48.2-noble
+  tags:
+    - docker
+  stage: test
+  needs:
+    - job: publish-jupyterlite
+      artifacts: true
+  variables:
+    JUPYTERLITE_TEST_SITE: public
+    JUPYTERLITE_SKIP_MOCK_OIDC: "1"
+  script:
+    - apt-get update -qq && apt-get install -y -qq --no-install-recommends python3
+    - npm install --legacy-peer-deps --no-package-lock --ignore-scripts
+    - npx playwright test ui-tests/dhis2-scenarios.spec.ts --grep "multiple retries" --max-failures=1
+  artifacts:
+    when: always
+    paths:
+      - test-results/
+    expire_in: 7 days
+  allow_failure: true
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
