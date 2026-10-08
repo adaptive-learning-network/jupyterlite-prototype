@@ -19,7 +19,7 @@ async function openWithSignIn(page: Page): Promise<void> {
     config['jupyter-config-data'] = { ...(config['jupyter-config-data'] ?? {}), alOidc: { issuer: ISSUER, clientId: 'test-client' } };
     await route.fulfill({ response, json: config });
   });
-  await page.goto('/lab/index.html?path=exercises/python/01-data-or-information.ipynb');
+  await page.goto('/lab/index.html?path=exercises/python/u03-n01-data-or-information.ipynb');
   await expect(page.locator('#al-engine-learning .al-identity')).toBeVisible();
 }
 

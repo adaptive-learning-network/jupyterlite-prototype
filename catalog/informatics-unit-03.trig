@@ -92,8 +92,8 @@ g:activities {
   ex:nb-case-or-aggregate-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/06-case-or-aggregate.ipynb" .
   ex:nb-case-or-aggregate-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/06-case-or-aggregate.ipynb" .
   ex:nb-dhis2-query-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/07-dhis2-query.ipynb" .
-  ex:nb-data-or-information-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/01-data-or-information.ipynb" .
-  ex:nb-data-or-information-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/01-data-or-information.ipynb" .
+  ex:nb-data-or-information-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/u03-n01-data-or-information.ipynb" .
+  ex:nb-data-or-information-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/u03-n01-data-or-information.ipynb" .
   ex:nb-explore-dataset-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/02-explore-dataset.ipynb" .
   ex:nb-explore-dataset-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/02-explore-dataset.ipynb" .
   ex:nb-filter-records-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/03-filter-records.ipynb" .

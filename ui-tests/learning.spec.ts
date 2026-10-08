@@ -69,7 +69,7 @@ test('R: coverage after a hint counts; the same engine serves the R Jupyter kern
 
 test('the Unit 3 knowledge check opens from the learning panel', async ({ page, context }) => {
   await context.route('https://forms.gle/**', route => route.fulfill({ contentType: 'text/html', body: '<title>Quiz</title>' }));
-  await openNotebook(page, 'exercises/python/01-data-or-information.ipynb');
+  await openNotebook(page, 'exercises/python/u03-n01-data-or-information.ipynb');
   const popup = page.waitForEvent('popup');
   await panel(page).getByRole('button', { name: 'Open: Unit 3 knowledge check' }).click();
   expect((await popup).url()).toBe('https://forms.gle/Y4yG5gMbFznczrBd9');

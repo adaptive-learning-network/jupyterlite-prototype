@@ -189,7 +189,7 @@ def scribe_list(*keys: str) -> str:
 # variables: name -> (kind, expected). Kinds: count | rate | choice | set | date.
 EXERCISES = [
     {
-        "file": "01-data-or-information", "check": "data-or-information", "slides": "6, 18–24", "activity": "act-data-or-information",
+        "file": "u03-n01-data-or-information", "check": "data-or-information", "slides": "6, 18–24", "activity": "act-data-or-information",
         "title": "Data or information?",
         "objective": OBJECTIVES[0],
         "context": (
@@ -386,6 +386,8 @@ def references(ex: dict) -> str:
              f"- [{SOURCE_DOCS['slides'][0]}]({SOURCE_DOCS['slides'][1]}): slides {ex['slides']}",
              f"- [{SOURCE_DOCS['quiz'][0]}]({SOURCE_DOCS['quiz'][1]})",
              "- Excel How-To Scribes:"]
+    if ex["file"] == "u03-n01-data-or-information":
+        lines.insert(5, "- Surveillance-cycle visual: *Unit 2, Version 2, Detection and Diagnosis*, slide 3 (course deck supplied with the project).")
     lines += [f"  - [{title}]({url})" for title, url in SCRIBES.values()]
     lines += ["", "*Public Health Informatics for FETP, Version 3 course materials, used with permission.*"]
     return "\n".join(lines)
@@ -400,8 +402,22 @@ def cell(cell_type: str, source: str, cell_id: str, metadata: dict | None = None
 
 def notebook(ex: dict, language: str) -> dict:
     name = "Python" if language == "python" else "R"
+    pilot_outline = ""
+    pilot_cue = ""
+    if ex["file"] == "u03-n01-data-or-information":
+        pilot_outline = f"**Course outline:** Unit 03 · Notebook 01 · {name}\n\n"
+        pilot_cue = (
+            "![Three-panel comic: Laila examines a line list, her supervisor points to the records, and she imagines a chart and map.](../assets/laila-unit03-notebook01-comic.png)\n\n"
+            "*Laila has ages, symptoms, and onset dates. Her supervisor asks which items already show a pattern. "
+            "Help Laila tell raw data from information. (Original teaching illustration; dialogue is not from the slides.)*\n\n"
+        )
+        pilot_cue += (
+            '<img src="../assets/unit2-v2-surveillance-cycle.png" width="420" alt="Course surveillance cycle: detect, collect, compile and analyze, interpret, communicate, and take action.">\n\n'
+            "*Slide connection: Unit 2, Version 2, slide 3. This notebook works at the **data → information** step, "
+            "where collected values become a pattern that can be interpreted.*\n\n"
+        )
     intro = (
-        f"# {ex['title']}\n\n"
+        f"{pilot_outline}# {ex['title']}\n\n{pilot_cue}"
         f"*{UNIT}*. Learning objective: **{ex['objective']}**.\n\n"
         f"{ex['context']}\n\n"
         f"## Your task\n\n{ex['task']}\n\n"
@@ -445,10 +461,10 @@ def main() -> None:
     for language in ("python", "r"):
         for ex in EXERCISES:
             path = CONTENT / "exercises" / language / f"{ex['file']}.ipynb"
-            path.write_text(json.dumps(notebook(ex, language), indent=1, ensure_ascii=False) + "\n")
+            path.write_text(json.dumps(notebook(ex, language), indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     for ex in EXERCISES:
-        (checks / f"{ex['check']}.py").write_text(python_check(ex["variables"]))
-        (checks / f"{ex['check']}.R").write_text(r_check(ex["variables"]))
+        (checks / f"{ex['check']}.py").write_text(python_check(ex["variables"]), encoding="utf-8")
+        (checks / f"{ex['check']}.R").write_text(r_check(ex["variables"]), encoding="utf-8")
     print(f"wrote {len(EXERCISES) * 2} notebooks and {len(EXERCISES) * 2} checks; register has {len(REGISTER)} records")
     # Separate Python-only pilot requested for the DHIS2 adapter. The existing
     # paired Python/R exercise spec stays unchanged until the R pilot is built.
@@ -456,6 +472,8 @@ def main() -> None:
     make_dhis2_pilot()
     from make_learning_record_notebook import main as make_learning_record_notebook
     make_learning_record_notebook()
+    from make_course_orientation import main as make_course_orientation
+    make_course_orientation()
 
 
 if __name__ == "__main__":

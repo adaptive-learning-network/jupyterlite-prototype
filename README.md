@@ -13,11 +13,18 @@ targets, evidence rules, and estimator policy are data in the `al:` upper
 ontology (`../adaptive-learning-ontology`). Everything runs in the browser.
 
 **Try it:** <https://adaptive-learning-network.github.io/jupyterlite-prototype/>
-([first Python exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/01-data-or-information.ipynb),
-[first R exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/r/01-data-or-information.ipynb)).
+([start here: Notebook 00](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/u00-n00-start-here.ipynb),
+[first Python exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/u03-n01-data-or-information.ipynb),
+[first R exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/r/u03-n01-data-or-information.ipynb)).
 The site is rebuilt and published by CI on every push to `main` on GitHub and
 GitLab. The GitLab Pages site is available to members with project access at
 <https://jupyterlite-prototype-4a4d87.gitpages.cdc.gov/>.
+
+Notebook 00 is an unscored orientation with the course cast and slide visuals.
+The Notebook 01 pilot uses `u03-n01-data-or-information.ipynb` in both language
+folders: `uNN-nNN-topic.ipynb` means unit number, notebook number, and topic.
+The remaining existing exercise filenames will be converted after this pilot.
+Units 1 and 2 are planned in the [course notebook inventory](../fetp-phi-course/docs/notebook-inventory.md).
 
 A [Python-only DHIS2 adapter pilot](docs/design/dhis2-adapter-pilot.md) adds a
 generated notebook at `content/exercises/python/07-dhis2-query.ipynb`. It uses
@@ -92,7 +99,7 @@ installs the Playwright browser. Use `SKIP_PLAYWRIGHT=1` to skip the browser.
 ```bash
 jlpm build:site          # catalog → exercises → engine tests → extension → _output/
 python -m http.server 8765 --directory _output
-# open http://127.0.0.1:8765/lab/index.html?path=exercises/python/01-data-or-information.ipynb
+# open http://127.0.0.1:8765/lab/index.html?path=exercises/python/u03-n01-data-or-information.ipynb
 ```
 
 The build downloads a checksum-verified Pyodide 314.0.6 core and the pinned

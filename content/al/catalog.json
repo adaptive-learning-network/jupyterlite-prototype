@@ -1,6 +1,6 @@
 {
   "schema": "al-catalog-projection/0.1",
-  "sourceDigest": "672fe7d0461e60a59b5f4021264c76739cbe644fc1ef731c2a33bd8220dbcfe1",
+  "sourceDigest": "9e7a1165e9e6deb8c526ec9df8d2c4683672a9d89a4bb5db166c877d1d708c29",
   "framework": {
     "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#framework",
     "title": "Public health informatics, Unit 3: Using informatics to get information faster",
@@ -163,8 +163,8 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-data-vs-information"
       ],
       "notebooks": {
-        "python": "exercises/python/01-data-or-information.ipynb",
-        "r": "exercises/r/01-data-or-information.ipynb"
+        "python": "exercises/python/u03-n01-data-or-information.ipynb",
+        "r": "exercises/r/u03-n01-data-or-information.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-data-or-information"
