@@ -25,7 +25,8 @@ const panel = (page: Page) => page.locator('#al-engine-learning');
 
 test('Python: exploring the register becomes evidence and unlocks filtering', async ({ page }) => {
   await openNotebook(page, 'exercises/python/02-explore-dataset.ipynb');
-  await expect(panel(page).locator('.al-rec-title').first()).toHaveText('1. Data or information?');
+  await expect(panel(page).locator('.al-rec-title').first()).toHaveText('1. Unit 1: From data to a public health decision');
+  await expect(panel(page).locator('.al-rec-title').filter({ hasText: 'Data or information?' })).toHaveCount(1);
 
   await runCell(page, 1); // loads pandas and the register
   await runCell(page, 2); // placeholders untouched
@@ -50,7 +51,8 @@ test('Python: exploring the register becomes evidence and unlocks filtering', as
     "age_max = int(register['age'].max())"
   ].join('\n'));
   await expect(panel(page).locator('.al-feedback')).toContainText('Correct. Recorded as evidence.');
-  await expect(panel(page).locator('.al-rec-title')).toContainText(['1. Data or information?', '2. Filter the records you need']);
+  await expect(panel(page).locator('.al-rec-title').filter({ hasText: 'Data or information?' })).toHaveCount(1);
+  await expect(panel(page).locator('.al-rec-title').filter({ hasText: 'Filter the records you need' })).toHaveCount(1);
   await expect(panel(page).locator('.al-gap.al-achieved')).toContainText('Explore a dataset with software');
 });
 
