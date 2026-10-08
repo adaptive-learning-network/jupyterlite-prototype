@@ -470,6 +470,8 @@ def main() -> None:
     # paired Python/R exercise spec stays unchanged until the R pilot is built.
     from make_dhis2_pilot import main as make_dhis2_pilot
     make_dhis2_pilot()
+    from make_unit01_pilot import main as make_unit01_pilot
+    make_unit01_pilot()
     from make_learning_record_notebook import main as make_learning_record_notebook
     make_learning_record_notebook()
     from make_course_orientation import main as make_course_orientation

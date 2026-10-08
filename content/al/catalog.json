@@ -1,9 +1,9 @@
 {
   "schema": "al-catalog-projection/0.1",
-  "sourceDigest": "9e7a1165e9e6deb8c526ec9df8d2c4683672a9d89a4bb5db166c877d1d708c29",
+  "sourceDigest": "b3d9732d1e70c93afcf8f82d7ee2c1b2fbd72d80072b7102bec3362650c85a05",
   "framework": {
     "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#framework",
-    "title": "Public health informatics, Unit 3: Using informatics to get information faster",
+    "title": "Public health informatics: Units 1 and 3 pilot",
     "scale": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#scale"
   },
   "levels": [
@@ -39,6 +39,13 @@
     }
   ],
   "capabilities": [
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-data-to-decision",
+      "notation": "data-to-decision",
+      "label": "Justify a public health action from data",
+      "ordinal": 0,
+      "prerequisites": []
+    },
     {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-data-vs-information",
       "notation": "data-vs-information",
@@ -117,6 +124,15 @@
       "critical": true
     },
     {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#t-data-to-decision",
+      "audiences": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#aud-fetp-trainee"
+      ],
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-data-to-decision",
+      "level": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent",
+      "critical": false
+    },
+    {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#t-data-vs-information",
       "audiences": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#aud-fetp-trainee"
@@ -154,6 +170,21 @@
     }
   ],
   "activities": [
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u01-data-to-decision",
+      "title": "Unit 1: From data to a public health decision",
+      "ordinal": 0,
+      "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
+      "capabilities": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-data-to-decision"
+      ],
+      "notebooks": {
+        "python": "exercises/python/u01-n01-data-to-decision.ipynb"
+      },
+      "rules": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u01-data-to-decision"
+      ]
+    },
     {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-data-or-information",
       "title": "Data or information?",
@@ -361,6 +392,18 @@
       "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-machine-readable",
       "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-machine-readable",
       "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-machine-readable",
+      "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
+      "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
+      "acceptedOutcomes": [
+        "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Correct"
+      ],
+      "maximumGuidance": 2
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u01-data-to-decision",
+      "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u01-data-to-decision",
+      "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-u01-data-to-decision",
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-data-to-decision",
       "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
       "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
       "acceptedOutcomes": [

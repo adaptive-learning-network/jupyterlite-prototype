@@ -7,7 +7,7 @@ Guidance for coding agents and contributors working in this repository.
 A JupyterLite site plus a JupyterLab 4 extension. Learners do exercises in
 Python or R notebooks, and an **ontology-driven adaptive-learning engine**
 records observations, builds evidence, estimates capabilities, and recommends
-what to do next. Current content: Public Health Informatics for FETP, Unit 3
+what to do next. Current scored content: Public Health Informatics for FETP, Units 1 and 3
 (Version 3 course materials, used with permission). The repository is
 **public** and published to GitHub Pages.
 
@@ -19,6 +19,7 @@ Read [README.md](README.md) and the design notes in [docs/design/](docs/design/)
 catalog/*.trig               curriculum in al: terms: SOURCE OF TRUTH for capabilities, targets, activities, rules
 scripts/build_catalog.py     validate catalog against al: shapes → content/al/catalog.json (generated)
 scripts/make_exercises.py    exercise SPEC → Python + R notebooks and checks in content/ (generated)
+scripts/make_unit01_pilot.py Python-only Unit 1 scored pilot (called by make_exercises.py)
 src/engine/                  adaptive-learning engine: pure, deterministic, no JupyterLab imports
 scripts/import_ucsf_readings.py  pinned UCSF source to unscored reading notebooks and images
 src/identity/                PKCE and identity-binding rules (pure)
@@ -54,8 +55,10 @@ The `al:` ontology is expected at `../adaptive-learning-ontology`; override with
 3. **Every scored exercise notebook ends with a References section** linking the original Google
    Docs and Slides (with slide numbers), the quiz, and guides. The Docs are
    retired once content is in notebooks; the links remain.
-4. **Python and R stay in parity.** One spec produces both. `jlpm test:checks`
-   must pass (it needs `Rscript`).
+4. **Python and R stay in parity** for the existing paired Unit 3 exercises.
+   The user requested Python first for new notebooks; Unit 1 Notebook 01 and
+   the DHIS2 pilot are explicitly Python only. `jlpm test:checks` must pass
+   (it needs `Rscript`).
 5. **The engine stays pure.** No DOM, storage, network, clock, or randomness in
    `src/engine/` or `src/identity/`. Policy values are data in the catalog.
 6. **Privacy.** Learner identity is an opaque `urn:uuid:`. OIDC sign-in keeps only

@@ -7,12 +7,13 @@
 @prefix schema:  <https://schema.org/> .
 @prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
 
-# Prototype curriculum: Public Health Informatics for FETP, Unit 3
+# Prototype curriculum: Public Health Informatics for FETP, Units 1 and 3
 # "Using Informatics to Get Information Faster" (Version 3 course materials,
 # used with permission). Exercises follow the unit's slides: data versus
 # information, exploring a dataset with software, combining variables into
-# information, machine-readable datasets, and case-based versus aggregate data. Every activity has a Python and an R
-# notebook bound to the same al: capability.
+# information, machine-readable datasets, and case-based versus aggregate data.
+# Unit 1 adds a Python-only data-to-decision pilot. Other scored Unit 3
+# activities have Python and R notebooks bound to the same al: capability.
 #
 # This file is the source of truth. scripts/build_catalog.py validates it with
 # the al: shapes and projects it to content/al/catalog.json for the browser.
@@ -20,11 +21,13 @@
 
 g:catalog {
   ex:framework a al:CapabilityFramework ;
-      dcterms:title "Public health informatics, Unit 3: Using informatics to get information faster"@en ;
+      dcterms:title "Public health informatics: Units 1 and 3 pilot"@en ;
       al:usesScale dreyfus:scale ;
-      al:hasCapability ex:cap-data-vs-information, ex:cap-explore-dataset, ex:cap-filter-records,
+      al:hasCapability ex:cap-data-to-decision, ex:cap-data-vs-information, ex:cap-explore-dataset, ex:cap-filter-records,
                        ex:cap-combine-variables, ex:cap-machine-readable, ex:cap-case-vs-aggregate .
 
+  ex:cap-data-to-decision a al:Capability ; skos:inScheme ex:framework ; skos:notation "data-to-decision" ; al:ordinal 0 ;
+      skos:prefLabel "Justify a public health action from data"@en .
   ex:cap-data-vs-information a al:Capability ; skos:inScheme ex:framework ; skos:notation "data-vs-information" ; al:ordinal 1 ;
       skos:prefLabel "Distinguish data from information"@en .
   ex:cap-explore-dataset a al:Capability ; skos:inScheme ex:framework ; skos:notation "explore-dataset" ; al:ordinal 2 ;
@@ -41,6 +44,8 @@ g:catalog {
 
   ex:aud-fetp-trainee a al:Audience ; rdfs:label "FETP trainees"@en .
 
+  ex:t-data-to-decision a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-data-to-decision ;
+      al:targetLevel dreyfus:competent ; al:isCritical false .
   ex:t-data-vs-information a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-data-vs-information ;
       al:targetLevel dreyfus:competent ; al:isCritical false .
   ex:t-explore-dataset a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-explore-dataset ;
@@ -56,6 +61,9 @@ g:catalog {
 }
 
 g:activities {
+  ex:act-u01-data-to-decision a al:LearningActivity ; dcterms:title "Unit 1: From data to a public health decision"@en ; al:ordinal 0 ;
+      al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-data-to-decision ;
+      al:usesAsset ex:nb-u01-data-to-decision-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u01-data-to-decision .
   ex:act-data-or-information a al:LearningActivity ; dcterms:title "Data or information?"@en ; al:ordinal 1 ;
       al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-data-vs-information ;
       al:usesAsset ex:nb-data-or-information-python, ex:nb-data-or-information-r ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-data-or-information .
@@ -89,6 +97,7 @@ g:activities {
       al:assessesCapability ex:cap-data-vs-information, ex:cap-explore-dataset, ex:cap-filter-records,
                             ex:cap-combine-variables, ex:cap-machine-readable, ex:cap-case-vs-aggregate .
 
+  ex:nb-u01-data-to-decision-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/u01-n01-data-to-decision.ipynb" .
   ex:nb-case-or-aggregate-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/06-case-or-aggregate.ipynb" .
   ex:nb-case-or-aggregate-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/06-case-or-aggregate.ipynb" .
   ex:nb-dhis2-query-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/07-dhis2-query.ipynb" .
@@ -104,7 +113,8 @@ g:activities {
   ex:nb-machine-readable-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/05-machine-readable.ipynb" .
 
   ex:rubric a al:Rubric ; dcterms:title "Exercise result matches the expected value"@en ;
-      al:criterion ex:crit-data-or-information, ex:crit-explore-dataset, ex:crit-filter-records, ex:crit-coverage, ex:crit-machine-readable, ex:crit-case-or-aggregate .
+      al:criterion ex:crit-u01-data-to-decision, ex:crit-data-or-information, ex:crit-explore-dataset, ex:crit-filter-records, ex:crit-coverage, ex:crit-machine-readable, ex:crit-case-or-aggregate .
+  ex:crit-u01-data-to-decision a al:RubricCriterion ; al:criterionCapability ex:cap-data-to-decision .
   ex:crit-data-or-information a al:RubricCriterion ; al:criterionCapability ex:cap-data-vs-information .
   ex:crit-explore-dataset a al:RubricCriterion ; al:criterionCapability ex:cap-explore-dataset .
   ex:crit-filter-records a al:RubricCriterion ; al:criterionCapability ex:cap-filter-records .
@@ -114,6 +124,8 @@ g:activities {
 
   # A correct result validated in the learner's own Jupyter kernel is
   # simulation-stage evidence, provided no more than ladder level 2 was used.
+  ex:rule-u01-data-to-decision a al:EvidenceRule ; al:supportsCriterion ex:crit-u01-data-to-decision ; al:evidenceStage al:Simulation ;
+      al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
   ex:rule-data-or-information a al:EvidenceRule ; al:supportsCriterion ex:crit-data-or-information ; al:evidenceStage al:Simulation ;
       al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
   ex:rule-explore-dataset a al:EvidenceRule ; al:supportsCriterion ex:crit-explore-dataset ; al:evidenceStage al:Simulation ;

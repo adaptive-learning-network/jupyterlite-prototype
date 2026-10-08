@@ -50,7 +50,7 @@ test('a new learner is offered only capabilities without prerequisites', () => {
   const a = assess(catalog, record([]));
   assert.equal(a.evidence.length, 0);
   assert.ok(a.gaps.every(g => g.state === GAP.unknown && g.status === STATUS.notAssessed));
-  assert.deepEqual(a.recommendations.map(r => r.capability), [EX + 'cap-data-vs-information', EX + 'cap-explore-dataset']);
+  assert.deepEqual(a.recommendations.map(r => r.capability), [EX + 'cap-data-to-decision', EX + 'cap-data-vs-information', EX + 'cap-explore-dataset']);
   assert.ok(a.recommendations.every(r => r.reasons.join() === REASON.notAssessed));
   assert.equal(gapOf(a, 'cap-combine-variables').gateBlocked, true, 'critical target not achieved blocks the gate');
 });
@@ -66,8 +66,24 @@ test('a correct exercise is simulation evidence and unlocks dependent capabiliti
   assert.equal(gap.state, GAP.achieved);
   assert.equal(gap.status, STATUS.demonstrated);
   assert.deepEqual(a.recommendations.map(r => r.capability),
-    [EX + 'cap-data-vs-information', EX + 'cap-filter-records', EX + 'cap-machine-readable']);
-  assert.ok(a.recommendations[1].reasons.includes(REASON.prerequisitesMet));
+    [EX + 'cap-data-to-decision', EX + 'cap-data-vs-information', EX + 'cap-filter-records']);
+  assert.ok(a.recommendations[2].reasons.includes(REASON.prerequisitesMet));
+});
+
+test('Unit 1 retries preserve attempts and success advances to Unit 3', () => {
+  const attempts: Observation[] = [];
+  for (const outcome of [OUTCOME.incomplete, OUTCOME.incorrect, OUTCOME.incorrect]) {
+    attempts.push(obs('act-u01-data-to-decision', outcome));
+    const a = assess(catalog, record(attempts));
+    assert.equal(gapOf(a, 'cap-data-to-decision').state, GAP.unknown);
+    assert.ok(a.recommendations.some(r => r.activity === EX + 'act-u01-data-to-decision'));
+  }
+  attempts.push(obs('act-u01-data-to-decision', OUTCOME.correct));
+  const a = assess(catalog, record(attempts));
+  assert.equal(attempts.length, 4);
+  assert.equal(gapOf(a, 'cap-data-to-decision').state, GAP.achieved);
+  assert.ok(!a.recommendations.some(r => r.activity === EX + 'act-u01-data-to-decision'));
+  assert.ok(a.recommendations.some(r => r.activity === EX + 'act-data-or-information'));
 });
 
 test('the critical capability is recommended first once its prerequisites are met', () => {
@@ -143,7 +159,7 @@ test('the assessment does not depend on observation order', () => {
 });
 
 test('a learner who completes every exercise has no open gates', () => {
-  const all = ['act-data-or-information', 'act-explore-dataset', 'act-filter-records', 'act-coverage', 'act-machine-readable', 'act-case-or-aggregate'];
+  const all = ['act-u01-data-to-decision', 'act-data-or-information', 'act-explore-dataset', 'act-filter-records', 'act-coverage', 'act-machine-readable', 'act-case-or-aggregate'];
   const a = assess(catalog, record(all.map(x => obs(x, OUTCOME.correct))));
   assert.ok(a.gaps.every(g => g.state === GAP.achieved && !g.gateBlocked));
   assert.equal(a.recommendations.length, 0);

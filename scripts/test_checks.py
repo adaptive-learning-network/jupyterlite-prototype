@@ -83,6 +83,20 @@ def main() -> int:
             ok = got["python"] == got["r"] == want
             failures += not ok
             print(f"  {'ok  ' if ok else 'FAIL'}  {ex['check']:<22} {mode:<12} python={got['python']:<10} r={got['r']}")
+    from make_unit01_pilot import REPORTS, expected as unit01_expected
+    district, increase = unit01_expected()
+    check = (ROOT / "content/checks/u01-data-to-decision.py").read_text(encoding="utf-8")
+    cases = {
+        "placeholder": ("priority_district = None\nincrease = None\nrecommended_step = None\n", "incomplete"),
+        "wrong_district": (f"priority_district = 'Bombali'\nincrease = {increase}\nrecommended_step = 'verify_reports_and_investigate'\n", "incorrect"),
+        "wrong_action": (f"priority_district = {district!r}\nincrease = {increase}\nrecommended_step = 'declare_confirmed_outbreak'\n", "incorrect"),
+        "correct": (f"priority_district = {district!r}\nincrease = {increase}\nrecommended_step = 'verify_reports_and_investigate'\n", "correct"),
+    }
+    for mode, (answer, want) in cases.items():
+        got = run_python(f"reports = {REPORTS!r}\n" + answer + check)
+        ok = got == want
+        failures += not ok
+        print(f"  {'ok  ' if ok else 'FAIL'}  u01-data-to-decision {mode:<15} python={got}")
     print("PASSED" if not failures else f"FAILED ({failures})")
     return 1 if failures else 0
 

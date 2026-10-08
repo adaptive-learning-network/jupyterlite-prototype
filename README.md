@@ -19,8 +19,9 @@ ontology (`../adaptive-learning-ontology`). Everything runs in the browser.
 
 **Start with** [Notebook 00](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/u00-n00-start-here.ipynb)
 on GitHub Pages, then try the
-[first Python exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/u03-n01-data-or-information.ipynb),
-[first R exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/r/u03-n01-data-or-information.ipynb).
+[Unit 1 Notebook 01 Python pilot](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/u01-n01-data-to-decision.ipynb),
+[Unit 3 Python exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/u03-n01-data-or-information.ipynb),
+[Unit 3 R exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/r/u03-n01-data-or-information.ipynb).
 The site is rebuilt and published by CI on every push to `main` on GitHub and
 GitLab.
 
@@ -33,8 +34,15 @@ opens 18 unscored source pages with the original case text, questions, and seven
 local images. They were imported from pinned UCSF revision `7eca2ec9` by
 `scripts/import_ucsf_readings.py`; external slides, forms, and videos remain
 links. UCSF's unit numbering differs from the local Version 3 plan, so each
-reading states its topic alignment. Local scored exercises for Units 1 and 2
-are still planned in the [course notebook inventory](../fetp-phi-course/docs/notebook-inventory.md).
+reading states its topic alignment. One scored Python pilot now covers Unit 1;
+Unit 2 scored work remains planned in the [course notebook inventory](../fetp-phi-course/docs/notebook-inventory.md).
+
+The Unit 1 pilot uses the course's data–information–knowledge–wisdom slide graphic,
+an original Laila teaching comic, synthetic weekly reported case counts, a
+reflection prompt, and an adaptive check. The check scores the district,
+numeric increase, and cautious first action; it does not grade the prose
+reflection or establish outbreak status. R adaptation is planned after the
+Python approach is reviewed.
 
 A [Python-only DHIS2 adapter pilot](docs/design/dhis2-adapter-pilot.md) adds a
 generated notebook at `content/exercises/python/07-dhis2-query.ipynb`. It uses
