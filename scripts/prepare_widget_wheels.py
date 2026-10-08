@@ -12,9 +12,11 @@ from prepare_pyodide import download
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "pypi"
 WHEELS = {
+    "anywidget": ("0.11.0", "c574d9acc6503ad27b37a9acea48f957a8ba7c9c9876cfcb37898931c098ce9d"),
     "comm": ("0.2.3", "c615d91d75f7f04f095b30d1c1711babd43bdc6419c1be9886a85f2f4e489417"),
     "ipywidgets": ("8.1.7", "764f2602d25471c213919b8a1997df04bef869251db4ca8efba1b76b1bd9f7bb"),
     "jupyterlab_widgets": ("3.0.15", "d59023d7d7ef71400d51e6fee9a88867f6e65e10a4201605d2d7f3e8f012a31c"),
+    "psygnal": ("0.15.0", "023c361c38e8ada87d0704704e1f2b7e799e9771e00b8e174fb409ff9ddeb502"),
     "widgetsnbextension": ("4.0.14", "4875a9eaf72fbf5079dc372a51a9f268fc38d46f767cbf85c43a36da5cb9b575"),
 }
 

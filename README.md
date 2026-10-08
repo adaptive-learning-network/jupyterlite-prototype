@@ -28,10 +28,15 @@ GitLab.
 Notebook 00 is an unscored orientation with the course cast and slide visuals.
 The Notebook 01 pilot uses `u03-n01-data-or-information.ipynb` in both language
 folders: `uNN-nNN-topic.ipynb` means unit number, notebook number, and topic.
-The Python U03 N01 notebook now uses radio buttons for its six classifications:
-run the setup cell, choose each answer, then run **Check my choices**. The R
-notebook still uses a typed vector. See the [widget interaction plan](docs/design/notebook-widget-interactions.md)
+The Python U03 N01 notebook now uses a drag-and-drop board with **Data** and
+**Information** bins for its six classifications. Run its collapsed setup cell,
+sort the cards, then run **Check my choices**. Each card also has a **Move to**
+menu for keyboard use. The R notebook still uses a typed vector. See the
+[widget interaction plan](docs/design/notebook-widget-interactions.md)
 for proposed controls across the course, including workflow ordering.
+JupyterLite preserves browser-saved notebook copies across site updates. To see
+the latest supplied notebook, first download or rename any personal copy you
+want to keep, then refresh the file list and reopen the supplied filename.
 The remaining existing exercise filenames will be converted after this pilot.
 The [UCSF Unit 1 and Unit 2 reading index](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb)
 opens 18 unscored source pages with the original case text, questions, and seven
@@ -129,10 +134,12 @@ packages needed by the current Python notebooks, then serves them from the site.
 Learners do not need the Pyodide CDN for these exercises. The R runtime and its
 packages are also included in the site. If a new Python notebook imports another
 package, add it to `REQUIRED_PACKAGES` in `scripts/prepare_pyodide.py`.
-The U03 N01 widget setup uses `jupyterlab_widgets` in the JupyterLite frontend;
-`scripts/prepare_widget_wheels.py` adds checksum-pinned Python widget wheels to
-the local `pypi/` index at build time. First use installs them within the
-browser-local Python Jupyter kernel without a runtime PyPI request.
+The U03 N01 widget setup uses `jupyterlab_widgets` and `anywidget` in the
+JupyterLite frontend; `scripts/prepare_widget_wheels.py` adds checksum-pinned
+Python widget wheels to the local `pypi/` index at build time. First use
+installs them within the browser-local Python Jupyter kernel without a runtime
+PyPI request. Teaching images in the orientation and pilot notebooks are
+embedded as notebook attachments so browser-saved copies retain them.
 
 On this Windows workspace, the local Node and Chromium installs live under
 `.tools/`. The full R build requires the separate micromamba setup. For the

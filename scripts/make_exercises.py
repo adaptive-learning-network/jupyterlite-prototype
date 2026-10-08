@@ -24,6 +24,8 @@ import random
 from datetime import date, timedelta
 from pathlib import Path
 
+from notebook_images import embed_images
+
 ROOT = Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "content"
 EX = "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#"
@@ -397,7 +399,7 @@ def cell(cell_type: str, source: str, cell_id: str, metadata: dict | None = None
     c = {"cell_type": cell_type, "id": cell_id, "metadata": metadata or {}, "source": source.splitlines(keepends=True)}
     if cell_type == "code":
         c.update({"execution_count": None, "outputs": []})
-    return c
+    return embed_images(c)
 
 
 def notebook(ex: dict, language: str) -> dict:
@@ -419,12 +421,12 @@ def notebook(ex: dict, language: str) -> dict:
     choice_pilot = ex["file"] == "u03-n01-data-or-information" and language == "python"
     if choice_pilot:
         task = (
-            "In the setup cell, choose **Data** or **Information** for each of the six slide examples "
-            "using the radio buttons. Then run the **Check my choices** cell. It reads your selections; "
-            "you do not need to type a list. Change any choice and run that same cell again to retry."
+            "Run the collapsed setup cell once to display the sorting board. Drag each of the six slide examples "
+            "from **To sort** into **Data** or **Information**. You can also use each card's **Move to** menu. "
+            "Then run **Check my choices**; you do not need to type an answer. Move a card and run that cell again to retry."
         )
         next_step = (
-            "Run the setup cell, choose all six answers, then run **Check my choices**. "
+            "Run the collapsed setup cell, sort all six cards, then run **Check my choices**. "
             "The **Learning** panel records each attempt and suggests what to do next. "
             "Hints are available there; using more than two lowers how much this attempt counts as evidence."
         )
@@ -447,34 +449,29 @@ def notebook(ex: dict, language: str) -> dict:
         "hints": ex["hints"],
     }
     if choice_pilot:
-        setup = '''# Run once to display six choice controls. Re-running resets the choices.
+        setup = '''# Run once to display the sorting board. Re-running resets the choices.
 try:
-    import ipywidgets as widgets
+    import anywidget
 except ImportError:
     import piplite
-    await piplite.install("ipywidgets==8.1.7")
-    import ipywidgets as widgets
+    await piplite.install(["ipywidgets==8.1.7", "anywidget==0.11.0"])
+    import anywidget
+import traitlets
 from IPython.display import display
 
 items = ''' + repr({chr(97 + i): item for i, item in enumerate(DATA_OR_INFORMATION)}) + '''
-classification_widgets = {}
-rows = []
-for letter, item in items.items():
-    choice = widgets.RadioButtons(
-        options=[("Choose one", None), ("Data", "data"), ("Information", "information")],
-        value=None,
-        description=f"{letter.upper()}. {item}",
-        style={"description_width": "initial"},
-        layout=widgets.Layout(width="auto"),
-    )
-    classification_widgets[letter] = choice
-    rows.append(choice)
+class DataBins(anywidget.AnyWidget):
+    _esm = ''' + repr((ROOT / "scripts" / "data_bins_widget.js").read_text(encoding="utf-8")) + '''
+    items = traitlets.Dict(default_value={}).tag(sync=True)
+    assignments = traitlets.Dict(default_value={}).tag(sync=True)
+
+data_bins = DataBins(items=items)
 def collect_choices():
-    selected = {letter: choice.value for letter, choice in classification_widgets.items()}
-    if None in selected.values():
+    selected = data_bins.assignments
+    if set(selected) != set(items) or any(value not in {"data", "information"} for value in selected.values()):
         return None
     return [letter for letter, answer in selected.items() if answer == "information"]
-display(widgets.VBox(rows, layout=widgets.Layout(gap="0.5em")))
+display(data_bins)
 '''
         exercise = '''# Check my choices: run this cell after selecting all six answers.
 information_items = collect_choices()
@@ -485,7 +482,7 @@ information_items = collect_choices()
     return {
         "cells": [
             cell("markdown", intro, "0"),
-            cell("code", setup, "1"),
+            cell("code", setup, "1", {"jupyter": {"source_hidden": True}} if choice_pilot else None),
             cell("code", exercise, "2", {"al": al_meta, "tags": ["al-exercise"]}),
             cell("markdown", references(ex), "3"),
         ],

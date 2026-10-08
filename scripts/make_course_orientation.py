@@ -6,6 +6,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from notebook_images import embed_images
+
 ROOT = Path(__file__).resolve().parent.parent
 OUTPUT = ROOT / "content/exercises/python/u00-n00-start-here.ipynb"
 
@@ -14,7 +16,7 @@ def cell(kind: str, source: str, cell_id: str) -> dict:
     result = {"cell_type": kind, "id": cell_id, "metadata": {}, "source": source.splitlines(keepends=True)}
     if kind == "code":
         result.update({"execution_count": None, "outputs": []})
-    return result
+    return embed_images(result)
 
 
 def main() -> None:
@@ -48,11 +50,11 @@ Select the next cell and press **Shift+Enter**. It is a practice cell and does n
     next_steps = """## Where to go next
 
 1. Browse the UCSF Unit 1 and Unit 2 source readings in **`readings/ucsf/u00-n01-reading-index.ipynb`**. They include the course narrative, case questions, and diagrams. Reading them does not add observations.
-2. Open **`u03-n01-data-or-information.ipynb`** in this folder for Notebook 01 in Python. The matching R notebook is in `exercises/r`.
-3. Run the setup cell, enter an answer in the exercise cell, and run it. The **Learning** panel records the attempt and offers hints or a next activity.
+2. Open **`u03-n01-data-or-information.ipynb`** in this folder for Unit 3 Notebook 01 in Python. The matching R notebook is in `exercises/r`. You can also try **`u01-n01-data-to-decision.ipynb`** for the Unit 1 exercise.
+3. In Unit 3 Notebook 01, run the collapsed setup cell, sort the cards into Data or Information, then run **Check my choices**. The **Learning** panel records the attempt and offers hints or a next activity.
 4. After a few attempts, export your record from the Learning panel. The unscored **`08-my-learning-record.ipynb`** notebook in this folder can show how observations, estimates, and recommendations changed.
 
-Notebook 00 is an orientation, so it has no scored exercise. The current runnable exercises cover **Unit 3**. Units 1 and 2 have source readings; their local scored exercises are still planned.
+Notebook 00 is an orientation, so it has no scored exercise. Current scored exercises cover **Units 1 and 3**. Unit 2 has source readings; its local scored exercises are still planned.
 """
     references = """## Course sources
 

@@ -7,6 +7,8 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
+from notebook_images import embed_images
+
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "content"
 EX = "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#"
@@ -66,7 +68,7 @@ def cell(kind: str, source: str, cell_id: str, metadata: dict | None = None) -> 
     value = {"cell_type": kind, "id": cell_id, "metadata": metadata or {}, "source": source.splitlines(keepends=True)}
     if kind == "code":
         value.update({"execution_count": None, "outputs": []})
-    return value
+    return embed_images(value)
 
 
 def expected() -> tuple[str, int]:

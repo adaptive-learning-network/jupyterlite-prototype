@@ -3,7 +3,9 @@ import { expect, Page, test } from '@playwright/test';
 const panel = (page: Page) => page.locator('#al-engine-learning');
 
 async function runCell(page: Page, index: number): Promise<void> {
-  await page.locator('.jp-Notebook .jp-Cell').nth(index).locator('.cm-content').click();
+  const cell = page.locator('.jp-Notebook .jp-Cell').nth(index);
+  if (index === 1) await cell.click(); // the infrastructure source is collapsed
+  else await cell.locator('.cm-content').click();
   await page.keyboard.press('Shift+Enter');
 }
 
@@ -16,7 +18,7 @@ async function outcomes(page: Page): Promise<string[]> {
   });
 }
 
-test('U03 N01 radio choices record incomplete, wrong, and correct attempts', async ({ page }) => {
+test('U03 N01 drag bins record incomplete, wrong, and correct attempts', async ({ page }) => {
   await page.context().route('**/*', route => {
     if (new URL(route.request().url()).hostname === '127.0.0.1') return route.continue();
     return route.abort();
@@ -25,20 +27,26 @@ test('U03 N01 radio choices record incomplete, wrong, and correct attempts', asy
   await expect(panel(page)).toBeVisible();
   await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]'))
     .toBeVisible({ timeout: 180_000 });
+  await expect(page.locator('.jp-Notebook .jp-Cell').nth(1).locator('.jp-InputArea')).toBeHidden();
   await runCell(page, 1);
-  const groups = page.locator('.jp-Notebook .jp-Cell').nth(1).locator('.widget-radio-box');
-  await expect(groups).toHaveCount(6, { timeout: 180_000 });
+  const board = page.locator('.jp-Notebook .jp-Cell').nth(1).locator('.board');
+  await expect(board.locator('.card')).toHaveCount(6, { timeout: 180_000 });
+  await expect(page.locator('.jp-Notebook .jp-Cell').nth(1).locator('.jp-InputArea')).toBeHidden();
   await runCell(page, 2);
   await expect.poll(() => outcomes(page)).toEqual(['Incomplete']);
 
-  for (let i = 0; i < 6; i++) {
-    await groups.nth(i).getByText('Data', { exact: true }).click();
+  await board.locator('.card[data-item="a"]').dragTo(board.locator('.zone[data-zone="data"]'), {
+    sourcePosition: { x: 18, y: 18 }, targetPosition: { x: 30, y: 80 }
+  });
+  await expect(board.locator('.zone[data-zone="data"] .card[data-item="a"]')).toBeVisible();
+  for (const letter of ['B', 'C', 'D', 'E', 'F']) {
+    await board.getByRole('combobox', { name: `Move item ${letter} to` }).selectOption('data');
   }
   await runCell(page, 2);
   await expect.poll(() => outcomes(page)).toEqual(['Incomplete', 'Incorrect']);
 
-  for (const i of [1, 4, 5]) {
-    await groups.nth(i).getByText('Information', { exact: true }).click();
+  for (const letter of ['B', 'E', 'F']) {
+    await board.getByRole('combobox', { name: `Move item ${letter} to` }).selectOption('information');
   }
   await runCell(page, 2);
   await expect.poll(() => outcomes(page)).toEqual(['Incomplete', 'Incorrect', 'Correct']);

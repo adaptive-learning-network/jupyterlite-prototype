@@ -26,7 +26,7 @@ CORE_NAME = f"pyodide-core-{VERSION}.tar.bz2"
 CORE_SHA256 = "1016c31e39ce3764d9a418cbb491a392c802c1b86ccc1367f009f5c59bf8f5fd"
 CORE_URL = f"https://github.com/pyodide/pyodide/releases/download/{VERSION}/{CORE_NAME}"
 WHEEL_URL = f"https://cdn.jsdelivr.net/pyodide/v{VERSION}/full"
-REQUIRED_PACKAGES = ("micropip", "ipython", "jedi", "pandas")
+REQUIRED_PACKAGES = ("micropip", "ipython", "jedi", "pandas", "typing-extensions")
 
 
 def sha256(path: Path) -> str:
