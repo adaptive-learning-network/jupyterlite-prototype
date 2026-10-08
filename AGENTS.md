@@ -20,6 +20,7 @@ catalog/*.trig               curriculum in al: terms: SOURCE OF TRUTH for capabi
 scripts/build_catalog.py     validate catalog against al: shapes → content/al/catalog.json (generated)
 scripts/make_exercises.py    exercise SPEC → Python + R notebooks and checks in content/ (generated)
 scripts/make_unit01_pilot.py Python-only Unit 1 scored pilot (called by make_exercises.py)
+scripts/prepare_widget_wheels.py  checksum-pinned local piplite wheels for U03 N01 controls
 src/engine/                  adaptive-learning engine: pure, deterministic, no JupyterLab imports
 scripts/import_ucsf_readings.py  pinned UCSF source to unscored reading notebooks and images
 src/identity/                PKCE and identity-binding rules (pure)

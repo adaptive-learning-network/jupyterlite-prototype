@@ -191,7 +191,7 @@ EXERCISES = [
     {
         "file": "u03-n01-data-or-information", "check": "data-or-information", "slides": "6, 18–24", "activity": "act-data-or-information",
         "title": "Data or information?",
-        "objective": OBJECTIVES[0],
+        "objective": "Classify example items as raw data or information",
         "context": (
             "**Data** are raw, unorganized numbers and facts: single variables that have limited value in isolation. "
             "**Information** is organized and structured data: it combines multiple variables to uncover patterns, "
@@ -416,13 +416,29 @@ def notebook(ex: dict, language: str) -> dict:
             "*Slide connection: Unit 2, Version 2, slide 3. This notebook works at the **data → information** step, "
             "where collected values become a pattern that can be interpreted.*\n\n"
         )
+    choice_pilot = ex["file"] == "u03-n01-data-or-information" and language == "python"
+    if choice_pilot:
+        task = (
+            "In the setup cell, choose **Data** or **Information** for each of the six slide examples "
+            "using the radio buttons. Then run the **Check my choices** cell. It reads your selections; "
+            "you do not need to type a list. Change any choice and run that same cell again to retry."
+        )
+        next_step = (
+            "Run the setup cell, choose all six answers, then run **Check my choices**. "
+            "The **Learning** panel records each attempt and suggests what to do next. "
+            "Hints are available there; using more than two lowers how much this attempt counts as evidence."
+        )
+    else:
+        task = ex["task"]
+        next_step = (
+            "Run the setup cell, then edit and run the exercise cell. The **Learning** panel records the result and suggests "
+            "what to do next. Hints are available there; using more than two lowers how much this attempt counts as evidence."
+        )
     intro = (
         f"{pilot_outline}# {ex['title']}\n\n{pilot_cue}"
         f"*{UNIT}*. Learning objective: **{ex['objective']}**.\n\n"
         f"{ex['context']}\n\n"
-        f"## Your task\n\n{ex['task']}\n\n"
-        "Run the setup cell, then edit and run the exercise cell. The **Learning** panel records the result and suggests "
-        "what to do next. Hints are available there; using more than two lowers how much this attempt counts as evidence."
+        f"## Your task\n\n{task}\n\n{next_step}"
     )
     al_meta = {
         "activity": EX + ex["activity"],
@@ -430,11 +446,47 @@ def notebook(ex: dict, language: str) -> dict:
         "check": f"checks/{ex['check']}",
         "hints": ex["hints"],
     }
+    if choice_pilot:
+        setup = '''# Run once to display six choice controls. Re-running resets the choices.
+try:
+    import ipywidgets as widgets
+except ImportError:
+    import piplite
+    await piplite.install("ipywidgets==8.1.7")
+    import ipywidgets as widgets
+from IPython.display import display
+
+items = ''' + repr({chr(97 + i): item for i, item in enumerate(DATA_OR_INFORMATION)}) + '''
+classification_widgets = {}
+rows = []
+for letter, item in items.items():
+    choice = widgets.RadioButtons(
+        options=[("Choose one", None), ("Data", "data"), ("Information", "information")],
+        value=None,
+        description=f"{letter.upper()}. {item}",
+        style={"description_width": "initial"},
+        layout=widgets.Layout(width="auto"),
+    )
+    classification_widgets[letter] = choice
+    rows.append(choice)
+def collect_choices():
+    selected = {letter: choice.value for letter, choice in classification_widgets.items()}
+    if None in selected.values():
+        return None
+    return [letter for letter, answer in selected.items() if answer == "information"]
+display(widgets.VBox(rows, layout=widgets.Layout(gap="0.5em")))
+'''
+        exercise = '''# Check my choices: run this cell after selecting all six answers.
+information_items = collect_choices()
+'''
+    else:
+        setup = ex["setup"][language]
+        exercise = placeholder(language, ex["variables"])
     return {
         "cells": [
             cell("markdown", intro, "0"),
-            cell("code", ex["setup"][language], "1"),
-            cell("code", placeholder(language, ex["variables"]), "2", {"al": al_meta, "tags": ["al-exercise"]}),
+            cell("code", setup, "1"),
+            cell("code", exercise, "2", {"al": al_meta, "tags": ["al-exercise"]}),
             cell("markdown", references(ex), "3"),
         ],
         "metadata": {

@@ -15,6 +15,7 @@ jlpm test                                 # engine unit tests (writes test-resul
 python scripts/validate_export.py test-results/learner-export.nq
 jlpm build                                # compile extension and labextension
 python scripts/prepare_pyodide.py         # locally host the runtime and current notebook packages
+python scripts/prepare_widget_wheels.py   # pin and host the U03 N01 radio-control wheels locally
 rm -rf _output .jupyterlite.doit.db
 jupyter lite build --pyodide "$PWD/.tools/pyodide"  # site in _output/ (Pyodide + xeus-r Jupyter kernels)
 python scripts/configure_site.py          # sign-in callback page; lite/oidc.json → alOidc (if present)
