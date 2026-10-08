@@ -1,5 +1,10 @@
 # Adaptive-learning JupyterLite prototype
 
+## Open the course notebooks
+
+- **[CDC GitLab Pages: launch JupyterLite](https://jupyterlite-prototype-4a4d87.gitpages.cdc.gov/)** (CDC sign-in required)
+- **[GitHub Pages: launch JupyterLite](https://adaptive-learning-network.github.io/jupyterlite-prototype/)** (public)
+
 A JupyterLite site in which learners work through exercises in **Python or R**
 while an **ontology-driven adaptive-learning engine** observes results, builds
 evidence, estimates capabilities, and recommends what to do next.
@@ -12,13 +17,12 @@ unit's quiz opens from the Learning panel. The curriculum,
 targets, evidence rules, and estimator policy are data in the `al:` upper
 ontology (`../adaptive-learning-ontology`). Everything runs in the browser.
 
-**Try it:** <https://adaptive-learning-network.github.io/jupyterlite-prototype/>
-([start here: Notebook 00](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/u00-n00-start-here.ipynb),
+**Start with** [Notebook 00](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/u00-n00-start-here.ipynb)
+on GitHub Pages, then try the
 [first Python exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/u03-n01-data-or-information.ipynb),
-[first R exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/r/u03-n01-data-or-information.ipynb)).
+[first R exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/r/u03-n01-data-or-information.ipynb).
 The site is rebuilt and published by CI on every push to `main` on GitHub and
-GitLab. The GitLab Pages site is available to members with project access at
-<https://jupyterlite-prototype-4a4d87.gitpages.cdc.gov/>.
+GitLab.
 
 Notebook 00 is an unscored orientation with the course cast and slide visuals.
 The Notebook 01 pilot uses `u03-n01-data-or-information.ipynb` in both language
