@@ -26,6 +26,11 @@ The site is rebuilt and published by CI on every push to `main` on GitHub and
 GitLab.
 
 Notebook 00 is an unscored orientation with the course cast and slide visuals.
+**Review the UCSF source readings:** [Unit 1 and Unit 2 index on GitHub Pages](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb)
+or [the same index on CDC GitLab Pages](https://jupyterlite-prototype-4a4d87.gitpages.cdc.gov/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb).
+The index links to the non-code lessons, cases, and assignments in source order.
+Its notebook links stay on whichever JupyterLite host you opened.
+If JupyterLite asks for a kernel while opening a reading, select **No Kernel**.
 The Notebook 01 pilot uses `u03-n01-data-or-information.ipynb` in both language
 folders: `uNN-nNN-topic.ipynb` means unit number, notebook number, and topic.
 The Python U03 N01 notebook now uses a drag-and-drop board with **Data** and
@@ -38,8 +43,7 @@ JupyterLite preserves browser-saved notebook copies across site updates. To see
 the latest supplied notebook, first download or rename any personal copy you
 want to keep, then refresh the file list and reopen the supplied filename.
 The remaining existing exercise filenames will be converted after this pilot.
-The [UCSF Unit 1 and Unit 2 reading index](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb)
-opens 18 unscored source pages with the original case text, questions, and seven
+The reading index opens 18 unscored source pages with the original case text, questions, and seven
 local images. They were imported from pinned UCSF revision `7eca2ec9` by
 `scripts/import_ucsf_readings.py`; external slides, forms, and videos remain
 links. UCSF's unit numbering differs from the local Version 3 plan, so each

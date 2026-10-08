@@ -9,6 +9,7 @@ new UCSF revision; generated notebooks and referenced images are committed.
 from __future__ import annotations
 
 import json
+import argparse
 import re
 from pathlib import Path
 from urllib.request import urlopen
@@ -19,7 +20,10 @@ ASSETS = OUT / "assets"
 REVISION = "7eca2ec9d4d6082e76c7061a4746f1ac69d4ca7b"
 RAW = f"https://raw.githubusercontent.com/UCSF-IGHS/FETP/{REVISION}/FETP_book/"
 BROWSE = f"https://github.com/UCSF-IGHS/FETP/blob/{REVISION}/FETP_book/"
-SITE = "https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html"
+
+def lab_link(filename: str) -> str:
+    """Let JupyterLab open a notebook in the same content directory."""
+    return f"{filename}.ipynb"
 
 # Source numbering is UCSF's. The local Version 3 unit is stated separately
 # inside each notebook; these readings are not al: assessment activities.
@@ -59,6 +63,20 @@ IMAGE_ALT = {
     "laila_2.3.png": "Laila's case notification data and remaining missing variables",
     "match_rows.png": "Matching case IDs across two example datasets",
 }
+
+UNIT1_SLIDES_PDF = "https://drive.google.com/file/d/1fMH_U9sGqUJfT_cA85OC_SpUKJ_hqxyV/preview"
+UNIT1_SLIDES_PLACEHOLDER = f"**Linked media from the source notebook**\n\n- [Open the source resource]({UNIT1_SLIDES_PDF})"
+UNIT1_SLIDES_EXPLANATION = (
+    "**Source media: Unit 1 slides PDF.** The archived UCSF notebook embeds a Google Drive PDF here. "
+    "CDC may block that viewer, and the PDF itself was not available for inspection here, so its exact slides are unverified. "
+    f"[Original PDF link]({UNIT1_SLIDES_PDF}).\n\n"
+    "**Available course deck for context:** The supplied *Unit 1 v2: Intro to Informatics for FETP* PowerPoint "
+    "has 31 slides. Slides 1–15 introduce the module, objectives, and learning methods; "
+    "16–22 cover the digital revolution, epidemiology, and public health informatics; "
+    "23–25 present Laila's data overload; 26–29 show data → information → knowledge → wisdom "
+    "and the surveillance value cycle; 30–31 summarize and invite reflection. "
+    "This Version 2 deck is related course material, not a verified copy of the linked PDF."
+)
 
 
 def get_bytes(path: str) -> bytes:
@@ -118,17 +136,24 @@ def cell(source: str, cell_id: str) -> dict:
     return {"cell_type": "markdown", "id": cell_id, "metadata": {}, "source": source.splitlines(keepends=True)}
 
 
-def make_notebook(row: tuple[str, str, str, str, str], images: set[str]) -> tuple[str, dict]:
+def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
+                  body_override: str | None = None) -> tuple[str, dict]:
     filename, source_path, source_unit, local_topic, title = row
-    raw = get_bytes(source_path).decode("utf-8")
-    if source_path.endswith(".md"):
-        parts = [raw]
+    if body_override is None:
+        raw = get_bytes(source_path).decode("utf-8")
+        if source_path.endswith(".md"):
+            parts = [raw]
+        else:
+            original = json.loads(raw)
+            parts = [source_of(c) if c["cell_type"] == "markdown" else code_to_reading(source_of(c))
+                     for c in original["cells"]]
+        page_images: set[str] = set()
+        body = "\n\n".join(part for part in (normalize_markdown(p, page_images) for p in parts) if part)
     else:
-        original = json.loads(raw)
-        parts = [source_of(c) if c["cell_type"] == "markdown" else code_to_reading(source_of(c))
-                 for c in original["cells"]]
-    page_images: set[str] = set()
-    body = "\n\n".join(part for part in (normalize_markdown(p, page_images) for p in parts) if part)
+        body = body_override
+        page_images = set(re.findall(r"assets/([^\s)\"']+)", body))
+    if filename == "u01-n02-lesson":
+        body = body.replace(UNIT1_SLIDES_PLACEHOLDER, UNIT1_SLIDES_EXPLANATION)
     images.update(page_images)
     number = filename.split("-")[1][1:]
     outline = (
@@ -137,10 +162,22 @@ def make_notebook(row: tuple[str, str, str, str, str], images: set[str]) -> tupl
         f"**Course alignment:** {local_topic}. This preserves a UCSF JupyterBook page as reading material. "
         "It does not record an adaptive-learning observation. UCSF and the local Version 3 course use different unit numbers."
     )
+    names = [entry[0] for entry in SOURCES]
+    position = names.index(filename)
+    adjacent = []
+    if position:
+        adjacent.append(f"[Previous reading]({lab_link(names[position - 1])})")
+    adjacent.append(f"[Reading index]({lab_link('u00-n01-reading-index')})")
+    if position + 1 < len(names):
+        adjacent.append(f"[Next reading]({lab_link(names[position + 1])})")
     reading_note = (
-        "## Use this reading\n\n"
-        "Read the case or question in the source material above. You can take notes in your own copy of this notebook. "
-        "For scored practice, use an exercise from the **Learning** panel when one is available for this topic."
+        "## Use and review this reading\n\n"
+        "If JupyterLite asks for a kernel, choose **No Kernel**; this page has no runnable cells. "
+        "Read the source lesson or case questions above. In your own notebook copy, note what is clear, "
+        "what needs a local example, and whether a linked slide, form, video, or illustration opens. "
+        "For an assignment, answer its source questions in your own copy. These notes are unscored. "
+        "For assessed practice, use the **Learning** panel when an exercise exists for this topic.\n\n"
+        " · ".join(adjacent)
     )
     references = (
         "## Source and visual attribution\n\n"
@@ -162,7 +199,7 @@ def make_notebook(row: tuple[str, str, str, str, str], images: set[str]) -> tupl
 def write_index() -> None:
     def links(unit: str) -> str:
         return "\n".join(
-            f"- [Notebook {name.split('-')[1][1:]}: {title}]({SITE}?path=readings/ucsf/{name}.ipynb) — {local_topic}"
+            f"- [Notebook {name.split('-')[1][1:]}: {title}]({lab_link(name)}) — {local_topic}"
             for name, _, _, local_topic, title in SOURCES if name.startswith(unit)
         )
 
@@ -174,6 +211,9 @@ def write_index() -> None:
             cell("## UCSF Unit 1\n\n" + links("u01-"), "1"),
             cell("## UCSF Unit 2\n\n" + links("u02-"), "2"),
             cell("## Using these readings\n\nOpen a page from the list or the JupyterLite file browser. "
+                 "The links stay on this JupyterLite site, including a local preview. "
+                 "Each reading links back here and to the adjacent page. "
+                 "If asked to select a kernel, choose **No Kernel**. "
                  "For assessed practice, use the **Learning** panel when an exercise exists for the topic. "
                  f"[UCSF source repository](https://github.com/UCSF-IGHS/FETP/tree/{REVISION}/FETP_book).", "3"),
         ],
@@ -185,18 +225,27 @@ def write_index() -> None:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--reuse-local", action="store_true",
+                        help="rebuild navigation and review notes from committed source bodies without downloading")
+    args = parser.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     ASSETS.mkdir(parents=True, exist_ok=True)
     images: set[str] = set()
     for row in SOURCES:
-        filename, notebook = make_notebook(row, images)
+        body = None
+        if args.reuse_local:
+            existing = OUT / f"{row[0]}.ipynb"
+            body = source_of(json.loads(existing.read_text(encoding="utf-8"))["cells"][1])
+        filename, notebook = make_notebook(row, images, body)
         (OUT / f"{filename}.ipynb").write_text(json.dumps(notebook, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     write_index()
-    for path in sorted(images):
-        if not path.startswith("images/") or Path(path).name != path.removeprefix("images/"):
-            raise ValueError(f"unexpected source image path: {path}")
-        (ASSETS / Path(path).name).write_bytes(get_bytes(path))
-    print(f"imported {len(SOURCES)} reading notebooks and {len(images)} source images from {REVISION}")
+    if not args.reuse_local:
+        for path in sorted(images):
+            if not path.startswith("images/") or Path(path).name != path.removeprefix("images/"):
+                raise ValueError(f"unexpected source image path: {path}")
+            (ASSETS / Path(path).name).write_bytes(get_bytes(path))
+    print(f"prepared {len(SOURCES)} reading notebooks and {len(images)} referenced source images from {REVISION}")
 
 
 if __name__ == "__main__":
