@@ -95,10 +95,11 @@ python -m http.server 8765 --directory _output
 # open http://127.0.0.1:8765/lab/index.html?path=exercises/python/01-data-or-information.ipynb
 ```
 
-The site is about 150 MB, mostly the R runtime and its packages. The Python
-Jupyter kernel downloads Pyodide from a CDN at first use. For fully offline use,
-configure a local Pyodide distribution (see the jupyterlite-pyodide-kernel
-documentation).
+The build downloads a checksum-verified Pyodide 314.0.6 core and the pinned
+packages needed by the current Python notebooks, then serves them from the site.
+Learners do not need the Pyodide CDN for these exercises. The R runtime and its
+packages are also included in the site. If a new Python notebook imports another
+package, add it to `REQUIRED_PACKAGES` in `scripts/prepare_pyodide.py`.
 
 On this Windows workspace, the local Node and Chromium installs live under
 `.tools/`. The full R build requires the separate micromamba setup. For the
@@ -109,7 +110,8 @@ $env:Path="$(Resolve-Path .tools/node-v22.23.3-win-x64);$(Resolve-Path .venv/Scr
 $env:PLAYWRIGHT_BROWSERS_PATH=(Resolve-Path .tools/ms-playwright).Path
 $env:NODE_USE_SYSTEM_CA='1'
 $site=".tools/site-$(Get-Date -Format yyyyMMdd-HHmmss)"
-jupyter-lite build --output-dir=$site --disable-addons=jupyterlite-xeus
+python scripts/prepare_pyodide.py
+jupyter-lite build --pyodide=.tools/pyodide --output-dir=$site --disable-addons=jupyterlite-xeus
 $env:JUPYTERLITE_TEST_SITE=$site
 node scripts/run_dhis2_browser.cjs
 ```
@@ -138,6 +140,9 @@ node scripts/run_dhis2_browser.cjs
 4. the Python/R parity test and the Playwright browser tests;
 5. on `main`, publish `_output/` to GitHub Pages when the variable
    `PAGES_ENABLED` is `true`.
+
+`.gitlab-ci.yml` builds the same site, runs the Python/R parity and browser
+tests in separate jobs, and deploys GitLab Pages only after those jobs pass.
 
 Repository settings:
 

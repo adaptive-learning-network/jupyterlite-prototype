@@ -1,11 +1,12 @@
 stages:
-  - deploy
+  - build
   - test
-publish-jupyterlite:
+  - deploy
+build-jupyterlite:
   image: node:20-bookworm
   tags:
     - docker
-  stage: deploy
+  stage: build
   variables:
     AL_ONTOLOGY_DIR: "$CI_PROJECT_DIR/.tools/ontology"
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.tools/pip-cache"
@@ -28,32 +29,47 @@ publish-jupyterlite:
     - .venv/bin/python "$AL_ONTOLOGY_DIR/scripts/validate.py"
     - .venv/bin/jlpm build:site
     - .venv/bin/jlpm test:checks
-    # GitHub Actions runs the full Playwright browser suite on the same main commit.
-    - mv _output public
-  pages: true
+  artifacts:
+    paths:
+      - _output/
+    expire_in: 7 days
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
 
-diagnose-dhis2-browser:
+test-browser:
   image: mcr.microsoft.com/playwright:v1.48.2-noble
   tags:
     - docker
   stage: test
   needs:
-    - job: publish-jupyterlite
+    - job: build-jupyterlite
       artifacts: true
   variables:
-    JUPYTERLITE_TEST_SITE: public
-    JUPYTERLITE_SKIP_MOCK_OIDC: "1"
+    JUPYTERLITE_TEST_SITE: _output
   script:
     - apt-get update -qq && apt-get install -y -qq --no-install-recommends python3
     - npm install --legacy-peer-deps --no-package-lock --ignore-scripts
-    - npx playwright test ui-tests/dhis2-scenarios.spec.ts --grep "multiple retries" --max-failures=1
+    - npx playwright test
   artifacts:
     when: always
     paths:
       - test-results/
     expire_in: 7 days
-  allow_failure: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+deploy-pages:
+  image: alpine:3.20
+  tags:
+    - docker
+  stage: deploy
+  needs:
+    - job: build-jupyterlite
+      artifacts: true
+    - job: test-browser
+      artifacts: false
+  script:
+    - mv _output public
+  pages: true
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'

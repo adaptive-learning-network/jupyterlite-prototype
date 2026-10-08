@@ -14,7 +14,8 @@ python scripts/make_exercises.py          # Python + R notebooks and checks from
 jlpm test                                 # engine unit tests (writes test-results/learner-export.nq)
 python scripts/validate_export.py test-results/learner-export.nq
 jlpm build                                # compile extension and labextension
+python scripts/prepare_pyodide.py         # locally host the runtime and current notebook packages
 rm -rf _output .jupyterlite.doit.db
-jupyter lite build                        # site in _output/ (Pyodide + xeus-r Jupyter kernels)
+jupyter lite build --pyodide "$PWD/.tools/pyodide"  # site in _output/ (Pyodide + xeus-r Jupyter kernels)
 python scripts/configure_site.py          # sign-in callback page; lite/oidc.json → alOidc (if present)
 echo "Site built in _output/. Serve with: python -m http.server 8765 --directory _output"

@@ -13,4 +13,5 @@ test-results/
 playwright-report/
 lib-test/
 .tools/
+.cache/
 .yarn/
