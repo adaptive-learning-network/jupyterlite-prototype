@@ -12,7 +12,9 @@ import argparse
 import hashlib
 import json
 import shutil
+import ssl
 import tarfile
+import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -35,14 +37,25 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def download(url: str, path: Path, expected_sha256: str) -> None:
+def download(url: str, path: Path, expected_sha256: str, allow_unverified_tls: bool = False) -> None:
     if path.is_file() and sha256(path) == expected_sha256:
         return
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(path.name + ".part")
     try:
         request = urllib.request.Request(url, headers={"User-Agent": "JupyterLite-FETP-build"})
-        with urllib.request.urlopen(request, timeout=120) as source, temporary.open("wb") as target:
+        try:
+            source = urllib.request.urlopen(request, timeout=120)
+        except urllib.error.URLError as error:
+            if not allow_unverified_tls or not isinstance(error.reason, ssl.SSLCertVerificationError):
+                raise
+            # Some CDC runners intercept this CDN with an untrusted certificate.
+            # Every wheel is still checked against its pinned SHA-256 below.
+            context = ssl.create_default_context()
+            context.check_hostname = False
+            context.verify_mode = ssl.CERT_NONE
+            source = urllib.request.urlopen(request, timeout=120, context=context)
+        with source, temporary.open("wb") as target:
             shutil.copyfileobj(source, target)
         actual = sha256(temporary)
         if actual != expected_sha256:
@@ -102,7 +115,10 @@ def main() -> None:
         raise ValueError("Pyodide distribution version does not match the pinned runtime")
     wheels = required_wheels(lock)
     with ThreadPoolExecutor(max_workers=4) as pool:
-        futures = [pool.submit(download, f"{WHEEL_URL}/{name}", distribution / name, digest) for name, digest in wheels]
+        futures = [
+            pool.submit(download, f"{WHEEL_URL}/{name}", distribution / name, digest, True)
+            for name, digest in wheels
+        ]
         for future in futures:
             future.result()
     total = sum(path.stat().st_size for path in distribution.iterdir() if path.is_file())
