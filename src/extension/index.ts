@@ -12,6 +12,22 @@ import { LearnerStore } from './store';
 
 const CATALOG_PATH = 'al/catalog.json';
 
+// A browser may retain notebooks from an older site build after the bundled
+// readings directory disappears. Recreate only the missing directory entries;
+// never replace a learner's notebook or clear browser storage.
+async function ensureReadingDirectories(app: JupyterFrontEnd): Promise<void> {
+  const contents = app.serviceManager.contents;
+  for (const path of ['readings', 'readings/ucsf']) {
+    const existing = await contents.get(path, { content: false }).catch(() => null);
+    if (existing?.type === 'directory') continue;
+    if (existing) throw new Error(`${path} exists but is not a directory`);
+    const slash = path.lastIndexOf('/');
+    const parent = slash < 0 ? '' : path.slice(0, slash);
+    const temporary = await contents.newUntitled({ path: parent, type: 'directory' });
+    await contents.rename(temporary.path, path);
+  }
+}
+
 const learningIcon = new LabIcon({
   name: 'al-engine:learning',
   svgstr:
@@ -31,6 +47,11 @@ const plugin: JupyterFrontEndPlugin<void> = {
   autoStart: true,
   requires: [ILabShell, INotebookTracker, IDocumentManager],
   activate: async (app: JupyterFrontEnd, shell: ILabShell, tracker: INotebookTracker, docManager: IDocumentManager) => {
+    try {
+      await ensureReadingDirectories(app);
+    } catch (error) {
+      console.warn('al-engine: could not repair reading directories.', error);
+    }
     let catalog: Catalog;
     try {
       catalog = await loadCatalog(app);

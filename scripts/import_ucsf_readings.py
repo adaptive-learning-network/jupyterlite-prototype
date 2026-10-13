@@ -30,9 +30,9 @@ def lab_link(filename: str) -> str:
 SOURCES = [
     ("u01-n01-slides", "Unit_1.md", "UCSF Unit 1", "Local Unit 1: informatics value", "Unit slides"),
     ("u01-n02-lesson", "_build/html/_sources/FETP_Unit_1.ipynb", "UCSF Unit 1 (archived build)", "Local Unit 1: informatics value", "Introduction to informatics"),
-    ("u01-n03-knowledge-check", "Unit_1_Informatics_quiz.ipynb", "UCSF Unit 1", "Local Unit 1: informatics value", "Knowledge check link"),
+    ("u01-n03-knowledge-check", "Unit_1_Informatics_quiz.ipynb", "UCSF Unit 1", "Local Unit 1: informatics value", "Knowledge check"),
     ("u02-n01-slides", "Unit_2.ipynb", "UCSF Unit 2", "Local Units 2–3 and later topics", "Unit slides"),
-    ("u02-n02-knowledge-check", "Unit_2_Informatics_quiz.ipynb", "UCSF Unit 2", "Local Units 2–3 and later topics", "Knowledge check link"),
+    ("u02-n02-knowledge-check", "Unit_2_Informatics_quiz.ipynb", "UCSF Unit 2", "Local Units 2–3 and later topics", "Knowledge check"),
     ("u02-n03-his-context", "Unit_2.1.ipynb", "UCSF Unit 2.1", "Local Unit 2: country HIS context", "Country and HIS context"),
     ("u02-n04-case-study", "Unit_2.1_Case_study.ipynb", "UCSF Unit 2.1", "Local Units 2–3: context and information needs", "Surveillance case study"),
     ("u02-n05-group-work", "Unit_2.1_Group_work.ipynb", "UCSF Unit 2.1", "Local Unit 2: system map", "Country HIS group work"),
@@ -54,6 +54,58 @@ EXTERNAL_IMAGE_RE = re.compile(r'<img\b[^>]*?src=["\'](https?://[^"\']+)["\'][^>
 IFRAME_RE = re.compile(r"<iframe\b[^>]*>\s*</iframe>", re.IGNORECASE | re.DOTALL)
 SRC_RE = re.compile(r'''\bsrc=["']([^"']+)["']''', re.IGNORECASE)
 URL_RE = re.compile(r'''https?://[^\s"']+''')
+FORM_LINK_RE = re.compile(r"\[([^]]+)\]\((https://docs\.google\.com/forms/[^)]+)\)")
+
+# These headings come from visible UCSF questions. The quiz forms could not be
+# inspected, so their local prompts are adaptations of the course material.
+LOCAL_RESPONSES = {
+    "u01-n02-lesson": ["How can informatics help Laila turn surveillance data into useful information?",
+                       "How do information, knowledge, and a decision differ in Laila's report?"],
+    "u01-n03-knowledge-check": ["How can an informatics tool improve surveillance or an outbreak investigation?",
+                                "Trace raw data through information and knowledge to action in Laila's case.",
+                                "Name a component of your country's health information system and its surveillance role."],
+    "u02-n02-knowledge-check": ["Trace case information from its source through the country health information system.",
+                                "Who uses that information at facility, district, and national levels?",
+                                "Where could reporting lose timeliness or completeness?"],
+    "u02-n05-group-work": ["Information needed for Laila's yellow fever report", "Where the data originates",
+                            "Paper and electronic systems", "Who can access and use each system"],
+    "u02-n08-assignment-2": ["Dataset size", "Time span and comparison with the period of interest",
+                              "Locations and comparison with the locations of interest",
+                              "People included and comparison with the population of interest"],
+    "u02-n09-assignment-3": ["Question 4: variables in the dataset",
+                              "Question 5: use the data dictionary and Excel to create a working dataset"],
+    "u02-n11-assignment-4": ["Question 6: data quality problems and examples",
+                              "Question 7: repair steps, changes made, and remaining problems"],
+    "u02-n14-assignment-5": ["Question 8: findings and preparation needed", "Question 9: prepare the patient dataset",
+                              "Question 10: merge result and checks"],
+    "u02-n15-assignment-6": ["Question 11: analyses and tools", "Question 12: tables",
+                              "Question 13: household map", "Question 14: epi curve and event dates",
+                              "Question 15: surveillance summary and recommendations"],
+}
+
+
+def localize_form(filename: str, body: str, prior_url: str | None = None) -> tuple[str, str | None, str | None]:
+    matches = FORM_LINK_RE.findall(body)
+    if not matches and not prior_url:
+        return body, None, None
+    if filename not in LOCAL_RESPONSES or (matches and len({url for _, url in matches}) != 1):
+        raise ValueError(f"unmapped source form in {filename}")
+    source_url = matches[0][1] if matches else prior_url
+    body = FORM_LINK_RE.sub("**Use the local response section below.**", body)
+    body = re.sub(r"> \*\*Please submit your answers using the form provided below\*\*",
+                  "**Record your answers in the local response section below.**", body)
+    is_quiz = "knowledge-check" in filename or filename == "u01-n02-lesson"
+    note = ("The source form could not be inspected here. These are local practice prompts adapted from "
+            "the visible course material, not a transcription of the quiz. No answer key or score is implied."
+            if is_quiz else
+            "The source form could not be inspected here. These response headings follow the questions "
+            "printed on the UCSF page; any additional form fields are unverified.")
+    prompts = "\n\n".join(f"**{i}. {prompt}**\n\n_Enter your response here._"
+                           for i, prompt in enumerate(LOCAL_RESPONSES[filename], 1))
+    response = ("## Local response section\n\n" + note +
+                "\n\nDouble-click this cell, replace each italic placeholder with your answer, "
+                "then press **Shift+Enter** and save the notebook. Responses remain in this browser.\n\n" + prompts)
+    return body, response, source_url
 IMAGE_ALT = {
     "laila_2.png": "Laila's current data-access problems and the quality dataset she needs",
     "his_context.png": "Laila's country HIS diagram linking community, facility, district, and national systems",
@@ -137,7 +189,7 @@ def cell(source: str, cell_id: str) -> dict:
 
 
 def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
-                  body_override: str | None = None) -> tuple[str, dict]:
+                  body_override: str | None = None, prior_form_url: str | None = None) -> tuple[str, dict]:
     filename, source_path, source_unit, local_topic, title = row
     if body_override is None:
         raw = get_bytes(source_path).decode("utf-8")
@@ -154,6 +206,7 @@ def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
         page_images = set(re.findall(r"assets/([^\s)\"']+)", body))
     if filename == "u01-n02-lesson":
         body = body.replace(UNIT1_SLIDES_PLACEHOLDER, UNIT1_SLIDES_EXPLANATION)
+    body, response, source_form_url = localize_form(filename, body, prior_form_url)
     images.update(page_images)
     number = filename.split("-")[1][1:]
     outline = (
@@ -179,17 +232,30 @@ def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
         "For assessed practice, use the **Learning** panel when an exercise exists for this topic.\n\n"
         + " · ".join(adjacent)
     )
+    if response:
+        reading_note = reading_note.replace("whether a linked slide, form, video, or illustration opens",
+                                            "whether a linked slide, video, or illustration opens")
     references = (
         "## Source and visual attribution\n\n"
         f"- [Original UCSF JupyterBook page]({BROWSE + source_path}) at revision `{REVISION}`.\n"
         + ("- Images in this reading were copied from that same revision of the UCSF course repository.\n" if page_images else "")
         + "\n"
-        "The page is retained as a reading. Embedded slides, forms, and videos open through their original links."
+        + ("The page is retained as a reading. Linked slides and videos open through their original sources."
+         if source_form_url else
+         "The page is retained as a reading. Embedded slides, forms, and videos open through their original links.")
     )
+    if source_form_url:
+        references += " The external response form has been replaced by the local response section."
+    if response:
+        notebook_cells = [cell(outline, "0"), cell(body, "1"), cell(response, "2"),
+                          cell(reading_note + "\n\n" + references, "3")]
+    else:
+        notebook_cells = [cell(outline, "0"), cell(body, "1"), cell(reading_note, "2"), cell(references, "3")]
     notebook = {
-        "cells": [cell(outline, "0"), cell(body, "1"), cell(reading_note, "2"), cell(references, "3")],
+        "cells": notebook_cells,
         "metadata": {"title": f"{source_unit} · {title}", "sourceRevision": REVISION,
-                     "sourcePath": source_path, "generatedBy": "scripts/import_ucsf_readings.py"},
+                     "sourcePath": source_path, "generatedBy": "scripts/import_ucsf_readings.py",
+                     **({"sourceFormUrl": source_form_url} if source_form_url else {})},
         "nbformat": 4,
         "nbformat_minor": 5,
     }
@@ -234,10 +300,13 @@ def main() -> None:
     images: set[str] = set()
     for row in SOURCES:
         body = None
+        prior_form_url = None
         if args.reuse_local:
             existing = OUT / f"{row[0]}.ipynb"
-            body = source_of(json.loads(existing.read_text(encoding="utf-8"))["cells"][1])
-        filename, notebook = make_notebook(row, images, body)
+            existing_notebook = json.loads(existing.read_text(encoding="utf-8"))
+            body = source_of(existing_notebook["cells"][1])
+            prior_form_url = existing_notebook["metadata"].get("sourceFormUrl")
+        filename, notebook = make_notebook(row, images, body, prior_form_url)
         (OUT / f"{filename}.ipynb").write_text(json.dumps(notebook, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     write_index()
     if not args.reuse_local:

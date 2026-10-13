@@ -80,6 +80,35 @@ test('Unit 2 knowledge check reading saves in a fresh browser', async ({ page })
   await page.keyboard.insertText('Local save test');
   await page.keyboard.press('ControlOrMeta+s');
   await expect(page.getByRole('dialog', { name: 'File Save Error' })).toHaveCount(0);
-  await page.reload();
+  await page.goto('/lab/index.html?path=readings/ucsf/u02-n02-knowledge-check.ipynb');
   await expect(page.locator('.jp-Notebook')).toContainText('Local save test');
+});
+
+test('repairs a missing browser reading directory before saving', async ({ page }) => {
+  // Reproduce an older static site whose notebook is present but whose parent
+  // directory is absent from JupyterLite's contents index.
+  await page.route('**/api/contents/readings/all.json', async route => {
+    const response = await route.fetch();
+    const index = await response.json();
+    index.content = index.content.filter((item: { name: string }) => item.name !== 'ucsf');
+    await route.fulfill({ response, json: index });
+  });
+  await page.goto('/lab/index.html?path=readings/ucsf/u02-n02-knowledge-check.ipynb');
+  await expect(page.locator('.jp-Notebook .jp-Cell')).toHaveCount(4);
+  const missingDirDialog = page.getByRole('dialog', { name: 'Directory not found' });
+  if (await missingDirDialog.isVisible()) {
+    await missingDirDialog.getByRole('button', { name: 'Close' }).click();
+  }
+  const noKernel = page.getByRole('dialog').getByRole('button', { name: 'No Kernel' });
+  if (await noKernel.isVisible()) await noKernel.click();
+  const responseCell = page.locator('.jp-Notebook .jp-Cell').nth(2);
+  await responseCell.click();
+  await page.keyboard.press('Enter');
+  await responseCell.locator('.cm-content').click();
+  await page.keyboard.press('ControlOrMeta+a');
+  await page.keyboard.insertText('Recovered local response');
+  await page.keyboard.press('ControlOrMeta+s');
+  await expect(page.getByRole('dialog', { name: 'File Save Error' })).toHaveCount(0);
+  await page.goto('/lab/index.html?path=readings/ucsf/u02-n02-knowledge-check.ipynb');
+  await expect(page.locator('.jp-Notebook')).toContainText('Recovered local response');
 });
