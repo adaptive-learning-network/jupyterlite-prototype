@@ -249,7 +249,8 @@ export class LearningPanel extends Widget {
     }
 
     // Recommendations.
-    const recs = el('section', { className: 'al-section' }, el('h3', {}, 'Next'));
+    const recs = el('section', { className: 'al-section' }, el('h3', {}, 'Suggested next'));
+    recs.append(el('p', { className: 'al-meta' }, 'These are adaptive exercise suggestions. The notebook library is available below and in the left file browser.'));
     const languageSelect = el('select', { className: 'al-language', title: 'Exercise language' });
     for (const [code, name] of Object.entries(LANGUAGE_TEXT)) {
       languageSelect.append(el('option', { value: code, selected: code === preferred }, name));
@@ -273,6 +274,14 @@ export class LearningPanel extends Widget {
       );
     }
     node.append(recs);
+
+    const library = el('section', { className: 'al-section' }, el('h3', {}, 'Notebook library'));
+    const start = el('button', { className: 'jp-Button al-library-open' }, 'Course start');
+    start.onclick = () => void this.docManager.openOrReveal('exercises/python/u00-n00-start-here.ipynb');
+    const readings = el('button', { className: 'jp-Button al-library-open' }, 'Unit 1–2 readings');
+    readings.onclick = () => void this.docManager.openOrReveal('readings/ucsf/u00-n01-reading-index.ipynb');
+    library.append(start, readings, el('p', { className: 'al-meta' }, 'Use the left file browser for all Python and R exercises and UCSF readings.'));
+    node.append(library);
 
     // Current exercise and hints.
     if (this.exercise) {

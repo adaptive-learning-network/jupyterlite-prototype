@@ -12,6 +12,7 @@
 .al-feedback.al-ok { background: var(--jp-success-color3); }
 .al-rec { margin: 6px 0; }
 .al-rec-title { font-weight: 600; }
+.al-library-open { margin: 0 6px 6px 0; }
 .al-reasons { color: var(--jp-ui-font-color2); margin: 2px 0 4px; }
 .al-hint { background: var(--jp-layout-color2); padding: 6px 8px; border-radius: 4px; margin: 4px 0; }
 .al-progress { list-style: none; padding: 0; margin: 0; }

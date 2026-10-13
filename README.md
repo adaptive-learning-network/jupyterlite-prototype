@@ -2,6 +2,13 @@
 
 ## Open the course notebooks
 
+The site currently includes **36 notebooks**: 19 UCSF reading and index
+notebooks under `readings/ucsf`, 11 Python notebooks under `exercises/python`,
+and 6 R notebooks under `exercises/r`. The Learning panel's **Suggested next**
+list shows up to three adaptive exercise recommendations, not the full library.
+In JupyterLite, click the `/` breadcrumb in the left file browser to switch
+between the `readings` and `exercises` folders.
+
 - **[CDC GitLab Pages: launch JupyterLite](https://jupyterlite-prototype-4a4d87.gitpages.cdc.gov/)** (CDC sign-in required)
 - **[GitHub Pages: launch JupyterLite](https://adaptive-learning-network.github.io/jupyterlite-prototype/)** (public)
 
