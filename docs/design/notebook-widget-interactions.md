@@ -47,7 +47,7 @@ The interaction is a candidate design, not a claim that a notebook or widget has
 | Notebook | Candidate widget interaction | Target evidence or explicit limit |
 | --- | --- | --- |
 | U00 N01 course aims | `Tab` for cast, course route, and source links | Orientation only. |
-| U02 N01 system map | Actor and system `Dropdown`s; reorder data-flow steps with `TagsInput` plus move buttons | Correct source-to-user path and required actors; include rationale for ambiguous paths. |
+| U02 N01 system map, Python pilot built | Two `Select` lists with **Move up** and **Move down** buttons order case and laboratory reporting paths | Each route starts at its source record, reaches the district HIS, and ends at MOH. The access-permissions reflection remains unscored because the source diagram does not define those permissions. |
 | U02 N02 application fit | Need-by-feature `RadioButtons`; `SelectMultiple` for constraints | Reasoned system fit against a local feature matrix, not product certification. |
 | U03 N09 information-needs plan | Ordered workflow controls for question -> population -> place/time -> variables -> output; short `Text` fields | Complete, coherent plan; human review for open-ended wording. |
 | U04 N01 source inventory | Source `Dropdown` and grain/provenance `RadioButtons` | Correct source choice and limitations. |

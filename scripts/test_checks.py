@@ -97,6 +97,19 @@ def main() -> int:
         ok = got == want
         failures += not ok
         print(f"  {'ok  ' if ok else 'FAIL'}  u01-data-to-decision {mode:<15} python={got}")
+    from make_unit02_pilot import CASE_ROUTE, LAB_ROUTE
+    check = (ROOT / "content/checks/u02-system-map.py").read_text(encoding="utf-8")
+    system_cases = {
+        "untouched": (None, "incomplete"),
+        "partial": ({"case": list(CASE_ROUTE), "lab": list(LAB_ROUTE), "case_moves": 1, "lab_moves": 0}, "incomplete"),
+        "wrong_route": ({"case": list(reversed(CASE_ROUTE)), "lab": list(LAB_ROUTE), "case_moves": 2, "lab_moves": 2}, "incorrect"),
+        "corrected": ({"case": list(CASE_ROUTE), "lab": list(LAB_ROUTE), "case_moves": 3, "lab_moves": 3}, "correct"),
+    }
+    for mode, (answer, want) in system_cases.items():
+        got = run_python(f"system_map = {answer!r}\n" + check)
+        ok = got == want
+        failures += not ok
+        print(f"  {'ok  ' if ok else 'FAIL'}  u02-system-map      {mode:<15} python={got}")
     print("PASSED" if not failures else f"FAILED ({failures})")
     return 1 if failures else 0
 

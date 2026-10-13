@@ -521,6 +521,8 @@ def main() -> None:
     make_dhis2_pilot()
     from make_unit01_pilot import main as make_unit01_pilot
     make_unit01_pilot()
+    from make_unit02_pilot import main as make_unit02_pilot
+    make_unit02_pilot()
     from make_learning_record_notebook import main as make_learning_record_notebook
     make_learning_record_notebook()
     from make_course_orientation import main as make_course_orientation

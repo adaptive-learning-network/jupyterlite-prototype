@@ -7,7 +7,7 @@ Guidance for coding agents and contributors working in this repository.
 A JupyterLite site plus a JupyterLab 4 extension. Learners do exercises in
 Python or R notebooks, and an **ontology-driven adaptive-learning engine**
 records observations, builds evidence, estimates capabilities, and recommends
-what to do next. Current scored content: Public Health Informatics for FETP, Units 1 and 3
+what to do next. Current scored content: Public Health Informatics for FETP, Units 1, 2, and 3
 (Version 3 course materials, used with permission). The repository is
 **public** and published to GitHub Pages.
 

@@ -177,7 +177,7 @@ def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
         "what needs a local example, and whether a linked slide, form, video, or illustration opens. "
         "For an assignment, answer its source questions in your own copy. These notes are unscored. "
         "For assessed practice, use the **Learning** panel when an exercise exists for this topic.\n\n"
-        " · ".join(adjacent)
+        + " · ".join(adjacent)
     )
     references = (
         "## Source and visual attribution\n\n"
