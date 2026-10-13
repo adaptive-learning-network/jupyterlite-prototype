@@ -54,9 +54,9 @@ async function recordedOutcomes(page: Page): Promise<string[]> {
   });
 }
 
-test('DHIS2: multiple retries are recorded and change the recommendation only after success', async ({ page }) => {
+test('DHIS2: multiple retries are recorded and only success adds capability evidence', async ({ page }) => {
   await openPilot(page);
-  await expect(recommendation(page, 'Explore the immunisation register')).toHaveCount(1);
+  await expect(achieved(page, 'Explore a dataset with software')).toHaveCount(0);
 
   await runCell(page, 2);
   await expectObservation(page, 1, 'Not finished yet');
@@ -65,7 +65,6 @@ test('DHIS2: multiple retries are recorded and change the recommendation only af
   await runCell(page, 2, answer.replace('n_missing_onset = sum(not value for value in onsets)', 'n_missing_onset = 0'));
   await expectObservation(page, 2, 'Not yet correct');
   await expect.poll(() => recordedOutcomes(page)).toEqual(['Incomplete', 'Incorrect']);
-  await expect(recommendation(page, 'Explore the immunisation register')).toContainText('not yet demonstrated');
   await expect(achieved(page, 'Explore a dataset with software')).toHaveCount(0);
 
   await runCell(page, 2, answer.replace(
@@ -74,19 +73,18 @@ test('DHIS2: multiple retries are recorded and change the recommendation only af
   ));
   await expectObservation(page, 3, 'Not yet correct');
   await expect.poll(() => recordedOutcomes(page)).toEqual(['Incomplete', 'Incorrect', 'Incorrect']);
-  await expect(recommendation(page, 'Explore the immunisation register')).toHaveCount(1);
+  await expect(achieved(page, 'Explore a dataset with software')).toHaveCount(0);
 
   await runCell(page, 2, answer);
   await expectObservation(page, 4, 'Correct. Recorded as evidence.');
   await expect.poll(() => recordedOutcomes(page)).toEqual(['Incomplete', 'Incorrect', 'Incorrect', 'Correct']);
   await expect(achieved(page, 'Explore a dataset with software')).toHaveCount(1);
-  await expect(recommendation(page, 'Filter the records you need')).toHaveCount(1);
   await expect(recommendation(page, 'Explore the immunisation register')).toHaveCount(0);
 
   await page.reload();
   await expect(panel(page)).toBeVisible();
   await expect.poll(() => recordedOutcomes(page)).toEqual(['Incomplete', 'Incorrect', 'Incorrect', 'Correct']);
-  await expect(recommendation(page, 'Filter the records you need')).toHaveCount(1);
+  await expect(achieved(page, 'Explore a dataset with software')).toHaveCount(1);
 });
 
 test('DHIS2: repeated correct attempts record observations but count as one exercise', async ({ page }) => {
@@ -115,7 +113,7 @@ test('DHIS2: three hints leave a correct attempt outside capability evidence', a
   await runCell(page, 2, answer);
   await expectObservation(page, 1, 'Correct. Recorded, but with this much help it does not count as evidence.');
   await expect(achieved(page, 'Explore a dataset with software')).toHaveCount(0);
-  await expect(recommendation(page, 'Explore the immunisation register')).toContainText('not yet demonstrated');
+  await expect(panel(page).locator('.al-gap').filter({ hasText: 'Explore a dataset with software' })).toContainText('Not assessed');
 });
 
 test('final notebook displays an exported learner graph without adding an observation', async ({ page }) => {

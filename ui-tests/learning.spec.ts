@@ -52,7 +52,7 @@ test('Python: exploring the register becomes evidence and unlocks filtering', as
   ].join('\n'));
   await expect(panel(page).locator('.al-feedback')).toContainText('Correct. Recorded as evidence.');
   await expect(panel(page).locator('.al-rec-title').filter({ hasText: 'Data or information?' })).toHaveCount(1);
-  await expect(panel(page).locator('.al-rec-title').filter({ hasText: 'Filter the records you need' })).toHaveCount(1);
+  await expect(panel(page).locator('.al-rec-title').filter({ hasText: 'Unit 2: Map Laila' })).toHaveCount(1);
   await expect(panel(page).locator('.al-gap.al-achieved')).toContainText('Explore a dataset with software');
 });
 
