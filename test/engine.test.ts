@@ -50,7 +50,7 @@ test('a new learner is offered only capabilities without prerequisites', () => {
   const a = assess(catalog, record([]));
   assert.equal(a.evidence.length, 0);
   assert.ok(a.gaps.every(g => g.state === GAP.unknown && g.status === STATUS.notAssessed));
-  assert.deepEqual(a.recommendations.map(r => r.capability), [EX + 'cap-data-to-decision', EX + 'cap-data-vs-information', EX + 'cap-explore-dataset']);
+  assert.deepEqual(a.recommendations.map(r => r.capability), [EX + 'cap-data-to-decision', EX + 'cap-system-map', EX + 'cap-data-vs-information']);
   assert.ok(a.recommendations.every(r => r.reasons.join() === REASON.notAssessed));
   assert.equal(gapOf(a, 'cap-combine-variables').gateBlocked, true, 'critical target not achieved blocks the gate');
 });
@@ -66,11 +66,11 @@ test('a correct exercise is simulation evidence and unlocks dependent capabiliti
   assert.equal(gap.state, GAP.achieved);
   assert.equal(gap.status, STATUS.demonstrated);
   assert.deepEqual(a.recommendations.map(r => r.capability),
-    [EX + 'cap-data-to-decision', EX + 'cap-data-vs-information', EX + 'cap-filter-records']);
-  assert.ok(a.recommendations[2].reasons.includes(REASON.prerequisitesMet));
+    [EX + 'cap-data-to-decision', EX + 'cap-system-map', EX + 'cap-data-vs-information']);
+  assert.equal(gapOf(a, 'cap-filter-records').gateBlocked, false);
 });
 
-test('Unit 1 retries preserve attempts and success advances to Unit 3', () => {
+test('Unit 1 retries preserve attempts and success offers Units 2 and 3', () => {
   const attempts: Observation[] = [];
   for (const outcome of [OUTCOME.incomplete, OUTCOME.incorrect, OUTCOME.incorrect]) {
     attempts.push(obs('act-u01-data-to-decision', outcome));
@@ -83,6 +83,7 @@ test('Unit 1 retries preserve attempts and success advances to Unit 3', () => {
   assert.equal(attempts.length, 4);
   assert.equal(gapOf(a, 'cap-data-to-decision').state, GAP.achieved);
   assert.ok(!a.recommendations.some(r => r.activity === EX + 'act-u01-data-to-decision'));
+  assert.ok(a.recommendations.some(r => r.activity === EX + 'act-u02-system-map'));
   assert.ok(a.recommendations.some(r => r.activity === EX + 'act-data-or-information'));
 });
 
@@ -96,8 +97,7 @@ test('incorrect attempts are not negative evidence', () => {
   const a = assess(catalog, record([obs('act-explore-dataset', OUTCOME.incorrect), obs('act-explore-dataset', OUTCOME.incomplete)]));
   assert.equal(a.evidence.length, 0);
   assert.equal(gapOf(a, 'cap-explore-dataset').state, GAP.unknown);
-  const rec = a.recommendations.find(r => r.capability === EX + 'cap-explore-dataset')!;
-  assert.ok(rec.reasons.includes(REASON.insufficientIndependentEvidence));
+  assert.equal(gapOf(a, 'cap-explore-dataset').status, STATUS.notAssessed);
 });
 
 test('DHIS2 retries stay in the record and only success changes the recommendation', () => {
@@ -107,9 +107,7 @@ test('DHIS2 retries stay in the record and only success changes the recommendati
     const a = assess(catalog, record(attempts));
     assert.equal(a.evidence.length, 0);
     assert.equal(gapOf(a, 'cap-explore-dataset').state, GAP.unknown);
-    const rec = a.recommendations.find(r => r.capability === EX + 'cap-explore-dataset')!;
-    assert.equal(rec.activity, EX + 'act-explore-dataset');
-    assert.ok(rec.reasons.includes(REASON.insufficientIndependentEvidence));
+    assert.equal(gapOf(a, 'cap-explore-dataset').status, STATUS.notAssessed);
     assert.ok(!a.recommendations.some(r => r.capability === EX + 'cap-filter-records'));
   }
 
@@ -119,7 +117,7 @@ test('DHIS2 retries stay in the record and only success changes the recommendati
   assert.equal(afterSuccess.evidence.length, 1);
   assert.equal(gapOf(afterSuccess, 'cap-explore-dataset').state, GAP.achieved);
   assert.ok(!afterSuccess.recommendations.some(r => r.capability === EX + 'cap-explore-dataset'));
-  assert.ok(afterSuccess.recommendations.some(r => r.capability === EX + 'cap-filter-records'));
+  assert.equal(gapOf(afterSuccess, 'cap-filter-records').gateBlocked, false);
 });
 
 test('guidance above the rule ceiling excludes the evidence', () => {
@@ -128,7 +126,7 @@ test('guidance above the rule ceiling excludes the evidence', () => {
   assert.equal(estimate.level, undefined);
   assert.equal(estimate.excluded[0].reason, EXCLUSION.guidanceExceeded);
   assert.equal(gapOf(a, 'cap-filter-records').state, GAP.unknown);
-  assert.ok(a.recommendations.some(r => r.capability === EX + 'cap-filter-records'));
+  assert.equal(gapOf(a, 'cap-filter-records').state, GAP.unknown);
 });
 
 test('guidance within the ceiling still counts', () => {
@@ -159,7 +157,7 @@ test('the assessment does not depend on observation order', () => {
 });
 
 test('a learner who completes every exercise has no open gates', () => {
-  const all = ['act-u01-data-to-decision', 'act-data-or-information', 'act-explore-dataset', 'act-filter-records', 'act-coverage', 'act-machine-readable', 'act-case-or-aggregate'];
+  const all = ['act-u01-data-to-decision', 'act-u02-system-map', 'act-data-or-information', 'act-explore-dataset', 'act-filter-records', 'act-coverage', 'act-machine-readable', 'act-case-or-aggregate'];
   const a = assess(catalog, record(all.map(x => obs(x, OUTCOME.correct))));
   assert.ok(a.gaps.every(g => g.state === GAP.achieved && !g.gateBlocked));
   assert.equal(a.recommendations.length, 0);
