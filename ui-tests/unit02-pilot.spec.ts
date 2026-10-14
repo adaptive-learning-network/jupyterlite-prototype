@@ -127,6 +127,7 @@ test('saves an existing reading whose browser model has a Windows path', async (
   await page.goto('/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb');
   await expect(page.locator('.jp-Notebook .jp-Cell')).toHaveCount(5);
   const noKernel = page.getByRole('dialog').getByRole('button', { name: 'No Kernel' });
+  await noKernel.waitFor({ state: 'visible', timeout: 30_000 }).catch(() => undefined);
   if (await noKernel.isVisible()) await noKernel.click();
   const cell = page.locator('.jp-Notebook .jp-Cell').nth(3);
   await cell.click();
