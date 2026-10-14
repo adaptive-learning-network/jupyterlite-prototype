@@ -39,6 +39,10 @@ def questions(source: str, unit: str, feedback: list[dict]) -> list[dict]:
     modes = MODES[unit]
     if len(found) != len(modes) or len(feedback) != len(found) or any(len(item["choices"]) < 2 for item in found):
         raise ValueError(f"review quiz parsing for {unit}: {len(found)} questions")
+    for item in found:
+        if any(choice.strip().rstrip(".").casefold() in {"choose one", "select one", "select all that apply"}
+               for choice in item["choices"]):
+            raise ValueError(f"instruction parsed as a choice for {unit}: {item['prompt']}")
     for item, mode, answer in zip(found, modes, feedback):
         item["mode"] = mode
         correct = answer["correct"]
@@ -49,6 +53,48 @@ def questions(source: str, unit: str, feedback: list[dict]) -> list[dict]:
         item["correct"] = correct
         item["feedback"] = answer["feedback"]
     return found
+
+
+def written_prompts(case: str, unit: str) -> list[str]:
+    if unit == "Unit 1":
+        first = re.search(r"(?m)^1\. (.+)$", case)
+        second = re.search(r"(?m)^2\. (.+)$", case)
+        parts = re.findall(r"(?m)^   - (.+)$", case)
+        if not first or not second or len(parts) != 3:
+            raise ValueError("review Unit 1 written prompts")
+        return [first.group(1), *(f"{second.group(1)} {part}" for part in parts)]
+    prompts = re.findall(r"(?m)^- (?:[a-d]|\d+)\. (.+)$", case)
+    if len(prompts) != 10:
+        raise ValueError(f"review {unit} written prompts: {len(prompts)}")
+    return prompts
+
+
+def response_code(unit: str, prompts: list[str]) -> str:
+    data = json.dumps(prompts, ensure_ascii=False)
+    return f'''# Run this cell to write responses for {unit}. The code is setup only.
+try:
+    import ipywidgets as widgets
+except ImportError:
+    import piplite
+    await piplite.install("ipywidgets==8.1.7")
+    import ipywidgets as widgets
+from html import escape
+from IPython.display import display
+
+prompts = {data}
+response_fields = []
+cards = []
+for number, prompt in enumerate(prompts, 1):
+    field = widgets.Textarea(
+        placeholder='Write your response here',
+        layout=widgets.Layout(width='100%', height='100px'),
+    )
+    response_fields.append(field)
+    cards.append(widgets.VBox([
+        widgets.HTML(value=f"<strong>{{number}}. {{escape(prompt)}}</strong>"), field,
+    ], layout=widgets.Layout(border='1px solid #d6dee5', padding='0.75rem', margin='0 0 0.75rem 0')))
+display(widgets.VBox(cards))
+'''
 
 
 def quiz_code(unit: str, items: list[dict]) -> str:
@@ -72,8 +118,8 @@ for number, item in enumerate(items, 1):
     title = widgets.HTML(value=f"<strong>{{number}}. {{escape(item['prompt'])}}</strong><br><small>Select {{'one' if item['mode'] == 'one' else 'all that apply'}}.</small>")
     if item['mode'] == 'one':
         control = widgets.RadioButtons(
-            options=[('Choose one', None)] + [(choice, choice) for choice in item['choices']],
-            value=None, layout=widgets.Layout(width='100%'),
+            options=[(choice, choice) for choice in item['choices']],
+            index=None, layout=widgets.Layout(width='100%'),
             style={{'description_width': 'initial'}},
         )
     else:
@@ -134,7 +180,8 @@ def main() -> None:
         cells.append(cell("markdown", f"## {unit} · Practice quiz\n\nChoose answers below, then select **Submit for feedback**. This provisional feedback is for practice; it does not update your adaptive learning record.", f"{slug}-intro"))
         review_groups[unit] = questions(source, unit, feedback[unit])
         cells.append(cell("code", quiz_code(unit, review_groups[unit]), f"{slug}-choices", hidden=True))
-        cells.append(cell("markdown", case, f"{slug}-case"))
+        cells.append(cell("markdown", f"## {unit} · Written case study\n\nWrite a response for each prompt below. These responses are unscored. Copy anything you want to keep before restarting the kernel.", f"{slug}-case"))
+        cells.append(cell("code", response_code(unit, written_prompts(case, unit)), f"{slug}-responses", hidden=True))
     for unit, block in zip(("Unit 4", "Unit 5", "Unit 7"), blocks[1:]):
         slug = unit.lower().replace(" ", "-")
         cells.append(cell("markdown", f"## {unit} · Practice quiz\n\nChoose answers below, then select **Submit for feedback**. This provisional feedback is for practice; it does not update your adaptive learning record.", f"{slug}-intro"))
