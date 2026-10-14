@@ -157,7 +157,7 @@ test('Unit 2 slide reading shows local PDF page previews', async ({ page }) => {
 
 test('Unit 2 dataset reading starts the Python kernel from a nested folder', async ({ page }) => {
   await page.goto('/lab/index.html?path=readings/ucsf/u02-n07-explore-datasets.ipynb');
-  await expect(page.locator('.jp-Notebook')).toContainText('Explore datasets');
+  await expect(page.locator('.jp-Notebook')).toContainText('Explore a surveillance dataset');
   const select = page.getByRole('dialog').getByRole('button', { name: 'Select', exact: true });
   if (await select.isVisible()) await select.click();
   await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]'))
