@@ -95,8 +95,10 @@ def localize_form(filename: str, body: str, prior_url: str | None = None) -> tup
     body = re.sub(r"> \*\*Please submit your answers using the form provided below\*\*",
                   "**Record your answers in the local response section below.**", body)
     is_quiz = "knowledge-check" in filename or filename == "u01-n02-lesson"
-    note = ("The source form could not be inspected here. These are local practice prompts adapted from "
-            "the visible course material, not a transcription of the quiz. No answer key or score is implied."
+    note = ("The UCSF-linked form could not be inspected here. These are local practice prompts adapted from "
+            "the visible course material, not a transcription of that form. "
+            "A related [Version 3 form question library](u00-n02-version3-form-library.ipynb) "
+            "preserves questions from the supplied PDF archive. No answer key or score is implied."
             if is_quiz else
             "The source form could not be inspected here. These response headings follow the questions "
             "printed on the UCSF page; any additional form fields are unverified.")
@@ -117,17 +119,17 @@ IMAGE_ALT = {
 }
 
 UNIT1_SLIDES_PDF = "https://drive.google.com/file/d/1fMH_U9sGqUJfT_cA85OC_SpUKJ_hqxyV/preview"
+SLIDE_PREVIEWS = {
+    "u01-n01-slides": ("Unit 1", "unit-1-version-2-slides.pdf", 30),
+    "u02-n01-slides": ("Unit 2", "unit-2-version-2-slides.pdf", 112),
+}
 UNIT1_SLIDES_PLACEHOLDER = f"**Linked media from the source notebook**\n\n- [Open the source resource]({UNIT1_SLIDES_PDF})"
 UNIT1_SLIDES_EXPLANATION = (
     "**Source media: Unit 1 slides PDF.** The archived UCSF notebook embeds a Google Drive PDF here. "
-    "CDC may block that viewer, and the PDF itself was not available for inspection here, so its exact slides are unverified. "
-    f"[Original PDF link]({UNIT1_SLIDES_PDF}).\n\n"
-    "**Available course deck for context:** The supplied *Unit 1 v2: Intro to Informatics for FETP* PowerPoint "
-    "has 31 slides. Slides 1–15 introduce the module, objectives, and learning methods; "
-    "16–22 cover the digital revolution, epidemiology, and public health informatics; "
-    "23–25 present Laila's data overload; 26–29 show data → information → knowledge → wisdom "
-    "and the surveillance value cycle; 30–31 summarize and invite reflection. "
-    "This Version 2 deck is related course material, not a verified copy of the linked PDF."
+    f"[Original PDF link]({UNIT1_SLIDES_PDF}). CDC may block that viewer. "
+    "The supplied Version 2 PowerPoint deck is available as a local, page-by-page "
+    "[preview in the Unit 1 slide notebook](u01-n01-slides.ipynb). "
+    "It is related course material, not a verified copy of the UCSF-linked PDF."
 )
 
 
@@ -204,8 +206,24 @@ def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
     else:
         body = body_override
         page_images = set(re.findall(r"assets/([^\s)\"']+)", body))
+    body = body.replace("Laila’s Laila’s Problem:", "Laila’s Problem:")
     if filename == "u01-n02-lesson":
         body = body.replace(UNIT1_SLIDES_PLACEHOLDER, UNIT1_SLIDES_EXPLANATION)
+        body = re.sub(r"\*\*Source media: Unit 1 slides PDF\.\*\*.*?(?=\n\n---)",
+                      UNIT1_SLIDES_EXPLANATION, body, count=1, flags=re.S)
+    body = re.sub(r"^## Unit [12] Version 2 slide preview\n.*?\n---\n\n", "", body, count=1, flags=re.S)
+    if filename in SLIDE_PREVIEWS:
+        unit, pdf, pages = SLIDE_PREVIEWS[filename]
+        url = f"../files/readings/ucsf/assets/{pdf}"
+        preview = (
+            f"## {unit} Version 2 slide preview\n\n"
+            f"The supplied course deck exports to {pages} PDF pages; hidden PowerPoint slides are omitted. "
+            "Open a page range below, then select a preview to open that PDF page. "
+            "This Version 2 deck is related course material; it has not been verified as "
+            "the same file linked in the UCSF reading.\n\n"
+            f"[Open the full {unit} slide PDF]({url})\n\n---\n\n"
+        )
+        body = preview + body
     body, response, source_form_url = localize_form(filename, body, prior_form_url)
     images.update(page_images)
     number = filename.split("-")[1][1:]
@@ -230,7 +248,7 @@ def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
         "what needs a local example, and whether a linked slide, form, video, or illustration opens. "
         "For an assignment, answer its source questions in your own copy. These notes are unscored. "
         "For assessed practice, use the **Learning** panel when an exercise exists for this topic.\n\n"
-        + " · ".join(adjacent)
+        + " · ".join(adjacent) + "\n\n"
     )
     if response:
         reading_note = reading_note.replace("whether a linked slide, form, video, or illustration opens",
@@ -246,11 +264,28 @@ def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
     )
     if source_form_url:
         references += " The external response form has been replaced by the local response section."
+    slide_cells = []
+    if filename in SLIDE_PREVIEWS:
+        unit, pdf, pages = SLIDE_PREVIEWS[filename]
+        number = int(unit[-1])
+        for first in range(1, pages + 1, 10):
+            last = min(first + 9, pages)
+            lines = [f"<details><summary>{unit} PDF pages {first}–{last}</summary>", ""]
+            for page in range(first, last + 1):
+                pdf_url = f"../files/readings/ucsf/assets/{pdf}#page={page}"
+                image_url = f"assets/slide-previews/unit-{number}-{page:03d}.jpg"
+                lines.append(
+                    f"**Page {page}** · [Open this PDF page]({pdf_url})\n\n"
+                    f"![{unit} slide page {page}]({image_url})\n"
+                )
+            lines += ["", "</details>"]
+            slide_cells.append(cell("\n".join(lines), f"slide-{first:03d}"))
     if response:
         notebook_cells = [cell(outline, "0"), cell(body, "1"), cell(response, "2"),
                           cell(reading_note + "\n\n" + references, "3")]
     else:
-        notebook_cells = [cell(outline, "0"), cell(body, "1"), cell(reading_note, "2"), cell(references, "3")]
+        notebook_cells = [cell(outline, "0"), cell(body, "1"), *slide_cells,
+                          cell(reading_note, "2"), cell(references, "3")]
     notebook = {
         "cells": notebook_cells,
         "metadata": {"title": f"{source_unit} · {title}", "sourceRevision": REVISION,
@@ -280,6 +315,8 @@ def write_index() -> None:
                  "The links stay on this JupyterLite site, including a local preview. "
                  "Each reading links back here and to the adjacent page. "
                  "If asked to select a kernel, choose **No Kernel**. "
+                 "[Version 3 local form questions](u00-n02-version3-form-library.ipynb) are a separate supplied source; "
+                 "matching unit numbers do not establish that its forms are the UCSF forms. "
                  "For assessed practice, use the **Learning** panel when an exercise exists for the topic. "
                  f"[UCSF source repository](https://github.com/UCSF-IGHS/FETP/tree/{REVISION}/FETP_book).", "3"),
         ],

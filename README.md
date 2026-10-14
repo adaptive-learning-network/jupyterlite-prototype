@@ -2,9 +2,10 @@
 
 ## Open the course notebooks
 
-The site currently includes **36 notebooks**: 19 UCSF reading and index
+The site currently includes **37 notebooks**: 19 UCSF reading and index
 notebooks under `readings/ucsf`, 11 Python notebooks under `exercises/python`,
-and 6 R notebooks under `exercises/r`. The Learning panel's **Suggested next**
+6 R notebooks under `exercises/r`, and one local Version 3 form-reference
+notebook under `readings/ucsf`. The Learning panel's **Suggested next**
 list shows up to three adaptive exercise recommendations, not the full library.
 In JupyterLite, click the `/` breadcrumb in the left file browser to switch
 between the `readings` and `exercises` folders.
@@ -34,6 +35,9 @@ The site is rebuilt and published by CI on every push to `main` on GitHub and
 GitLab.
 
 Notebook 00 is an unscored orientation with the course cast and slide visuals.
+The [Version 3 form reference](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=readings/ucsf/u00-n02-version3-form-library.ipynb)
+preserves reviewed Unit 1, 2, 4, 5, and 7 quiz choices and case-study prompts from the
+supplied PDF archive, without account details or answer keys.
 **Review the UCSF source readings:** [Unit 1 and Unit 2 index on GitHub Pages](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb)
 or [the same index on CDC GitLab Pages](https://jupyterlite-prototype-4a4d87.gitpages.cdc.gov/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb).
 The index links to the non-code lessons, cases, and assignments in source order.
@@ -50,11 +54,18 @@ for proposed controls across the course, including workflow ordering.
 JupyterLite preserves browser-saved notebook copies across site updates. To see
 the latest supplied notebook, first download or rename any personal copy you
 want to keep, then refresh the file list and reopen the supplied filename.
+If an older open tab reports `Directory does not exist: readings\ucsf`, copy any
+unsaved cell text before reloading the page. The current site normalizes Windows
+paths when saving; reopen the notebook after the reload and save it. This does
+not clear or overwrite your browser-saved notebooks.
 The remaining existing exercise filenames will be converted after this pilot.
 The reading index opens 18 unscored source pages with the original case text, questions, and seven
 local images. They were imported from pinned UCSF revision `7eca2ec9` by
-`scripts/import_ucsf_readings.py`; external slides, forms, and videos remain
-links. UCSF's unit numbering differs from the local Version 3 plan, so each
+`scripts/import_ucsf_readings.py`. The Unit 1 and Unit 2 slide readings also
+include expandable, local page previews of the supplied Version 2 decks and
+links to their PDFs. [Conversion details](docs/slide-preview.md) distinguish
+these decks from the UCSF-linked sources. Other external videos remain links.
+UCSF's unit numbering differs from the local Version 3 plan, so each
 reading states its topic alignment. Scored Python pilots now cover Units 1 and 2;
 the rest of Unit 2 remains planned in the [course notebook inventory](../fetp-phi-course/docs/notebook-inventory.md).
 
@@ -69,7 +80,7 @@ The Unit 2 system-map pilot reuses the UCSF country HIS diagram and a new Laila
 comic. Learners use move buttons to order case and laboratory reporting paths,
 then submit, inspect feedback, and revise. The check scores the two routes in
 the diagram; the access-permissions reflection is unscored. Its source reading
-`u02-n02-knowledge-check.ipynb` links to an external quiz and is unscored here.
+`u02-n02-knowledge-check.ipynb` includes a local answer section and is unscored here.
 
 A [Python-only DHIS2 adapter pilot](docs/design/dhis2-adapter-pilot.md) adds a
 generated notebook at `content/exercises/python/07-dhis2-query.ipynb`. It uses

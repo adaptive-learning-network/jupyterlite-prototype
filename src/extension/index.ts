@@ -12,6 +12,33 @@ import { LearnerStore } from './store';
 
 const CATALOG_PATH = 'al/catalog.json';
 
+// JupyterLite's browser contents store uses POSIX paths. An older Windows
+// build put backslashes in notebook models; those paths remain in open tabs
+// and browser storage even after the static site is rebuilt. Normalize at the
+// contents boundary so saving an existing tab does not lose learner edits.
+function normalizeBrowserContentsPaths(app: JupyterFrontEnd): void {
+  const contents = app.serviceManager.contents;
+  const path = (value: string) => value.replace(/\\/g, '/');
+  const get = contents.get.bind(contents);
+  const save = contents.save.bind(contents);
+  const rename = contents.rename.bind(contents);
+  const newUntitled = contents.newUntitled.bind(contents);
+  const copy = contents.copy.bind(contents);
+  const remove = contents.delete.bind(contents);
+  contents.get = (name, options) => get(path(name), options);
+  contents.save = (name, options) => save(path(name), options && {
+    ...options,
+    ...(options.path ? { path: path(options.path) } : {})
+  });
+  contents.rename = (oldName, newName) => rename(path(oldName), path(newName));
+  contents.newUntitled = options => newUntitled(options && {
+    ...options,
+    ...(options.path ? { path: path(options.path) } : {})
+  });
+  contents.copy = (name, toDir) => copy(path(name), path(toDir));
+  contents.delete = name => remove(path(name));
+}
+
 // A browser may retain notebooks from an older site build after the bundled
 // readings directory disappears. Recreate only the missing directory entries;
 // never replace a learner's notebook or clear browser storage.
@@ -47,6 +74,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
   autoStart: true,
   requires: [ILabShell, INotebookTracker, IDocumentManager],
   activate: async (app: JupyterFrontEnd, shell: ILabShell, tracker: INotebookTracker, docManager: IDocumentManager) => {
+    normalizeBrowserContentsPaths(app);
     try {
       await ensureReadingDirectories(app);
     } catch (error) {
