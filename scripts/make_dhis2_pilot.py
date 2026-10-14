@@ -78,7 +78,7 @@ This is a **local course simulation**, not a DHIS2 server. It uses synthetic mea
 
 *Unit 3: Using Informatics to Get Information Faster.* Learning objective: **Use software to explore a dataset.**
 
-The [UCSF course book's Unit 2.1 Assignment 2](https://github.com/UCSF-IGHS/FETP/blob/main/FETP_book/Unit_2.1_Case_study_Assignment_2.ipynb) asks: “How big is this dataset?”, “What timeframe does the dataset span?”, and “What locations does the dataset include?” [Assignment 3](https://github.com/UCSF-IGHS/FETP/blob/main/FETP_book/Unit_2.1_Case_study_Assignment_3.ipynb) adds: “Describe the variables in your dataset.” Those are the questions this exercise preserves.
+Laila needs to know how many records she has, what timeframe they span, which locations they cover, and what each variable means. [Explore those questions](../../readings/ucsf/u02-n08-assignment-2.ipynb) before querying the local adapter.
 
 In the course assignment, the network is down and the district data manager supplies an Excel backup and DHIS2 data dictionary. This pilot provides a synthetic, local API-shaped copy of case events and dictionary entries so you can practice the same inspection questions inside JupyterLite. It does not simulate an online DHIS2 connection.
 
@@ -92,18 +92,13 @@ In the course assignment, the network is down and the district data manager supp
 Run the setup cell, then edit and run the exercise cell. The **Learning** panel checks your result. The one missing onset date is a data-quality signal; do not silently replace it with the event date.
 """
 
-REFERENCES = """## References
+REFERENCES = """## Continue learning
 
-- [UCSF FETP JupyterBook: Unit 2.1 case study, Assignment 2](https://github.com/UCSF-IGHS/FETP/blob/main/FETP_book/Unit_2.1_Case_study_Assignment_2.ipynb): dataset size, timeframe, locations, and population.
-- [UCSF FETP JupyterBook: Unit 2.1 case study, Assignment 3](https://github.com/UCSF-IGHS/FETP/blob/main/FETP_book/Unit_2.1_Case_study_Assignment_3.ipynb): use the data dictionary to understand variables.
-- [FETP Unit 3 instructor guide](https://docs.google.com/document/d/1B6qrW7QBcL4uCO85QPIN8pJ--37S8N6j3xkT87qBACA).
-- [FETP Unit 3 slides](https://docs.google.com/presentation/d/1EXkFCxffubjhpM94373WiJ0a9_V0Tsfn): dataset exploration, slides 56–57.
-- [FETP Unit 3 knowledge check](https://forms.gle/Y4yG5gMbFznczrBd9).
-- [DHIS2 Tracker API reference](https://docs.dhis2.org/en/develop/using-the-api/dhis-core-version-241/tracker.html): event query shape. This pilot implements only the documented subset stated above.
+- [Check dataset fit](../../readings/ucsf/u02-n08-assignment-2.ipynb) and [select useful variables](../../readings/ucsf/u02-n09-assignment-3.ipynb).
+- [Inspect the local case register](../../readings/ucsf/assets/laila-case-register.csv) and [data dictionary](../../readings/ucsf/assets/laila-data-dictionary.md).
 
-*The case events and IDs in this notebook are synthetic.*
+The case events and IDs in this notebook are synthetic.
 """
-
 
 def cell(kind: str, source: str, cell_id: str, metadata: dict | None = None) -> dict:
     result = {"cell_type": kind, "id": cell_id, "metadata": metadata or {}, "source": source.splitlines(keepends=True)}

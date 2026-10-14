@@ -32,13 +32,9 @@ To see changes across retries, export after each attempt, rename each download `
 files = find_exports()
 display(Markdown(render_report([(path.name, path.read_text(encoding="utf-8")) for path in files])))
 """
-    references = """## References and limits
+    references = """## Read your record
 
-- [FETP Unit 3 instructor guide](https://docs.google.com/document/d/1B6qrW7QBcL4uCO85QPIN8pJ--37S8N6j3xkT87qBACA) and [slides](https://docs.google.com/presentation/d/1EXkFCxffubjhpM94373WiJ0a9_V0Tsfn) provide the dataset exploration context for this prototype.
-- [FETP Unit 3 knowledge check](https://forms.gle/Y4yG5gMbFznczrBd9) is separate from the learner graph; its results are not recorded here.
-- The notebook reads the N-Quads shape exported by this prototype. It does not claim to validate arbitrary RDF or infer learner effectiveness from the graph.
-
-The browser-local record is the source of observations. The exported graph also contains recalculated estimates and recommendations; this notebook reads an export snapshot, not live browser storage.
+The browser-local record contains observations from your attempts. The exported graph also contains recalculated estimates and recommendations. This notebook reads the export snapshot you upload here; it does not change your record.
 """
     notebook = {
         "cells": [cell("markdown", intro, "0"), cell("code", viewer, "1"), cell("code", run, "2"), cell("markdown", references, "3")],

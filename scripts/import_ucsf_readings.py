@@ -48,6 +48,28 @@ SOURCES = [
     ("u02-n15-assignment-6", "Unit_2.3_Case_study_Assignment_6.ipynb", "UCSF Unit 2.3", "Local Unit 13: analysis and visualization", "Case study assignment 6"),
 ]
 
+# Learner-facing framing. Source versions and crosswalks live in course docs.
+LEARNING = {
+    "u01-n01-slides": ("Why informatics matters", "Identify a way informatics helps Laila use surveillance data.", "Which slide best explains why more data alone does not solve Laila's problem?"),
+    "u01-n02-lesson": ("From data to decisions", "Explain how Laila turns reports into a useful public health decision.", "Choose one report value and describe the context needed before Laila acts on it."),
+    "u01-n03-knowledge-check": ("Check your understanding", "Apply informatics ideas to Laila's reporting problem.", "What would you ask Laila before interpreting a sudden increase in reports?"),
+    "u02-n01-slides": ("Follow the surveillance pathway", "Trace how a report moves from detection toward action.", "Where could a delayed or missing report change a district summary?"),
+    "u02-n02-knowledge-check": ("Check the reporting pathway", "Explain how health information systems support surveillance.", "Which handoff in the reporting pathway would you verify first?"),
+    "u02-n03-his-context": ("Map the information system", "Map the people and systems that move a case report.", "Follow one case alert from a health facility to the district team."),
+    "u02-n04-case-study": ("Laila's surveillance case", "Identify the information Laila needs for a surveillance summary.", "What is known from the first alert, and what must Laila still find out?"),
+    "u02-n05-group-work": ("Map who needs the data", "Map the sources, systems, and users of Laila's report.", "Who creates each record, and who needs the resulting summary?"),
+    "u02-n06-assignment-1": ("Start the case investigation", "Describe the reporting problem and Laila's first information needs.", "Write two questions Laila should answer before choosing a dataset."),
+    "u02-n07-explore-datasets": ("Explore a surveillance dataset", "Inspect a dataset before using it for Laila's report.", "Which variables and time period would you check first?"),
+    "u02-n08-assignment-2": ("Check dataset fit", "Evaluate whether a dataset fits Laila's question.", "Compare its people, places, and time period with the report request."),
+    "u02-n09-assignment-3": ("Select useful variables", "Select variables needed for a working dataset.", "Which fields identify a case, a place, and an onset date?"),
+    "u02-n10-data-quality": ("Find data quality problems", "Detect gaps that could distort a surveillance summary.", "Which missing or inconsistent fields would change your interpretation?"),
+    "u02-n11-assignment-4": ("Plan data quality repairs", "Prioritize fixes for incomplete or inconsistent records.", "Which change would you make first, and how would you record it?"),
+    "u02-n12-compile-analyze": ("Prepare data for analysis", "Organize records for a person, place, and time summary.", "What checks would you run before combining records?"),
+    "u02-n13-analyze-visualize": ("Show the pattern", "Analyze patterns in cases across person, place, and time.", "Which table or visual would help Laila explain the signal?"),
+    "u02-n14-assignment-5": ("Combine the case data", "Verify a merged dataset before analysis.", "How would you detect duplicated or unmatched case IDs?"),
+    "u02-n15-assignment-6": ("Build the surveillance summary", "Justify a surveillance finding with tables and visuals.", "What can Laila recommend from the evidence, and what remains uncertain?"),
+}
+
 IMAGE_RE = re.compile(r"!\[([^]]*)\]\((images/[^)]+)\)")
 HTML_IMAGE_RE = re.compile(r'(<img\b[^>]*?src=["\'])images/([^"\']+)', re.IGNORECASE)
 EXTERNAL_IMAGE_RE = re.compile(r'<img\b[^>]*?src=["\'](https?://[^"\']+)["\'][^>]*?/?>', re.IGNORECASE)
@@ -95,13 +117,11 @@ def localize_form(filename: str, body: str, prior_url: str | None = None) -> tup
     body = re.sub(r"> \*\*Please submit your answers using the form provided below\*\*",
                   "**Record your answers in the local response section below.**", body)
     is_quiz = "knowledge-check" in filename or filename == "u01-n02-lesson"
-    note = ("The UCSF-linked form could not be inspected here. These are local practice prompts adapted from "
-            "the visible course material, not a transcription of that form. "
-            "A related [Version 3 form question library](u00-n02-version3-form-library.ipynb) "
-            "preserves questions from the supplied PDF archive. No answer key or score is implied."
+    note = ("Use these prompts to test your reasoning. "
+            "For more practice, open the [question library](u00-n02-version3-form-library.ipynb). "
+            "Your response here is for reflection and is not scored."
             if is_quiz else
-            "The source form could not be inspected here. These response headings follow the questions "
-            "printed on the UCSF page; any additional form fields are unverified.")
+            "Use these headings to organize your case response. Your notes stay in this browser and are not scored.")
     prompts = "\n\n".join(f"**{i}. {prompt}**\n\n_Enter your response here._"
                            for i, prompt in enumerate(LOCAL_RESPONSES[filename], 1))
     response = ("## Local response section\n\n" + note +
@@ -123,13 +143,18 @@ SLIDE_PREVIEWS = {
     "u01-n01-slides": ("Unit 1", "unit-1-version-2-slides.pdf", 30),
     "u02-n01-slides": ("Unit 2", "unit-2-version-2-slides.pdf", 112),
 }
+UNIT1_VISUALS = {
+    "1lp7jiftbj2Va-HN6QN6wfPu8GpA0QIde": (22, "Laila faces data overload"),
+    "1yHoX1gRFidMnKgsGWT0yQcGLUhW7B3vB": (19, "What public health informatics does"),
+    "1JH42e3y9Fjxz6YHWGvXsTRukm67fp-dM": (21, "How informaticians support a health system"),
+    "1sdTujihwDDiKR0ZJaL6ryLaq1X-1Ies6": (25, "From data to wisdom"),
+    "1_ksiZ0RMpLgHFnxNay_WODXDZTRU39pB": (26, "The public health surveillance cycle"),
+    "1O7-oJefmWMCD5Wsra5xqi1d425NGtsov": (27, "Creating value from surveillance data"),
+}
 UNIT1_SLIDES_PLACEHOLDER = f"**Linked media from the source notebook**\n\n- [Open the source resource]({UNIT1_SLIDES_PDF})"
 UNIT1_SLIDES_EXPLANATION = (
-    "**Source media: Unit 1 slides PDF.** The archived UCSF notebook embeds a Google Drive PDF here. "
-    f"[Original PDF link]({UNIT1_SLIDES_PDF}). CDC may block that viewer. "
-    "The supplied Version 2 PowerPoint deck is available as a local, page-by-page "
-    "[preview in the Unit 1 slide notebook](u01-n01-slides.ipynb). "
-    "It is related course material, not a verified copy of the UCSF-linked PDF."
+    "[Explore the Unit 1 slides](u01-n01-slides.ipynb) as you read. "
+    "Look for the point where raw reports become information Laila can use."
 )
 
 
@@ -144,19 +169,17 @@ def source_of(cell: dict) -> str:
 
 
 def code_to_reading(source: str) -> str:
-    videos = re.findall(r"YouTubeVideo\(['\"]([^'\"]+)", source)
-    urls = [url.rstrip(",)") for url in URL_RE.findall(source)]
-    links = [f"- [Watch the source video](https://www.youtube.com/watch?v={video})" for video in videos]
-    links += [f"- [Open the source resource]({url})" for url in urls]
-    if links:
-        return "**Linked media from the source notebook**\n\n" + "\n".join(dict.fromkeys(links))
-    return "*The source page used a flashcard widget here. Open the source notebook in UCSF's book to use it.*"
+    return ""
 
 
 def normalize_markdown(markdown: str, images: set[str]) -> str:
     def replace_iframe(match: re.Match) -> str:
         src = SRC_RE.search(match.group())
-        return f"[Open the source slides or response form]({src.group(1)})" if src else "*Embedded source resource*"
+        if not src:
+            return ""
+        if "docs.google.com/forms" in src.group(1):
+            return f"[Answer the questions below]({src.group(1)})"
+        return ""
 
     markdown = IFRAME_RE.sub(replace_iframe, markdown)
 
@@ -174,20 +197,77 @@ def normalize_markdown(markdown: str, images: set[str]) -> str:
     markdown = HTML_IMAGE_RE.sub(replace_html_image, markdown)
 
     def replace_external_image(match: re.Match) -> str:
-        # The archived Unit 1 book embeds six Google Drive images whose direct
-        # image endpoint is no longer renderable in JupyterLite. Keep a source
-        # link in place, rather than showing a broken image box.
         url = match.group(1)
         drive_id = re.search(r"drive\.google\.com/uc\?id=([^&]+)", url)
-        if drive_id:
-            url = f"https://drive.google.com/file/d/{drive_id.group(1)}/view"
-        return f"[Open source illustration]({url})"
+        if drive_id and drive_id.group(1) in UNIT1_VISUALS:
+            page, alt = UNIT1_VISUALS[drive_id.group(1)]
+            return f"![{alt}](assets/slide-previews/unit-1-{page:03d}.jpg)"
+        return ""
 
     return EXTERNAL_IMAGE_RE.sub(replace_external_image, markdown).strip()
 
 
 def cell(source: str, cell_id: str) -> dict:
     return {"cell_type": "markdown", "id": cell_id, "metadata": {}, "source": source.splitlines(keepends=True)}
+
+
+def localize_dependencies(filename: str, body: str) -> str:
+    if filename == "u01-n02-lesson":
+        for drive_id, (page, alt) in UNIT1_VISUALS.items():
+            body = body.replace(
+                f"[Open source illustration](https://drive.google.com/file/d/{drive_id}/view)",
+                f"![{alt}](assets/slide-previews/unit-1-{page:03d}.jpg)",
+            )
+    body = re.sub(r"^.*\[Watch the source video\]\(https?://[^\n]+\n?", "", body, flags=re.M)
+    body = re.sub(r"^- \[[^\n\]]+\]\(https?://scribehow\.com/[^\n]+\n?", "", body, flags=re.M)
+    body = re.sub(r"^.*\[Open the source slides or response form\]\(https?://[^\n]+\n?", "", body, flags=re.M)
+    body = re.sub(r"^.*\[Presentation Template: Surveillance Summary Report\]\(https?://[^\n]+\n?",
+                  "Use the headings **finding, evidence, limitations, and recommended action** for your local surveillance summary.\n", body, flags=re.M)
+    body = re.sub(r"\[2021 (?:Measles )?Case Notification Data\]\(https?://[^)]+\)",
+                  "[Local practice case register](assets/laila-case-register.csv)", body)
+    body = re.sub(r"\[2021 Clinical Data \(Measles\)\]\(https?://[^)]+\)",
+                  "[Local practice clinical records](assets/laila-clinical-records.csv)", body)
+    body = re.sub(r"^- \[(?:Technical Guidelines|Situational Analysis|Community Health Information System)[^\n]+\n?", "", body, flags=re.M)
+    body = re.sub(r"^- DHIS2 Data Dictionary \([^\n]+", "- [Local practice data dictionary](assets/laila-data-dictionary.md)", body, flags=re.M)
+    body = re.sub(r"\*The source page used a flashcard widget here\.[^*]+\*", "", body)
+    body = re.sub(r"How-To Scribes", "Local practice steps", body, flags=re.I)
+    body = re.sub(r"^\*\*Lets take a minute and watch this video\*\*\s*", "", body, flags=re.M)
+    body = re.sub(r"^\*\*Watch or explore\*\*\s*", "", body, flags=re.M)
+    body = re.sub(r"^What are Excel Local practice steps\?.*?What Excel Local practice steps are available\?",
+                  "Use the local case register below to sort, filter, count, and inspect minimum and maximum values.",
+                  body, flags=re.M | re.S)
+    body = re.sub(r"^\*\*Excel Local practice steps\*\*", "**Practice with the local files below**", body, flags=re.M)
+    body = body.replace("#### Excel Local practice steps", "#### Practice with the browser dataset")
+    body = re.sub(r"### Resources: Sierra Leone eIDSR and HIS Strategies\s*The following resources describe the current eIDSR and HIS context, strategies, and policies:",
+                  "### Apply the system context\n\nWhich district responsibility would be hardest if facility and community reports arrive late? What would you verify with the district team?", body)
+    if "### Dimensions of Data Quality" in body and "**Completeness:**" not in body:
+        body = body.replace("### Dimensions of Data Quality\n", "### Dimensions of Data Quality\n\n"
+                            "- **Completeness:** are expected records and required fields present?\n"
+                            "- **Timeliness:** do reports arrive in time for action?\n"
+                            "- **Accuracy:** do values match the event or source record?\n")
+    body = body.replace("- Excel\n\n**Practice with the local files below**", "")
+    body = body.replace("### Resources\n\nUse the headings", "### Report structure\n\nUse the headings")
+    body = body.replace('  ![Creating value from surveillance data](assets/slide-previews/unit-1-027.jpg)',
+                        '  <img src="assets/slide-previews/unit-1-027.jpg" width="460" alt="Creating value from surveillance data">')
+    if filename == "u02-n07-explore-datasets" and "## Try it with a small register" not in body:
+        body += ("\n\n## Try it with a small register\n\n"
+                 "Open the [practice case register](assets/laila-case-register.csv) and "
+                 "[data dictionary](assets/laila-data-dictionary.md). These fictional records are a small "
+                 "practice set, not Laila's 8,500-row file. Count records, find the earliest and latest onset dates, "
+                 "and list the districts. Which fields would you need for a district summary?\n")
+    if filename == "u02-n10-data-quality" and "## Try a quality check" not in body:
+        body += ("\n\n## Try a quality check\n\n"
+                 "Use the [practice case register](assets/laila-case-register.csv), "
+                 "[clinical records](assets/laila-clinical-records.csv), and "
+                 "[data dictionary](assets/laila-data-dictionary.md). Identify a missing specimen date, "
+                 "an unmatched case ID, and a value that needs clarification before reporting.\n")
+    if filename == "u02-n13-analyze-visualize" and "## Try a local summary" not in body:
+        body += ("\n\n## Try a local summary\n\n"
+                 "Use the [practice case register](assets/laila-case-register.csv) to count cases by district "
+                 "and onset week. Sketch one table or chart, then write the finding, evidence, limitations, "
+                 "and recommended verification step. These fictional records are for practice.\n")
+    body = re.sub(r"\n{4,}", "\n\n\n", body)
+    return body
 
 
 def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
@@ -207,31 +287,36 @@ def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
         body = body_override
         page_images = set(re.findall(r"assets/([^\s)\"']+)", body))
     body = body.replace("Laila’s Laila’s Problem:", "Laila’s Problem:")
+    body = body.replace("*The source page used a flashcard widget here. Open the source notebook in UCSF's book to use it.*", "")
+    body = body.replace("**Linked media from the source notebook**", "**Watch or explore**")
     if filename == "u01-n02-lesson":
         body = body.replace(UNIT1_SLIDES_PLACEHOLDER, UNIT1_SLIDES_EXPLANATION)
         body = re.sub(r"\*\*Source media: Unit 1 slides PDF\.\*\*.*?(?=\n\n---)",
                       UNIT1_SLIDES_EXPLANATION, body, count=1, flags=re.S)
-    body = re.sub(r"^## Unit [12] Version 2 slide preview\n.*?\n---\n\n", "", body, count=1, flags=re.S)
+    body = localize_dependencies(filename, body)
+    body = re.sub(r"^## Unit [12] (?:Version 2 )?slide preview\n.*?\n---\n\n", "", body, count=1, flags=re.S)
     if filename in SLIDE_PREVIEWS:
         unit, pdf, pages = SLIDE_PREVIEWS[filename]
         url = f"../files/readings/ucsf/assets/{pdf}"
         preview = (
-            f"## {unit} Version 2 slide preview\n\n"
-            f"The supplied course deck exports to {pages} PDF pages; hidden PowerPoint slides are omitted. "
-            "Open a page range below, then select a preview to open that PDF page. "
-            "This Version 2 deck is related course material; it has not been verified as "
-            "the same file linked in the UCSF reading.\n\n"
-            f"[Open the full {unit} slide PDF]({url})\n\n---\n\n"
+            f"## {unit} slide preview\n\n"
+            "Open a page range below. Each slide has a link to its full PDF page. "
+            "As you browse, notice where data is collected, organized, interpreted, and used.\n\n"
+            f"[Open all {pages} slide pages in the PDF]({url})\n\n---\n\n"
         )
         body = preview + body
+        body = re.sub(r"\[Open the source slides or response form\]\([^)]*\)", "", body)
+        body = re.sub(r"\n# Unit Slides\s*$", "", body)
     body, response, source_form_url = localize_form(filename, body, prior_form_url)
     images.update(page_images)
-    number = filename.split("-")[1][1:]
+    unit_number = int(filename[1:3])
+    notebook_number = int(filename[5:7])
+    learner_title, goal, prompt = LEARNING[filename]
     outline = (
-        f"**Source reading:** {source_unit} · Notebook {number}\n\n"
-        f"# {title}\n\n"
-        f"**Course alignment:** {local_topic}. This preserves a UCSF JupyterBook page as reading material. "
-        "It does not record an adaptive-learning observation. UCSF and the local Version 3 course use different unit numbers."
+        f"**Unit {unit_number} · Notebook {notebook_number:02d}**\n\n"
+        f"# {learner_title}\n\n"
+        f"**Learning goal:** {goal}\n\n"
+        "Follow Laila's case, inspect the examples, and use the question at the end to test your understanding."
     )
     names = [entry[0] for entry in SOURCES]
     position = names.index(filename)
@@ -241,29 +326,12 @@ def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
     adjacent.append(f"[Reading index]({lab_link('u00-n01-reading-index')})")
     if position + 1 < len(names):
         adjacent.append(f"[Next reading]({lab_link(names[position + 1])})")
-    reading_note = (
-        "## Use and review this reading\n\n"
-        "If JupyterLite asks for a kernel, choose **No Kernel**; this page has no runnable cells. "
-        "Read the source lesson or case questions above. In your own notebook copy, note what is clear, "
-        "what needs a local example, and whether a linked slide, form, video, or illustration opens. "
-        "For an assignment, answer its source questions in your own copy. These notes are unscored. "
-        "For assessed practice, use the **Learning** panel when an exercise exists for this topic.\n\n"
-        + " · ".join(adjacent) + "\n\n"
-    )
-    if response:
-        reading_note = reading_note.replace("whether a linked slide, form, video, or illustration opens",
-                                            "whether a linked slide, video, or illustration opens")
-    references = (
-        "## Source and visual attribution\n\n"
-        f"- [Original UCSF JupyterBook page]({BROWSE + source_path}) at revision `{REVISION}`.\n"
-        + ("- Images in this reading were copied from that same revision of the UCSF course repository.\n" if page_images else "")
-        + "\n"
-        + ("The page is retained as a reading. Linked slides and videos open through their original sources."
-         if source_form_url else
-         "The page is retained as a reading. Embedded slides, forms, and videos open through their original links.")
-    )
-    if source_form_url:
-        references += " The external response form has been replaced by the local response section."
+    reflection = ("## Try it\n\n" + prompt + "\n\n"
+                  "Double-click this cell to write a short answer in your own notebook copy. "
+                  "Choose **No Kernel** if asked; this reading has no code to run.\n\n"
+                  "_Write your reasoning here._")
+    navigation = ("## Continue learning\n\n" + " · ".join(adjacent) + "\n\n"
+                  "For a scored exercise, open the **Learning** panel. Your notes in this reading are for practice.")
     slide_cells = []
     if filename in SLIDE_PREVIEWS:
         unit, pdf, pages = SLIDE_PREVIEWS[filename]
@@ -281,15 +349,13 @@ def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
             lines += ["", "</details>"]
             slide_cells.append(cell("\n".join(lines), f"slide-{first:03d}"))
     if response:
-        notebook_cells = [cell(outline, "0"), cell(body, "1"), cell(response, "2"),
-                          cell(reading_note + "\n\n" + references, "3")]
+        notebook_cells = [cell(outline, "0"), cell(body, "1"), cell(response, "2"), cell(navigation, "3")]
     else:
         notebook_cells = [cell(outline, "0"), cell(body, "1"), *slide_cells,
-                          cell(reading_note, "2"), cell(references, "3")]
+                          cell(reflection, "2"), cell(navigation, "3")]
     notebook = {
         "cells": notebook_cells,
-        "metadata": {"title": f"{source_unit} · {title}", "sourceRevision": REVISION,
-                     "sourcePath": source_path, "generatedBy": "scripts/import_ucsf_readings.py",
+        "metadata": {"title": learner_title, "generatedBy": "scripts/import_ucsf_readings.py",
                      **({"sourceFormUrl": source_form_url} if source_form_url else {})},
         "nbformat": 4,
         "nbformat_minor": 5,
@@ -300,28 +366,22 @@ def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
 def write_index() -> None:
     def links(unit: str) -> str:
         return "\n".join(
-            f"- [Notebook {name.split('-')[1][1:]}: {title}]({lab_link(name)}) — {local_topic}"
-            for name, _, _, local_topic, title in SOURCES if name.startswith(unit)
+            f"- [Notebook {name.split('-')[1][1:]}: {LEARNING[name][0]}]({lab_link(name)})"
+            for name, *_ in SOURCES if name.startswith(unit)
         )
 
     notebook = {
         "cells": [
-            cell("**Course outline:** Source readings · Index\n\n# UCSF Unit 1 and Unit 2 readings\n\n"
-                 "These pages preserve the UCSF JupyterBook text, case prompts, and available visuals. "
-                 "They are unscored. Their unit numbers come from UCSF; each page states its closest local Version 3 topic.", "0"),
-            cell("## UCSF Unit 1\n\n" + links("u01-"), "1"),
-            cell("## UCSF Unit 2\n\n" + links("u02-"), "2"),
-            cell("## Using these readings\n\nOpen a page from the list or the JupyterLite file browser. "
-                 "The links stay on this JupyterLite site, including a local preview. "
-                 "Each reading links back here and to the adjacent page. "
-                 "If asked to select a kernel, choose **No Kernel**. "
-                 "[Version 3 local form questions](u00-n02-version3-form-library.ipynb) are a separate supplied source; "
-                 "matching unit numbers do not establish that its forms are the UCSF forms. "
-                 "For assessed practice, use the **Learning** panel when an exercise exists for the topic. "
-                 f"[UCSF source repository](https://github.com/UCSF-IGHS/FETP/tree/{REVISION}/FETP_book).", "3"),
+            cell("**Course outline ? Reading index**\n\n# Follow Laila's informatics case\n\n"
+                 "Read the case, inspect the diagrams, and answer the prompts in your notebook copy. "
+                 "Your written notes stay in this browser.", "0"),
+            cell("## Unit 1 ? From data to decisions\n\n" + links("u01-"), "1"),
+            cell("## Unit 2 ? Follow a report through the system\n\n" + links("u02-"), "2"),
+            cell("## Continue practicing\n\nChoose **No Kernel** if asked; these readings have no code to run. "
+                 "Use the **Learning** panel for scored exercises. "
+                 "[Practice questions](u00-n02-version3-form-library.ipynb) offer another way to review the ideas.", "3"),
         ],
-        "metadata": {"title": "UCSF Unit 1 and 2 reading index", "sourceRevision": REVISION,
-                     "generatedBy": "scripts/import_ucsf_readings.py"},
+        "metadata": {"title": "Unit 1 and 2 reading index", "generatedBy": "scripts/import_ucsf_readings.py"},
         "nbformat": 4, "nbformat_minor": 5,
     }
     (OUT / "u00-n01-reading-index.ipynb").write_text(json.dumps(notebook, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")

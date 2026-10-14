@@ -35,7 +35,7 @@ INTRO = """**Course outline:** Unit 02 · Notebook 01 · Python
 
 ![Source HIS diagram: electronic patient and community records feed case alerts and reports; laboratory records feed laboratory reports; both reach the district health information system and then MOH.](../assets/unit2-ucsf-his-context.png)
 
-*Source connection: the UCSF Unit 2.1 country HIS diagram. It shows two reporting branches into the district health information system, then a path to the Ministry of Health (MOH). The diagram depicts example systems; it does not specify access permissions for every worker.*
+*Follow the case and laboratory reporting branches to the district health information system and Ministry of Health (MOH). Ask who can access each system.*
 
 **Learning objective:** **Trace** a case-report path and a laboratory-report path from source records to MOH.
 
@@ -45,7 +45,7 @@ The [course case study](../../readings/ucsf/u02-n04-case-study.ipynb) begins wit
 
 In the diagram above, build two **electronic** paths. For each path, use **Move up** and **Move down** to put the four stages in the order information travels. Select a stage first, then move it. Both lists start out of order. Run **Check my map** after moving stages in both lists. You can correct a route and check again; the Learning panel records each attempt.
 
-The case text names measles while one group-work prompt names yellow fever. This notebook uses the fever-and-rash reporting path common to the system diagram, without resolving that source inconsistency.
+Trace the fever-and-rash reporting path shown in the diagram.
 """
 
 SETUP = '''# Run once to display the route controls. Re-running resets both routes.
@@ -123,19 +123,14 @@ print("Lab path: ", " → ".join(system_map["lab"]))
 
 ENDING = """## Reflect on system use
 
-The source group work also asks who has access to and uses paper and electronic systems. The diagram does not define permissions. In your own copy, name one worker or team that would need each report and one access question you would verify locally. This reflection is not automatically scored.
+Who needs each case or laboratory report? Name one access question you would verify with the district team. Your reflection is not automatically scored.
 
-## References
+## Continue learning
 
-- [UCSF Unit 2.1 country HIS context](../../readings/ucsf/u02-n03-his-context.ipynb), including the diagram reproduced above ([pinned source](https://github.com/UCSF-IGHS/FETP/blob/7eca2ec9d4d6082e76c7061a4746f1ac69d4ca7b/FETP_book/Unit_2.1.ipynb)).
-- [UCSF surveillance case study](../../readings/ucsf/u02-n04-case-study.ipynb) and [country HIS group work](../../readings/ucsf/u02-n05-group-work.ipynb).
-- [FETP Unit 2 slides: country and organizational context](https://docs.google.com/presentation/d/1qOLgJ7_7U2QXksuHX5OO55VLq-2p7eA6). The linked Version 3 deck is not embedded here; the diagram is from the pinned UCSF page.
-- [FETP Unit 2 instructor guide](https://docs.google.com/document/d/16BY6V78E5Muw66ztlaEsQYt0TMF8kPdH82Ql0r6GfV8).
-- [FETP Unit 2 knowledge check](../../readings/ucsf/u02-n02-knowledge-check.ipynb). Its external form does not report scores to this notebook.
-
-*The system-map choices are a formative simulation. They do not establish the actual installation or access rules of a country HIS. The opening comic is an original teaching illustration, not a source slide.*
+- [Explore the country HIS diagram](../../readings/ucsf/u02-n03-his-context.ipynb).
+- [Read Laila's case](../../readings/ucsf/u02-n04-case-study.ipynb) and [map the data users](../../readings/ucsf/u02-n05-group-work.ipynb).
+- [Review the Unit 2 slides](../../readings/ucsf/u02-n01-slides.ipynb).
 """
-
 
 def cell(kind: str, source: str, cell_id: str, metadata: dict | None = None) -> dict:
     value = {"cell_type": kind, "id": cell_id, "metadata": metadata or {}, "source": source.splitlines(keepends=True)}

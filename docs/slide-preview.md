@@ -17,8 +17,7 @@ The PDFs were exported from the supplied *FETP Informatics Course.zip* in
 Downloads using PowerPoint on Windows. The exported PDFs omit hidden
 PowerPoint slides. Page numbers in the previews refer to the PDFs. These are
 Version 2 local course decks and have not been verified as identical to the
-files linked by the UCSF JupyterBook. The original UCSF links remain in the
-reading notebooks for source attribution.
+files linked by the UCSF JupyterBook. The original source links are recorded in the course audit; they are not part of the learner path.
 
 To regenerate from the supplied extracted archive on Windows:
 
@@ -32,3 +31,9 @@ The last command rebuilds the slide gallery cells and reading navigation from
 the local notebook text. Review slide page counts in
 `scripts/import_ucsf_readings.py` if the decks change. The checked-in PDFs and
 JPEG previews are the build inputs; the published site does not run PowerPoint.
+
+## Unit 1 lesson visual replacements
+
+The blocked Google Drive illustration linked after Laila's data-overload story (file ID `1lp7jiftbj2Va-HN6QN6wfPu8GpA0QIde`) cannot be inspected from this environment. The learner notebook now displays page 22 of the supplied local Unit 1 deck for that topic. The other five inaccessible illustration slots use local pages 19, 21, and 25?27 at matching points in the lesson. These are related course visuals; identity with the remote images is unverified.
+
+The source's Google Slides, video, and spreadsheet links are kept in source audit records. Core learner activities use local slide previews, case prompts, and clearly marked synthetic practice data.

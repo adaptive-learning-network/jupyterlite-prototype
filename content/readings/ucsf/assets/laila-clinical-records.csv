@@ -1,0 +1,10 @@
+case_id,fever,rash,specimen_date,lab_result
+C001,yes,yes,2021-01-06,pending
+C002,yes,yes,2021-01-07,positive
+C003,yes,yes,,pending
+C004,yes,yes,2021-01-10,positive
+C006,yes,yes,2021-01-15,positive
+C008,yes,yes,2021-01-18,positive
+C010,yes,yes,2021-01-22,positive
+C011,yes,yes,2021-01-24,positive
+C012,yes,yes,,pending

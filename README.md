@@ -2,9 +2,9 @@
 
 ## Open the course notebooks
 
-The site currently includes **37 notebooks**: 19 UCSF reading and index
+The site currently includes **37 notebooks**: 19 case reading and index
 notebooks under `readings/ucsf`, 11 Python notebooks under `exercises/python`,
-6 R notebooks under `exercises/r`, and one local Version 3 form-reference
+6 R notebooks under `exercises/r`, and one local practice-question
 notebook under `readings/ucsf`. The Learning panel's **Suggested next**
 list shows up to three adaptive exercise recommendations, not the full library.
 In JupyterLite, click the `/` breadcrumb in the left file browser to switch
@@ -17,13 +17,7 @@ A JupyterLite site in which learners work through exercises in **Python or R**
 while an **ontology-driven adaptive-learning engine** observes results, builds
 evidence, estimates capabilities, and recommends what to do next.
 
-The current exercises convert **Public Health Informatics for FETP, Unit 3:
-Using Informatics to Get Information Faster** (Version 3 course materials, used
-with permission). Each notebook follows the unit's slides and ends with
-references to the original guide, slides, quiz, and Excel How-To Scribes. The
-unit's quiz opens from the Learning panel. The curriculum,
-targets, evidence rules, and estimator policy are data in the `al:` upper
-ontology (`../adaptive-learning-ontology`). Everything runs in the browser.
+The course combines local readings, slide previews, practice files, and browser-based exercises. Learners can work through the core activities without opening Google Drive, Google Forms, ScribeHow, or the UCSF server. The curriculum, targets, evidence rules, and estimator policy are data in the `al:` upper ontology (`../adaptive-learning-ontology`). Everything runs in the browser.
 
 **Start with** [Notebook 00](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/u00-n00-start-here.ipynb)
 on GitHub Pages, then try the
@@ -35,12 +29,12 @@ The site is rebuilt and published by CI on every push to `main` on GitHub and
 GitLab.
 
 Notebook 00 is an unscored orientation with the course cast and slide visuals.
-The [Version 3 form reference](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=readings/ucsf/u00-n02-version3-form-library.ipynb)
+The [practice-question library](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=readings/ucsf/u00-n02-version3-form-library.ipynb)
 preserves reviewed Unit 1, 2, 4, 5, and 7 quiz choices and case-study prompts from the
 supplied PDF archive, without account details or answer keys.
-**Review the UCSF source readings:** [Unit 1 and Unit 2 index on GitHub Pages](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb)
+**Read Laila's case:** [Unit 1 and Unit 2 index on GitHub Pages](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb)
 or [the same index on CDC GitLab Pages](https://jupyterlite-prototype-4a4d87.gitpages.cdc.gov/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb).
-The index links to the non-code lessons, cases, and assignments in source order.
+The index links to lessons, cases, and assignments in learning order.
 Its notebook links stay on whichever JupyterLite host you opened.
 If JupyterLite asks for a kernel while opening a reading, select **No Kernel**.
 The Notebook 01 pilot uses `u03-n01-data-or-information.ipynb` in both language
@@ -59,15 +53,7 @@ unsaved cell text before reloading the page. The current site normalizes Windows
 paths when saving; reopen the notebook after the reload and save it. This does
 not clear or overwrite your browser-saved notebooks.
 The remaining existing exercise filenames will be converted after this pilot.
-The reading index opens 18 unscored source pages with the original case text, questions, and seven
-local images. They were imported from pinned UCSF revision `7eca2ec9` by
-`scripts/import_ucsf_readings.py`. The Unit 1 and Unit 2 slide readings also
-include expandable, local page previews of the supplied Version 2 decks and
-links to their PDFs. [Conversion details](docs/slide-preview.md) distinguish
-these decks from the UCSF-linked sources. Other external videos remain links.
-UCSF's unit numbering differs from the local Version 3 plan, so each
-reading states its topic alignment. Scored Python pilots now cover Units 1 and 2;
-the rest of Unit 2 remains planned in the [course notebook inventory](../fetp-phi-course/docs/notebook-inventory.md).
+The reading index opens 18 unscored pages with Laila's case, prompts, diagrams, and local slide previews. Unit 1 and Unit 2 slide notebooks contain 142 page previews and two PDFs served by this JupyterLite site. Local, synthetic practice CSV files and a data dictionary support the dataset and quality-check readings. The practice files are small teaching examples, not the original surveillance spreadsheets. Source mapping and unavailable-media details live in [slide preview notes](docs/slide-preview.md) and the [course link audit](../fetp-phi-course/docs/audit/form-links-audit.md). Scored Python pilots cover Units 1 and 2; the rest of Unit 2 remains planned in the [course notebook inventory](../fetp-phi-course/docs/notebook-inventory.md).
 
 The Unit 1 pilot uses the course's data–information–knowledge–wisdom slide graphic,
 an original Laila teaching comic, synthetic weekly reported case counts, a

@@ -34,7 +34,7 @@ INTRO = """**Course outline:** Unit 01 · Notebook 01 · Python
 
 <img src="../assets/unit1-v2-data-wisdom-pyramid.png" width="360" alt="Course pyramid with data at the base, followed by information, knowledge, and wisdom.">
 
-*Slide connection: Unit 1, Version 2, slide 26. You will turn raw reported counts (data) into a district comparison (information), interpret the change (knowledge), and select a cautious action (wisdom).*
+*You will turn raw reported counts (data) into a district comparison (information), interpret the change (knowledge), and select a cautious action (wisdom).*
 
 **Learning objective:** **Justify** one public health action from a synthetic surveillance summary.
 
@@ -53,16 +53,14 @@ Laila receives a small table of **synthetic weekly reported case counts**. The r
 Then run the exercise cell. The **Learning** panel records each check, offers hints, and recommends the next activity. Afterward, write one sentence in the reflection cell explaining what the counts do and do not establish. The reflection is for you; it is not automatically graded.
 """
 
-REFERENCES = """## References
+REFERENCES = """## Continue learning
 
-- [UCSF FETP JupyterBook, Unit 1 lesson](../../readings/ucsf/u01-n02-lesson.ipynb), sections “Laila’s Problem: Data Overload” and “Transforming Data into Wisdom” ([pinned source](https://github.com/UCSF-IGHS/FETP/blob/7eca2ec9d4d6082e76c7061a4746f1ac69d4ca7b/FETP_book/_build/html/_sources/FETP_Unit_1.ipynb)).
-- [FETP Unit 1 slides](https://docs.google.com/presentation/d/12B-A7_4LhTTfWXtbj3KOmZyWkyq8GPR5xCuIifawZVQ): the local Version 2 slide 23 introduces Laila's data overload; slide 26 supplies the reproduced data–information–knowledge–wisdom pyramid; slide 28 shows the information value cycle. The online deck may use different slide numbers.
-- [FETP Unit 1 instructor guide](https://docs.google.com/document/d/17vQbKSFUWlu0NzVWhe_ZmPBXQQxbj9JKkEZI-TPpHOM).
-- [FETP Unit 1 knowledge check](https://docs.google.com/forms/d/e/1FAIpQLSddLw3-yw2-kDUZfewy15d8mM22h2f30Jgynua3oibIWoskqw/viewform).
+- [Laila's Unit 1 lesson](../../readings/ucsf/u01-n02-lesson.ipynb) explains data overload and the move from data to action.
+- [Unit 1 slides](../../readings/ucsf/u01-n01-slides.ipynb) show the data-to-wisdom pyramid and surveillance value cycle.
+- [Unit 1 practice questions](../../readings/ucsf/u01-n03-knowledge-check.ipynb) let you explain your choice in words.
 
-*The counts are synthetic and support practice in interpreting a signal; they are not outbreak evidence. The illustration was generated for this course prototype and is not a source slide.*
+The counts are synthetic. Verify a signal before treating it as an outbreak.
 """
-
 
 def cell(kind: str, source: str, cell_id: str, metadata: dict | None = None) -> dict:
     value = {"cell_type": kind, "id": cell_id, "metadata": metadata or {}, "source": source.splitlines(keepends=True)}

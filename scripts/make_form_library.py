@@ -23,9 +23,8 @@ def main() -> None:
     notebook = {
         "cells": cells,
         "metadata": {
-            "title": "Version 3 form questions · local reference",
+            "title": "Practice questions for Laila's case",
             "generatedBy": "scripts/make_form_library.py",
-            "sourceArchive": "fetp-phi-course/google_docs/FETP Materials.zip",
         },
         "nbformat": 4,
         "nbformat_minor": 5,

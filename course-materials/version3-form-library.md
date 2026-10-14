@@ -1,12 +1,12 @@
-# Version 3 form questions · local reference
+# Practice questions for Laila's case
 
-These questions and choices come from blank PDF captures in the course archive at `fetp-phi-course/google_docs/FETP Materials.zip`. Account headers, submissions, and response summaries are omitted. No answer keys are included. This is **unscored** reading material; editing it does not add an adaptive-learning observation. The UCSF JupyterBook readings use a different unit structure, so similarly named forms should not be treated as identical without comparison.
+Use these questions to check your reasoning about public health informatics. Select choices or write answers in your notebook copy, then compare your thinking with the course diagrams and exercises. These questions are for practice and are not scored.
 
-Choose **No Kernel** in JupyterLite. Double-click a cell to enter a response in your own copy, then press **Shift+Enter** and save.
+Choose **No Kernel** in JupyterLite. Double-click a cell to enter a response, then press **Shift+Enter** and save.
 
 <!-- notebook cell -->
 
-## Unit 1 · Version 3
+## Unit 1: Informatics and action
 
 ### Quiz U01-N03
 
@@ -45,11 +45,10 @@ Choose **No Kernel** in JupyterLite. Double-click a cell to enter a response in 
 
 _Your choices and responses:_
 
-**Source PDFs:** `U01-V3/Unit1 v3 FETP Informatics Quiz U01-N03.pdf` and `U01-V3/Small Group Work U01-N02.pdf`.
 
 <!-- notebook cell -->
 
-## Unit 2 · Version 3
+## Unit 2: Reporting systems
 
 ### Quiz U02-N02
 
@@ -89,7 +88,7 @@ _Your choices and responses:_
    - Conducting large-scale population surveys
    - Managing the national health data warehouse
 
-### Case-study form exports
+### Case-study questions
 
 **Assignment 2 · U02-N08 · Question 3**
 
@@ -118,15 +117,12 @@ _Your choices and responses:_
 
 _Your choices and responses:_
 
-The Assignment 6 PDF capture contains only Question 11. Questions 12–15 are printed in the [UCSF source reading](u02-n15-assignment-6.ipynb); their presence in the external form is not verified by this archive.
 
-**Source PDFs:** `U02-V3/Unit2 v3 FETP Informatics Quiz U02-N02.pdf` and the five `Case_study_assignment_2` through `_6` PDFs in the same ZIP.
 
 <!-- notebook cell -->
 
-## Later Version 3 quiz captures
+## Further practice
 
-These questions can be used when the Unit 4, 5, and 7 teaching notebooks are built. They are included here so learners can review the supplied form text locally. The captures do not include answer keys.
 
 ### Unit 4 · Data sources
 
@@ -164,9 +160,6 @@ These questions can be used when the Unit 4, 5, and 7 teaching notebooks are bui
    - National ID number
    - Fingerprint
 
-The captured Unit 5 form says “Select all that apply” for Question 1 but
-displays single-choice circles. This source inconsistency needs facilitator
-review before the question is turned into a scored local check.
 
 2. **True or False: Biometric data such as fingerprints, retina scans, and facial images are considered sensitive data but are not necessarily PII or PHI.**
    - True
@@ -252,9 +245,3 @@ review before the question is turned into a scored local check.
    - Costs for any server procurement or set-up
 
 _Your choices:_
-
-**Source PDFs:** `U04-V3/Unit 4 v3 FETP Informatics Quiz.pdf`;
-`U05-V3/Unit 5 v3 FETP Informatics Quiz.pdf`; and
-`U07-V3/Unit 7 v3 FETP Informatics Quiz.pdf`.
-
-The archive also contains Google Forms editor, settings, and aggregate response-summary captures, which are not learner questions. It has no Unit 3 quiz PDF and no quiz PDFs for Units 6 or 8–14. The [form-links audit](https://github.com/adaptive-learning-network/fetp-phi-course/blob/main/docs/audit/form-links-audit.md) tracks original URLs still needing comparison. These local prompts do not claim to reproduce an answer key or grade responses.

@@ -185,7 +185,7 @@ DATASET_TABLES = [  # Unit 3 slide 39
 
 
 def scribe_list(*keys: str) -> str:
-    return "\n".join(f"- [{SCRIBES[k][0]}]({SCRIBES[k][1]})" for k in keys)
+    return "\n".join(f"- {SCRIBES[k][0]}: run the setup and exercise cells below to practice this step." for k in keys)
 
 
 # variables: name -> (kind, expected). Kinds: count | rate | choice | set | date.
@@ -217,7 +217,7 @@ EXERCISES = [
             "Laila's supervisor gave her a large surveillance file, and she does not know whether it includes the data she "
             "needs. To make data more useful, ask: What timeframe does the dataset span? What locations does it include? "
             "Who is included? Five essential functions help: **sort**, **filter**, **count**, **max**, and **min**.\n\n"
-            "The same steps in Excel (Excel How-To Scribes):\n" + scribe_list("copy", "sort", "count", "maxmin")
+            "Practice the same steps in this notebook:\n" + scribe_list("copy", "sort", "count", "maxmin")
         ),
         "task": (
             "Answer these questions about `register` with code:\n\n"
@@ -248,7 +248,7 @@ EXERCISES = [
         "objective": OBJECTIVES[2],
         "context": (
             "Filtering shows or hides specific data in a list, which makes large datasets much easier to work with.\n\n"
-            "The same steps in Excel (Excel How-To Scribes):\n" + scribe_list("filter", "multisort")
+            "Practice the same steps in this notebook:\n" + scribe_list("filter", "multisort")
         ),
         "task": "How many records are a **first dose** (`dose` 1) of **MMR** given in **District X** to a child **under age 5**? "
                 "Store the number in `n_mmr_dose1_x`.",
@@ -383,16 +383,10 @@ def placeholder(language: str, variables: dict) -> str:
 
 
 def references(ex: dict) -> str:
-    lines = ["## References", "",
-             f"- [{SOURCE_DOCS['guide'][0]}]({SOURCE_DOCS['guide'][1]})",
-             f"- [{SOURCE_DOCS['slides'][0]}]({SOURCE_DOCS['slides'][1]}): slides {ex['slides']}",
-             f"- [{SOURCE_DOCS['quiz'][0]}]({SOURCE_DOCS['quiz'][1]})",
-             "- Excel How-To Scribes:"]
-    if ex["file"] == "u03-n01-data-or-information":
-        lines.insert(5, "- Surveillance-cycle visual: *Unit 2, Version 2, Detection and Diagnosis*, slide 3 (course deck supplied with the project).")
-    lines += [f"  - [{title}]({url})" for title, url in SCRIBES.values()]
-    lines += ["", "*Public Health Informatics for FETP, Version 3 course materials, used with permission.*"]
-    return "\n".join(lines)
+    return ("## Continue learning\n\n"
+            "- [Follow Laila's case](../../readings/ucsf/u00-n01-reading-index.ipynb).\n"
+            "- [Use the Unit 2 surveillance cycle](../../readings/ucsf/u02-n01-slides.ipynb).\n"
+            "- [Review the local practice questions](../../readings/ucsf/u00-n02-version3-form-library.ipynb).")
 
 
 def cell(cell_type: str, source: str, cell_id: str, metadata: dict | None = None) -> dict:
@@ -411,12 +405,11 @@ def notebook(ex: dict, language: str) -> dict:
         pilot_cue = (
             "![Three-panel comic: Laila examines a line list, her supervisor points to the records, and she imagines a chart and map.](../assets/laila-unit03-notebook01-comic.png)\n\n"
             "*Laila has ages, symptoms, and onset dates. Her supervisor asks which items already show a pattern. "
-            "Help Laila tell raw data from information. (Original teaching illustration; dialogue is not from the slides.)*\n\n"
+            "Help Laila tell raw data from information. (Laila needs to tell raw observations from a useful pattern.)*\n\n"
         )
         pilot_cue += (
             '<img src="../assets/unit2-v2-surveillance-cycle.png" width="420" alt="Course surveillance cycle: detect, collect, compile and analyze, interpret, communicate, and take action.">\n\n'
-            "*Slide connection: Unit 2, Version 2, slide 3. This notebook works at the **data → information** step, "
-            "where collected values become a pattern that can be interpreted.*\n\n"
+            "*Work at the **data to information** step: organize collected values into a pattern you can interpret.*\n\n"
         )
     choice_pilot = ex["file"] == "u03-n01-data-or-information" and language == "python"
     if choice_pilot:

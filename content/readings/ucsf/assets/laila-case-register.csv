@@ -1,0 +1,13 @@
+case_id,onset_date,report_date,district,sex,age_years,case_status,vaccinated
+C001,2021-01-03,2021-01-05,North,F,8,suspected,yes
+C002,2021-01-04,2021-01-06,North,M,11,confirmed,yes
+C003,2021-01-05,2021-01-08,South,F,4,suspected,no
+C004,2021-01-07,2021-01-09,North,M,7,confirmed,no
+C005,2021-01-08,2021-01-12,East,F,16,discarded,yes
+C006,2021-01-11,2021-01-13,South,M,3,confirmed,no
+C007,2021-01-12,2021-01-14,North,F,5,suspected,unknown
+C008,2021-01-15,2021-01-17,East,M,22,confirmed,yes
+C009,2021-01-18,2021-01-20,South,F,6,suspected,no
+C010,2021-01-19,2021-01-21,North,M,10,confirmed,yes
+C011,2021-01-21,2021-01-23,South,F,9,confirmed,no
+C012,2021-01-23,2021-01-25,East,M,14,suspected,yes

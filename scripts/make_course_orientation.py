@@ -34,13 +34,13 @@ These notebooks turn course questions into small, hands-on investigations. You w
 
 <img src="../assets/unit2-v2-laila-problem.png" width="600" alt="Course slide: Laila needs a district TB summary report and faces delayed, incomplete, fragmented data.">
 
-*Slide connection: Unit 2, Version 2, slide 2 introduces Laila's reporting problem. Martha appears in slides 65–67 of the same deck.*
+*Laila needs a district summary, but late and incomplete reports make it hard to see what is happening.*
 
 Laila's case continues across course units. The first scored notebook starts with a small choice: which items are raw **data**, and which already organize data into **information**?
 
 <img src="../assets/unit2-v2-surveillance-cycle.png" width="420" alt="Course surveillance cycle from detection and collection to analysis, interpretation, communication, and action.">
 
-*Slide connection: Unit 2, Version 2, slide 3. Notebook 01 begins at the **data → information** part of this cycle.*
+*Start at **data to information**: organize collected values into a pattern you can interpret.*
 
 ## Try one cell
 
@@ -49,20 +49,17 @@ Select the next cell and press **Shift+Enter**. It is a practice cell and does n
     run = "print('Ready to investigate with Laila.')"
     next_steps = """## Where to go next
 
-1. Browse the UCSF Unit 1 and Unit 2 source readings in **`readings/ucsf/u00-n01-reading-index.ipynb`**. They include the course narrative, case questions, and diagrams. Reading them does not add observations.
+1. Browse the Unit 1 and Unit 2 readings in **`readings/ucsf/u00-n01-reading-index.ipynb`**. They include the course narrative, case questions, and diagrams. Reading them does not add observations.
 2. Try **`u01-n01-data-to-decision.ipynb`** for Unit 1, **`u02-n01-system-map.ipynb`** for Unit 2, or **`u03-n01-data-or-information.ipynb`** for Unit 3. The Unit 3 notebook has a matching R version in `exercises/r`.
 3. In Unit 3 Notebook 01, run the collapsed setup cell, sort the cards into Data or Information, then run **Check my choices**. The **Learning** panel records the attempt and offers hints or a next activity.
 4. After a few attempts, export your record from the Learning panel. The unscored **`08-my-learning-record.ipynb`** notebook in this folder can show how observations, estimates, and recommendations changed.
 
-Notebook 00 is an orientation, so it has no scored exercise. Current scored Python exercises cover **Units 1, 2, and 3**. The Unit 2 system map is a first pilot; its source readings remain unscored.
+Notebook 00 is an orientation, so it has no scored exercise. Current scored Python exercises cover **Units 1, 2, and 3**. The Unit 2 system map is a scored exercise; the adjacent readings are for reflection.
 """
-    references = """## Course sources
+    references = """## Keep exploring
 
-- [FETP Unit 3 instructor guide](https://docs.google.com/document/d/1B6qrW7QBcL4uCO85QPIN8pJ--37S8N6j3xkT87qBACA) and [slides](https://docs.google.com/presentation/d/1EXkFCxffubjhpM94373WiJ0a9_V0Tsfn) introduce the data-to-information work used in Notebook 01.
-- [FETP course JupyterBook](https://github.com/UCSF-IGHS/FETP) supplies the wider course sequence and case context.
-- The embedded visuals come from *Unit 2, Version 2, Detection and Diagnosis*, slides 2–3 of the deck supplied with the project. Martha's scenario appears on slides 65–67.
-
-Laila is the case-study character in the course materials. The dialogue and visual cues in these notebooks are teaching prompts, not quotations from the slides.
+- [Follow Laila's case](../../readings/ucsf/u00-n01-reading-index.ipynb).
+- [View the Unit 1 slides](../../readings/ucsf/u01-n01-slides.ipynb) and [Unit 2 slides](../../readings/ucsf/u02-n01-slides.ipynb) here in the course.
 """
     notebook = {
         "cells": [
