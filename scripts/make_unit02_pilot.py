@@ -41,7 +41,7 @@ INTRO = """**Course outline:** Unit 02 · Notebook 01 · Python
 
 ## Laila's case
 
-The [course case study](../../readings/ucsf/u02-n04-case-study.ipynb) begins with a call from Kukuna Health Center about reports of fever and rash. Laila's team must prepare a surveillance summary. The [group-work page](../../readings/ucsf/u02-n05-group-work.ipynb) asks where needed data originates, which paper and electronic systems hold it, and who uses those systems.
+Kukuna Health Center calls about reports of fever and rash. Laila's team must prepare a surveillance summary. She needs to know where the data originates, which paper and electronic systems hold it, and who can use each system.
 
 In the diagram above, build two **electronic** paths. For each path, use **Move up** and **Move down** to put the four stages in the order information travels. Select a stage first, then move it. Both lists start out of order. Run **Check my map** after moving stages in both lists. You can correct a route and check again; the Learning panel records each attempt.
 
@@ -125,11 +125,10 @@ ENDING = """## Reflect on system use
 
 Who needs each case or laboratory report? Name one access question you would verify with the district team. Your reflection is not automatically scored.
 
-## Continue learning
+## Continue the case
 
-- [Explore the country HIS diagram](../../readings/ucsf/u02-n03-his-context.ipynb).
-- [Read Laila's case](../../readings/ucsf/u02-n04-case-study.ipynb) and [map the data users](../../readings/ucsf/u02-n05-group-work.ipynb).
-- [Review the Unit 2 slides](../../readings/ucsf/u02-n01-slides.ipynb).
+Use the **Learning** panel for the next activity. If a route was incorrect,
+follow each arrow in the diagram and try the same map again.
 """
 
 def cell(kind: str, source: str, cell_id: str, metadata: dict | None = None) -> dict:

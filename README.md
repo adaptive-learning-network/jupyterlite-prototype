@@ -59,6 +59,11 @@ Every shipped notebook ends with References. The learning text and illustrations
 are included locally; external source pages are documented separately and are
 not required to complete a notebook. `scripts/add_course_references.py --check`
 verifies the references and local notebook images.
+The scored Python notebooks are the main case path: each includes the course
+context, local visual, data task, interpretation, and adaptive check it needs.
+The UCSF readings are an optional source library, not a second required route
+through the same story. New R variants are deferred until the Python path is
+stable.
 
 The Unit 1 pilot uses the course's data–information–knowledge–wisdom slide graphic,
 an original Laila teaching comic, synthetic weekly reported case counts, a

@@ -395,14 +395,17 @@ def write_index() -> None:
 
     notebook = {
         "cells": [
-            cell("**Course outline ? Reading index**\n\n# Follow Laila's informatics case\n\n"
-                 "Read the case, inspect the diagrams, and answer the prompts in your notebook copy. "
+            cell("**Course source library · Reading index**\n\n# Explore the fuller course readings\n\n"
+                 "These readings preserve more of the course text, prompts, and diagrams. "
+                 "The scored Python notebooks provide the main case path, including the "
+                 "explanation and visuals needed for each computation. These readings are optional. "
                  "Your written notes stay in this browser.", "0"),
             cell("## Unit 1 ? From data to decisions\n\n" + links("u01-"), "1"),
             cell("## Unit 2 ? Follow a report through the system\n\n" + links("u02-"), "2"),
-            cell("## Continue practicing\n\nChoose **No Kernel** if asked; these readings have no code to run. "
-                 "Use the **Learning** panel for scored exercises. "
-                 "[Practice questions](u00-n02-version3-form-library.ipynb) offer another way to review the ideas.", "3"),
+            cell("## Continue Laila's case\n\nChoose **No Kernel** if asked; these readings have no code to run. "
+                 "Return to the [Unit 1 computational notebook](../../exercises/python/u01-n01-data-to-decision.ipynb) "
+                 "or use the **Learning** panel for the next scored exercise. "
+                 "[Optional practice questions](u00-n02-version3-form-library.ipynb) offer another way to review the ideas.", "3"),
         ],
         "metadata": {"title": "Unit 1 and 2 reading index", "generatedBy": "scripts/import_ucsf_readings.py"},
         "nbformat": 4, "nbformat_minor": 5,

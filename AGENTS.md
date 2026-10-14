@@ -60,23 +60,28 @@ The `al:` ontology is expected at `../adaptive-learning-ontology`; override with
    reference URL only after verifying that its destination works; add it to the
    reviewed allowlist in `scripts/add_course_references.py`.
 4. **Python and R stay in parity** for the existing paired Unit 3 exercises.
-   The user requested Python first for new notebooks; Unit 1 Notebook 01 and
-   the DHIS2 pilot are explicitly Python only. `jlpm test:checks` must pass
-   (it needs `Rscript`).
-5. **The engine stays pure.** No DOM, storage, network, clock, or randomness in
+   Develop new computational narratives in Python first; defer new R variants
+   until the Python path is stable. Unit 1 Notebook 01 and the DHIS2 pilot are
+   Python only. `jlpm test:checks` must pass (it needs `Rscript`).
+5. **One case journey per topic.** Put the needed course explanation, local
+   visual, data task, interpretation, and adaptive check in the scored notebook.
+   Existing UCSF readings are an optional source library, not a second required
+   route through the same case. Preserve source coverage in the course inventory.
+6. **The engine stays pure.** No DOM, storage, network, clock, or randomness in
    `src/engine/` or `src/identity/`. Policy values are data in the catalog.
-6. **Privacy.** Learner identity is an opaque `urn:uuid:`. OIDC sign-in keeps only
+7. **Privacy.** Learner identity is an opaque `urn:uuid:`. OIDC sign-in keeps only
    the issuer and an opaque subject, under consent. Never store names, email
    addresses, or tokens. `lite/oidc.json` holds public values only;
    `configure_site.py` rejects secrets.
-7. **Public repository.** No secrets, tokens, personal names (including
+8. **Public repository.** No secrets, tokens, personal names (including
    facilitators named in course guides), or local paths. Course specifics belong
    in notebooks with attribution; design docs stay generic.
-8. **Terminology.** Use **adaptive-learning engine** for the deterministic
+9. **Terminology.** Use **adaptive-learning engine** for the deterministic
    component and **Jupyter kernel** for Python or R runtimes. Never say "kernel"
    alone.
-9. **Notebook cell IDs** are "0", "1", "2", "3". A global `nbstripout` git filter
-   renumbers IDs this way, so the generator matches it.
+10. **Notebook cell IDs** must be unique. Core generated cells use numeric IDs;
+    the final References cell uses its own ID, and slide preview cells use
+    descriptive IDs.
 
 ## Before you commit
 

@@ -44,6 +44,10 @@ def references(path: Path) -> str:
         prefix = "assets/"
     else:
         source = "Public Health Informatics for FETP, course slides and practice exercises."
+        if name == "u01-n01-data-to-decision":
+            source = "UCSF-IGHS, *FETP JupyterBook*, Unit 1 informatics lesson; adapted with synthetic weekly reports."
+        elif name == "u02-n01-system-map":
+            source = "UCSF-IGHS, *FETP JupyterBook*, Unit 2 HIS case study and group work; adapted with a local system map."
         slides = [1] if name.startswith("u01-") else [2]
         if name.startswith("u00-"):
             slides = [1, 2]

@@ -383,10 +383,17 @@ def placeholder(language: str, variables: dict) -> str:
 
 
 def references(ex: dict) -> str:
-    return ("## Continue learning\n\n"
-            "- [Follow Laila's case](../../readings/ucsf/u00-n01-reading-index.ipynb).\n"
-            "- [Use the Unit 2 surveillance cycle](../../readings/ucsf/u02-n01-slides.ipynb).\n"
-            "- [Review the local practice questions](../../readings/ucsf/u00-n02-version3-form-library.ipynb).")
+    next_task = {
+        "u03-n01-data-or-information": ("inspect the available fields", "02-explore-dataset.ipynb"),
+        "02-explore-dataset": ("filter records for Laila's question", "03-filter-records.ipynb"),
+        "03-filter-records": ("calculate a coverage measure", "04-coverage.ipynb"),
+        "04-coverage": ("inspect the dataset structure", "05-machine-readable.ipynb"),
+        "05-machine-readable": ("choose the right level of records", "06-case-or-aggregate.ipynb"),
+        "06-case-or-aggregate": ("query the simulated reporting system", "07-dhis2-query.ipynb"),
+    }[ex["file"]]
+    return ("## Continue Laila's investigation\n\n"
+            f"Next, [{next_task[0]}]({next_task[1]}). "
+            "The **Learning** panel can recommend a different step based on your attempts.")
 
 
 def cell(cell_type: str, source: str, cell_id: str, metadata: dict | None = None) -> dict:

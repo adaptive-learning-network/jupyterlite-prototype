@@ -38,7 +38,7 @@ INTRO = """**Course outline:** Unit 01 · Notebook 01 · Python
 
 **Learning objective:** **Justify** one public health action from a synthetic surveillance summary.
 
-The [Unit 1 course lesson](../../readings/ucsf/u01-n02-lesson.ipynb) describes Laila's problem as **data overload**: locating, cleaning, and transforming data into usable information takes time. It defines information as data organized with context, knowledge as interpreted patterns, and wisdom as decisions and actions informed by that knowledge. This short exercise follows that sequence.
+Laila's problem is **data overload**: locating, cleaning, and transforming reports into usable information takes time. Information is data organized with context; knowledge is an interpreted pattern; wisdom is a decision and action informed by that knowledge. You will follow that sequence with her reported counts.
 
 ## Scenario and task
 
@@ -53,13 +53,11 @@ Laila receives a small table of **synthetic weekly reported case counts**. The r
 Then run the exercise cell. The **Learning** panel records each check, offers hints, and recommends the next activity. Afterward, write one sentence in the reflection cell explaining what the counts do and do not establish. The reflection is for you; it is not automatically graded.
 """
 
-REFERENCES = """## Continue learning
+ENDING = """## Continue the case
 
-- [Laila's Unit 1 lesson](../../readings/ucsf/u01-n02-lesson.ipynb) explains data overload and the move from data to action.
-- [Unit 1 slides](../../readings/ucsf/u01-n01-slides.ipynb) show the data-to-wisdom pyramid and surveillance value cycle.
-- [Unit 1 practice questions](../../readings/ucsf/u01-n03-knowledge-check.ipynb) let you explain your choice in words.
-
-The counts are synthetic. Verify a signal before treating it as an outbreak.
+The counts are synthetic. Verify a signal before treating it as an outbreak. Use
+the **Learning** panel for your next activity or retry this decision after
+checking the district changes.
 """
 
 def cell(kind: str, source: str, cell_id: str, metadata: dict | None = None) -> dict:
@@ -88,7 +86,7 @@ increase = None
 recommended_step = None
 """
     meta = {"al": {"activity": EX + "act-u01-data-to-decision", "object": EX + "act-u01-data-to-decision-exercise", "check": "checks/u01-data-to-decision", "hints": ["For each district, pair its previous and current rows before comparing counts.", "Subtract previous from current for every district; choose the largest increase, not merely the largest current count.", "A reported increase is a signal. Verify the reports and investigate before declaring a confirmed outbreak."]}, "tags": ["al-exercise"]}
-    reflection = "## Your reflection\n\nReplace this prompt with one sentence: *Why is the chosen action justified, and what remains uncertain?*\n\n" + REFERENCES
+    reflection = "## Your reflection\n\nReplace this prompt with one sentence: *Why is the chosen action justified, and what remains uncertain?*\n\n" + ENDING
     notebook = {
         "cells": [cell("markdown", INTRO, "0"), cell("code", setup, "1"), cell("code", exercise, "2", meta), cell("markdown", reflection, "3")],
         "metadata": {"kernelspec": {"name": "python", "display_name": "Python (Pyodide)", "language": "python"}, "language_info": {"name": "python"}, "al": {"activity": EX + "act-u01-data-to-decision", "language": "python", "generatedBy": "scripts/make_unit01_pilot.py"}, "title": "Unit 01 Notebook 01: From data to a public health decision (Python)"},
