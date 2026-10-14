@@ -142,9 +142,10 @@ test('saves an existing reading whose browser model has a Windows path', async (
 
 test('Unit 2 slide reading shows local PDF page previews', async ({ page }) => {
   await page.goto('/lab/index.html?path=readings/ucsf/u02-n01-slides.ipynb');
-  await expect(page.locator('.jp-Notebook')).toContainText('Unit 2 Version 2 slide preview');
+  await expect(page.locator('.jp-Notebook')).toContainText('Unit 2 slide preview');
   const noKernel = page.getByRole('dialog').getByRole('button', { name: 'No Kernel' });
   if (await noKernel.isVisible()) await noKernel.click();
+  await page.locator('.jp-Notebook .jp-Cell').nth(2).scrollIntoViewIfNeeded();
   const firstRange = page.locator('.jp-Notebook details').first();
   await firstRange.locator('summary').click();
   await expect.poll(() => firstRange.locator('img').first().evaluate(image => image.naturalWidth))
