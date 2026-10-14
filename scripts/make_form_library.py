@@ -109,7 +109,33 @@ except ImportError:
     await piplite.install("ipywidgets==8.1.7")
     import ipywidgets as widgets
 from html import escape
-from IPython.display import display
+from IPython.display import HTML, display
+
+display(HTML("""<style>
+.course-quiz-card .widget-radio,
+.course-quiz-card .widget-checkbox {{ height: auto !important; }}
+.course-quiz-card .widget-radio-box {{ width: 100% !important; }}
+.course-quiz-card .widget-radio-box label,
+.course-quiz-card .widget-checkbox .widget-label-basic {{
+    display: block !important;
+    position: relative;
+    box-sizing: border-box;
+    height: auto !important;
+    min-height: 1.6em;
+    padding: 0.15em 0 0.15em 1.65em;
+    margin: 0.15em 0;
+    line-height: 1.4;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+}}
+.course-quiz-card .widget-radio-box label input[type=radio],
+.course-quiz-card .widget-checkbox .widget-label-basic input[type=checkbox] {{
+    position: absolute;
+    left: 0;
+    top: 0.35em;
+    margin: 0;
+}}
+</style>"""))
 
 items = {data}
 controls = []
@@ -128,8 +154,10 @@ for number, item in enumerate(items, 1):
                    for choice in item['choices']]
     controls.append(control)
     choices = control if isinstance(control, list) else [control]
-    cards.append(widgets.VBox([title, *choices], layout=widgets.Layout(
-        border='1px solid #d6dee5', padding='0.75rem', margin='0 0 0.75rem 0')))
+    card = widgets.VBox([title, *choices], layout=widgets.Layout(
+        border='1px solid #d6dee5', padding='0.75rem', margin='0 0 0.75rem 0'))
+    card.add_class('course-quiz-card')
+    cards.append(card)
 
 summary = widgets.Output()
 review_button = widgets.Button(description='Submit for feedback', button_style='info')

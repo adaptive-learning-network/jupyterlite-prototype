@@ -26,3 +26,28 @@
 .al-LearningPanel .jp-Button { padding: 2px 10px; border: 1px solid var(--jp-border-color1); border-radius: 3px; background: var(--jp-layout-color2); cursor: pointer; }
 .al-identity button { margin-right: 6px; margin-top: 4px; }
 .al-identity-message { margin: 4px 0; }
+
+/* Let long ipywidgets answers wrap without covering the next option. */
+.jp-Notebook .widget-radio,
+.jp-Notebook .widget-checkbox { height: auto !important; }
+.jp-Notebook .widget-radio-box { width: 100% !important; }
+.jp-Notebook .widget-radio-box label,
+.jp-Notebook .widget-checkbox .widget-label-basic {
+  display: block !important;
+  position: relative;
+  box-sizing: border-box;
+  height: auto !important;
+  min-height: 1.6em;
+  padding: 0.15em 0 0.15em 1.65em;
+  margin: 0.15em 0;
+  line-height: 1.4;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+}
+.jp-Notebook .widget-radio-box label input[type=radio],
+.jp-Notebook .widget-checkbox .widget-label-basic input[type=checkbox] {
+  position: absolute;
+  left: 0;
+  top: 0.35em;
+  margin: 0;
+}

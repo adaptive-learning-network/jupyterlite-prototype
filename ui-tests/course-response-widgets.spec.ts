@@ -1,11 +1,32 @@
 import { expect, test } from '@playwright/test';
 
+async function expectChoicesDoNotOverlap(cell: import('@playwright/test').Locator) {
+  const violations = await cell.locator('.course-quiz-card').evaluateAll((cards) =>
+    cards.flatMap((card, cardIndex) => {
+      const labels = [...card.querySelectorAll('.widget-radio-box label, .widget-checkbox .widget-label-basic')];
+      return labels.flatMap((label, index) => {
+        const text = label.querySelector('span') ?? label.firstChild;
+        if (!text) return [`card ${cardIndex + 1}, option ${index + 1}: no text`];
+        const range = document.createRange();
+        range.selectNodeContents(text);
+        const textBottom = Math.max(...[...range.getClientRects()].map((rect) => rect.bottom));
+        const labelBottom = label.getBoundingClientRect().bottom;
+        const nextTop = labels[index + 1]?.getBoundingClientRect().top ?? Infinity;
+        return label.getBoundingClientRect().width > 0 &&
+          labelBottom + 1 >= textBottom && nextTop + 1 >= textBottom
+          ? [] : [`card ${cardIndex + 1}, option ${index + 1}: text overlaps next option`];
+      });
+    }));
+  expect(violations).toEqual([]);
+}
+
 test('practice quiz presents choices as controls without scoring them', async ({ page }) => {
+  await page.setViewportSize({ width: 1050, height: 850 });
   await page.goto('/lab/index.html?path=readings/ucsf/u00-n02-version3-form-library.ipynb');
   await expect(page.locator('.jp-Notebook')).toContainText('Unit 1 · Practice quiz');
   await expect(page.locator('.jp-Notebook')).not.toContainText('Quiz U01-N03');
   await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]'))
-    .toBeVisible({ timeout: 180_000 });
+    .toHaveCount(1, { timeout: 180_000 });
   const quiz = page.locator('.jp-Notebook .jp-Cell').nth(2);
   await quiz.click();
   await page.keyboard.press('Shift+Enter');
@@ -13,6 +34,7 @@ test('practice quiz presents choices as controls without scoring them', async ({
   await expect(quiz.getByRole('radio', { name: 'Choose one' })).toHaveCount(0);
   await expect(quiz.getByRole('radio', { checked: true })).toHaveCount(0);
   await expect(quiz.getByRole('checkbox')).toHaveCount(5);
+  await expectChoicesDoNotOverlap(quiz);
   await quiz.getByRole('button', { name: 'Submit for feedback' }).click();
   await expect(quiz.locator('.jp-OutputArea').last()).toContainText('1. Choose an answer, then submit again.');
   await quiz.getByRole('radio', { name: 'They replace epidemiologists with AI.' }).check();
@@ -32,6 +54,7 @@ test('practice quiz presents choices as controls without scoring them', async ({
   await expect(unit2.getByRole('button', { name: 'Submit for feedback' })).toBeVisible({ timeout: 180_000 });
   await expect(unit2.getByRole('radio', { name: 'Choose one' })).toHaveCount(0);
   await expect(unit2.getByRole('radio', { checked: true })).toHaveCount(0);
+  await expectChoicesDoNotOverlap(unit2);
   for (const index of [10, 12, 14]) {
     const laterQuiz = page.locator('.jp-Notebook .jp-Cell').nth(index);
     await laterQuiz.click();
@@ -40,6 +63,7 @@ test('practice quiz presents choices as controls without scoring them', async ({
     await expect(submit).toBeVisible({ timeout: 180_000 });
     await expect(laterQuiz.getByRole('radio', { name: 'Choose one' })).toHaveCount(0);
     await expect(laterQuiz.getByRole('radio', { checked: true })).toHaveCount(0);
+    await expectChoicesDoNotOverlap(laterQuiz);
     const firstChoice = laterQuiz.getByRole(index === 14 ? 'radio' : 'checkbox').first();
     await firstChoice.check();
     await submit.click();
