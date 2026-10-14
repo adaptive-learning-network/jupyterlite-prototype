@@ -136,7 +136,7 @@ test('saves an existing reading whose browser model has a Windows path', async (
   await page.keyboard.insertText('Windows path save recovered');
   await page.keyboard.press('ControlOrMeta+s');
   await expect(page.getByRole('dialog', { name: 'File Save Error' })).toHaveCount(0);
-  await page.reload();
+  await page.goto('/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb');
   await expect(page.locator('.jp-Notebook')).toContainText('Windows path save recovered');
 });
 
