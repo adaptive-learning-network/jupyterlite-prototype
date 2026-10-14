@@ -247,8 +247,31 @@ def localize_dependencies(filename: str, body: str) -> str:
                             "- **Accuracy:** do values match the event or source record?\n")
     body = body.replace("- Excel\n\n**Practice with the local files below**", "")
     body = body.replace("### Resources\n\nUse the headings", "### Report structure\n\nUse the headings")
-    body = body.replace('  ![Creating value from surveillance data](assets/slide-previews/unit-1-027.jpg)',
-                        '  <img src="assets/slide-previews/unit-1-027.jpg" width="460" alt="Creating value from surveillance data">')
+    if filename == "u01-n02-lesson":
+        # The archived page put this image and 39px text in nested HTML divs.
+        # Markdown renders more reliably in JupyterLite's narrow reading pane.
+        body = re.sub(
+            r'<div style="display: flex; align-items: flex-start;">\s*'
+            r'\s*!\[Creating value from surveillance data\]'
+            r'\(assets/slide-previews/unit-1-027\.jpg\)\s*'
+            r'<div style="flex: 1;">.*?</div>\s*</div>',
+            '![Creating value from surveillance data](assets/slide-previews/unit-1-027.jpg)\n\n'
+            'By applying informatics principles, systems, and tools, we use evidence '
+            'to solve public health problems and improve health outcomes.',
+            body,
+            flags=re.S,
+        )
+        # --reuse-local also repairs notebooks generated before the block above.
+        body = re.sub(
+            r'<div style="display: flex; align-items: flex-start;">\s*'
+            r'<img src="assets/slide-previews/unit-1-027\.jpg"[^>]*>\s*'
+            r'<div style="flex: 1;">.*?</div>\s*</div>',
+            '![Creating value from surveillance data](assets/slide-previews/unit-1-027.jpg)\n\n'
+            'By applying informatics principles, systems, and tools, we use evidence '
+            'to solve public health problems and improve health outcomes.',
+            body,
+            flags=re.S,
+        )
     if filename == "u02-n07-explore-datasets" and "## Try it with a small register" not in body:
         body += ("\n\n## Try it with a small register\n\n"
                  "Open the [practice case register](assets/laila-case-register.csv) and "
