@@ -1,14 +1,14 @@
 # Practice questions for Laila's case
 
-Use these questions to check your reasoning about public health informatics. Select choices or write answers in your notebook copy, then compare your thinking with the course diagrams and exercises. These questions are for practice and are not scored.
+Use these questions to check your reasoning about public health informatics. Run a unit's quiz cell to choose answers with radio buttons or checkboxes, then select **Submit for feedback**. You will see whether each choice matches the **provisional practice key** and why. This is not the official form answer key and does not add an adaptive-learning observation. Compare the feedback with the course diagrams and exercises.
 
-Choose **No Kernel** in JupyterLite. Double-click a cell to enter a response, then press **Shift+Enter** and save.
+Choose **Python (Pyodide)** in JupyterLite. You can revise choices and submit again. Widget selections reset when the kernel restarts. The case-study prompts below are for written reflection.
 
 <!-- notebook cell -->
 
 ## Unit 1: Informatics and action
 
-### Quiz U01-N03
+### Unit 1 quiz
 
 1. **How do advances in information and computer science enhance public health surveillance for epidemiologists?** Select one.
    - They replace epidemiologists with AI.
@@ -50,7 +50,7 @@ _Your choices and responses:_
 
 ## Unit 2: Reporting systems
 
-### Quiz U02-N02
+### Unit 2 quiz
 
 1. **Which of the following key strategic areas commonly found in a country's Health Information System (HIS) Strategy is most likely to directly impact epidemiologists' work?** Select one.
    - Inventory system data exchange standards

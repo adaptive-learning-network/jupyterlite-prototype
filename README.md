@@ -31,12 +31,19 @@ GitLab.
 Notebook 00 is an unscored orientation with the course cast and slide visuals.
 The [practice-question library](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=readings/ucsf/u00-n02-version3-form-library.ipynb)
 preserves reviewed Unit 1, 2, 4, 5, and 7 quiz choices and case-study prompts from the
-supplied PDF archive, without account details or answer keys.
+supplied PDF archive, without account details or participant responses. Its practice
+questions use local radio buttons and checkboxes with **provisional practice
+feedback** derived from the course material; this is not the official form key.
+Choose **Python (Pyodide)**
+and run the quiz cell for the unit you want to review. The Unit 1 lesson also
+has text fields for its unscored reflection.
+The [provisional feedback review sheet](docs/review/provisional-quiz-feedback.md)
+lists every proposed choice and explanation for course-owner review.
 **Read Laila's case:** [Unit 1 and Unit 2 index on GitHub Pages](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb)
 or [the same index on CDC GitLab Pages](https://jupyterlite-prototype-4a4d87.gitpages.cdc.gov/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb).
 The index links to lessons, cases, and assignments in learning order.
 Its notebook links stay on whichever JupyterLite host you opened.
-If JupyterLite asks for a kernel while opening a reading, select **No Kernel**.
+For other text-only readings, select **No Kernel** if JupyterLite asks.
 The Notebook 01 pilot uses `u03-n01-data-or-information.ipynb` in both language
 folders: `uNN-nNN-topic.ipynb` means unit number, notebook number, and topic.
 The Python U03 N01 notebook now uses a drag-and-drop board with **Data** and

@@ -122,6 +122,10 @@ def localize_form(filename: str, body: str, prior_url: str | None = None) -> tup
             "Your response here is for reflection and is not scored."
             if is_quiz else
             "Use these headings to organize your case response. Your notes stay in this browser and are not scored.")
+    if filename == "u01-n02-lesson":
+        return (body, "## Reflect on Laila's report\n\nRun the next cell to write in the response fields. "
+                "Select **Show my reflection** to review your text. To keep it after a kernel restart, "
+                "copy the summary into a note in your saved notebook. This reflection is not scored.", source_url)
     prompts = "\n\n".join(f"**{i}. {prompt}**\n\n_Enter your response here._"
                            for i, prompt in enumerate(LOCAL_RESPONSES[filename], 1))
     response = ("## Local response section\n\n" + note +
@@ -209,6 +213,42 @@ def normalize_markdown(markdown: str, images: set[str]) -> str:
 
 def cell(source: str, cell_id: str) -> dict:
     return {"cell_type": "markdown", "id": cell_id, "metadata": {}, "source": source.splitlines(keepends=True)}
+
+
+def response_widget(prompts: list[str]) -> dict:
+    source = '''# Run this cell to write your reflection in the fields below.
+try:
+    import ipywidgets as widgets
+except ImportError:
+    import piplite
+    await piplite.install("ipywidgets==8.1.7")
+    import ipywidgets as widgets
+from html import escape
+from IPython.display import display
+
+prompts = ''' + repr(prompts) + '''
+fields = []
+for number, prompt in enumerate(prompts, 1):
+    label = widgets.HTML(value=f"<strong>{number}. {escape(prompt)}</strong>")
+    field = widgets.Textarea(placeholder="Write your reflection here", rows=5,
+                             layout=widgets.Layout(width="100%"))
+    fields.append(field)
+    display(widgets.VBox([label, field]))
+
+summary = widgets.Output()
+button = widgets.Button(description="Show my reflection", button_style="info")
+def show_reflection(_):
+    with summary:
+        summary.clear_output()
+        for number, field in enumerate(fields, 1):
+            print(f"{number}. {field.value.strip() or '[No response yet]'}\\n")
+button.on_click(show_reflection)
+display(button, summary)
+'''
+    return {"cell_type": "code", "id": "reflection-fields",
+            "metadata": {"jupyter": {"source_hidden": True}},
+            "source": source.splitlines(keepends=True),
+            "execution_count": None, "outputs": []}
 
 
 def localize_dependencies(filename: str, body: str) -> str:
@@ -327,7 +367,8 @@ def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
             "As you browse, notice where data is collected, organized, interpreted, and used.\n\n"
             f"[Open all {pages} slide pages in the PDF]({url})\n\n---\n\n"
         )
-        body = preview + body
+        if not body.startswith(f"## {unit} slide preview\n"):
+            body = preview + body
         body = re.sub(r"\[Open the source slides or response form\]\([^)]*\)", "", body)
         body = re.sub(r"\n# Unit Slides\s*$", "", body)
     body, response, source_form_url = localize_form(filename, body, prior_form_url)
@@ -372,13 +413,18 @@ def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
             lines += ["", "</details>"]
             slide_cells.append(cell("\n".join(lines), f"slide-{first:03d}"))
     if response:
-        notebook_cells = [cell(outline, "0"), cell(body, "1"), cell(response, "2"), cell(navigation, "3")]
+        notebook_cells = [cell(outline, "0"), cell(body, "1"), cell(response, "2")]
+        if filename == "u01-n02-lesson":
+            notebook_cells.append(response_widget(LOCAL_RESPONSES[filename]))
+        notebook_cells.append(cell(navigation, "3"))
     else:
         notebook_cells = [cell(outline, "0"), cell(body, "1"), *slide_cells,
                           cell(reflection, "2"), cell(navigation, "3")]
     notebook = {
         "cells": notebook_cells,
         "metadata": {"title": learner_title, "generatedBy": "scripts/import_ucsf_readings.py",
+                     **({"kernelspec": {"name": "python", "display_name": "Python (Pyodide)", "language": "python"},
+                         "language_info": {"name": "python"}} if filename == "u01-n02-lesson" else {}),
                      **({"sourceFormUrl": source_form_url} if source_form_url else {})},
         "nbformat": 4,
         "nbformat_minor": 5,
@@ -402,7 +448,8 @@ def write_index() -> None:
                  "Your written notes stay in this browser.", "0"),
             cell("## Unit 1 ? From data to decisions\n\n" + links("u01-"), "1"),
             cell("## Unit 2 ? Follow a report through the system\n\n" + links("u02-"), "2"),
-            cell("## Continue Laila's case\n\nChoose **No Kernel** if asked; these readings have no code to run. "
+            cell("## Continue Laila's case\n\nMost text-only readings use **No Kernel**. "
+                 "For the Unit 1 lesson's reflection fields and the optional practice quiz, choose **Python (Pyodide)** and run their response cells. "
                  "Return to the [Unit 1 computational notebook](../../exercises/python/u01-n01-data-to-decision.ipynb) "
                  "or use the **Learning** panel for the next scored exercise. "
                  "[Optional practice questions](u00-n02-version3-form-library.ipynb) offer another way to review the ideas.", "3"),

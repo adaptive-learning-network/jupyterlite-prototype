@@ -1,0 +1,44 @@
+{
+  "status": "provisional practice feedback; not the official Google Forms answer key",
+  "basis": "Reviewed Version 3 quiz PDFs and supplied FETP slide concepts; answer selections require course-owner review.",
+  "units": {
+    "Unit 1": [
+      {"correct": [2], "feedback": "Better collection, quality, and analysis help epidemiologists interpret reports sooner; people still judge the evidence and decide what to do."},
+      {"correct": [3, 4, 5], "feedback": "An informatics-savvy organization needs governance, interoperable systems, and people with the skills to use them."},
+      {"correct": [1], "feedback": "Knowledge comes from interpreting information with disease, population, and setting expertise. Wisdom is the informed action that follows."},
+      {"correct": [3], "feedback": "Public health informatics uses data, information, and knowledge to improve health and care delivery."}
+    ],
+    "Unit 2": [
+      {"correct": [2], "feedback": "Integrating health information systems changes how epidemiologists can find and combine the reports they need."},
+      {"correct": [4], "feedback": "Both systems routinely collect reports about events and cases across levels of the health system."},
+      {"correct": [3], "feedback": "A backlog cleared after delayed reporting can create a dashboard spike even when events did not suddenly increase."},
+      {"correct": [4], "feedback": "Poor connectivity can interrupt collection, reporting, and access to the resulting data."},
+      {"correct": [3], "feedback": "User support, help desk procedures, and troubleshooting keep applications usable after deployment."},
+      {"correct": [1], "feedback": "Clinical staff record accurate patient information during care; national policy and warehouse management have different owners."}
+    ],
+    "Unit 4": [
+      {"correct": [1, 2, 4], "feedback": "Existing survey reports, facility summaries, and laboratory extracts are secondary sources for this investigation. Newly collected investigation data and the new focus group are primary sources."},
+      {"correct": [2], "feedback": "A secondary source is useful only if its people, place, time, and variables fit the information need."},
+      {"correct": [1, 3, 4], "feedback": "A feature is a general capability such as mapping; a function is an action such as generating a report."},
+      {"correct": [1, 3, 5], "feedback": "A useful request states the user problem, the task or decision it supports, and a concrete example."}
+    ],
+    "Unit 5": [
+      {"correct": [1, 2, 4], "feedback": "The supplied security slide groups date of birth, marital status, and national ID under PII; it shows HIV results as health information and biometrics as other sensitive data. Biometrics can identify people in other contexts, so this provisional choice needs course-owner review."},
+      {"correct": [1], "feedback": "The course distinguishes biometric data as sensitive data that may or may not also identify a person or relate to their health in a particular setting."},
+      {"correct": [1, 3, 4], "feedback": "A security failure can erode trust and bring legal and reputational harm; it does not increase participation."},
+      {"correct": [1, 2, 3], "feedback": "Encryption in transit, role-based access, and inactivity logout reduce disclosure risk. Public sharing without consent does the opposite."},
+      {"correct": [1, 3, 5], "feedback": "Protect transmission, limit access to trained users, and secure the device and backup. Names, addresses, and GPS locations require care."}
+    ],
+    "Unit 7": [
+      {"correct": [4], "feedback": "Begin with an existing tool that the ministry or investigation already uses, then verify it meets the task's critical needs."},
+      {"correct": [2], "feedback": "Of these offered controls, a drop-down can capture one yes/no choice. A symptom list allowing several answers needs checkboxes."},
+      {"correct": [3], "feedback": "A calendar or date picker helps capture symptom-onset dates in a consistent format."},
+      {"correct": [4], "feedback": "Checkboxes let a learner or data collector select more than one symptom."},
+      {"correct": [4], "feedback": "Validation can require answers, constrain feasible ranges, and enforce formats."},
+      {"correct": [4], "feedback": "A pilot checks user fit, technical operation, and whether the tool needs changes before wider use."},
+      {"correct": [1, 2, 3, 5, 7], "feedback": "Plan who will test, where and for how long, and what counts as success. Age and height are not general pilot-plan requirements."},
+      {"correct": [4], "feedback": "Fit includes critical functions, sustainability, and whether the tool is already used or approved locally."},
+      {"correct": [1, 2, 4, 5], "feedback": "Budget for licenses, devices, connectivity, specialist skills, and servers. Colorful charts alone are not a sustainability criterion."}
+    ]
+  }
+}
