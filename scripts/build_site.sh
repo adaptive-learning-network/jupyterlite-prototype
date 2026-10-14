@@ -12,6 +12,7 @@ command -v micromamba >/dev/null || { echo "micromamba not found: see README (Se
 python scripts/build_catalog.py           # validate catalog with al: shapes, write content/al/catalog.json
 python scripts/make_exercises.py          # Python + R notebooks and checks from one spec
 python scripts/make_form_library.py       # reviewed local text from supplied form exports
+python scripts/add_course_references.py   # local references at the end of each notebook
 jlpm test                                 # engine unit tests (writes test-results/learner-export.nq)
 python scripts/validate_export.py test-results/learner-export.nq
 jlpm build                                # compile extension and labextension

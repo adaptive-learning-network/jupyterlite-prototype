@@ -25,5 +25,7 @@ test('Unit 1 lesson loads every course visual locally', async ({ page }) => {
     expect(await visual.getAttribute('src')).not.toMatch(/^https?:/);
   }
   await expect(page.locator('.jp-Notebook')).not.toContainText('Open source illustration');
+  await expect(page.locator('.jp-Notebook h2').filter({ hasText: 'References' })).toHaveCount(1);
+  await expect(page.locator('.jp-Notebook')).not.toContainText('Source and visual attribution');
   expect(externalCourseRequests).toEqual([]);
 });

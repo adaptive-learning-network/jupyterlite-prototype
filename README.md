@@ -55,6 +55,11 @@ not clear or overwrite your browser-saved notebooks.
 The remaining existing exercise filenames will be converted after this pilot.
 The reading index opens 18 unscored pages with Laila's case, prompts, diagrams, and local slide previews. Unit 1 and Unit 2 slide notebooks contain 142 page previews and two PDFs served by this JupyterLite site. Local, synthetic practice CSV files and a data dictionary support the dataset and quality-check readings. The practice files are small teaching examples, not the original surveillance spreadsheets. Source mapping and unavailable-media details live in [slide preview notes](docs/slide-preview.md) and the [course link audit](../fetp-phi-course/docs/audit/form-links-audit.md). Scored Python pilots cover Units 1 and 2; the rest of Unit 2 remains planned in the [course notebook inventory](../fetp-phi-course/docs/notebook-inventory.md).
 
+Every shipped notebook ends with References. The learning text and illustrations
+are included locally; external source pages are documented separately and are
+not required to complete a notebook. `scripts/add_course_references.py --check`
+verifies the references and local notebook images.
+
 The Unit 1 pilot uses the course's data–information–knowledge–wisdom slide graphic,
 an original Laila teaching comic, synthetic weekly reported case counts, a
 reflection prompt, and an adaptive check. The check scores the district,

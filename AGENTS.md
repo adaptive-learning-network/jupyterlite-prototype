@@ -23,6 +23,7 @@ scripts/make_unit01_pilot.py Python-only Unit 1 scored pilot (called by make_exe
 scripts/prepare_widget_wheels.py  checksum-pinned local piplite wheels for U03 N01 controls
 src/engine/                  adaptive-learning engine: pure, deterministic, no JupyterLab imports
 scripts/import_ucsf_readings.py  pinned UCSF source to unscored reading notebooks and images
+scripts/add_course_references.py  local, final References cell and dependency check
 src/identity/                PKCE and identity-binding rules (pure)
 src/extension/               JupyterLab plugin: observer, panel, store, guide, OIDC sign-in
 site/oidc-callback.html      copied to the site root by scripts/configure_site.py
@@ -53,9 +54,11 @@ The `al:` ontology is expected at `../adaptive-learning-ontology`; override with
    slide examples and definitions, course scenarios, Excel How-To Scribes, and
    quiz items. Synthetic data only fills gaps, and it extends the course's own
    examples. Expected answers are computed from the data, never typed in.
-3. **Every scored exercise notebook ends with a References section** linking the original Google
-   Docs and Slides (with slide numbers), the quiz, and guides. The Docs are
-   retired once content is in notebooks; the links remain.
+3. **Every shipped notebook ends with a References section.** Cite the course
+   source in text and link bundled slides or companion readings where useful.
+   Do not make learning content depend on external links. Include an external
+   reference URL only after verifying that its destination works; add it to the
+   reviewed allowlist in `scripts/add_course_references.py`.
 4. **Python and R stay in parity** for the existing paired Unit 3 exercises.
    The user requested Python first for new notebooks; Unit 1 Notebook 01 and
    the DHIS2 pilot are explicitly Python only. `jlpm test:checks` must pass
