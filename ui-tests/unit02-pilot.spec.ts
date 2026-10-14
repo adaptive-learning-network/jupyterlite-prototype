@@ -70,7 +70,7 @@ test('Unit 2 system map records a wrong route and a corrected route', async ({ p
 
 test('Unit 2 knowledge check reading saves in a fresh browser', async ({ page }) => {
   await page.goto('/lab/index.html?path=readings/ucsf/u02-n02-knowledge-check.ipynb');
-  await expect(page.locator('.jp-Notebook .jp-Cell')).toHaveCount(4);
+  await expect(page.locator('.jp-Notebook .jp-Cell')).toHaveCount(5);
   await page.getByRole('dialog').getByRole('button', { name: 'No Kernel' }).click();
   const cell = page.locator('.jp-Notebook .jp-Cell').nth(2);
   await cell.click();
@@ -94,7 +94,7 @@ test('repairs a missing browser reading directory before saving', async ({ page 
     await route.fulfill({ response, json: index });
   });
   await page.goto('/lab/index.html?path=readings/ucsf/u02-n02-knowledge-check.ipynb');
-  await expect(page.locator('.jp-Notebook .jp-Cell')).toHaveCount(4);
+  await expect(page.locator('.jp-Notebook .jp-Cell')).toHaveCount(5);
   const missingDirDialog = page.getByRole('dialog', { name: 'Directory not found' });
   if (await missingDirDialog.isVisible()) {
     await missingDirDialog.getByRole('button', { name: 'Close' }).click();
@@ -125,7 +125,7 @@ test('saves an existing reading whose browser model has a Windows path', async (
     await route.fulfill({ response, json: index });
   });
   await page.goto('/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb');
-  await expect(page.locator('.jp-Notebook .jp-Cell')).toHaveCount(4);
+  await expect(page.locator('.jp-Notebook .jp-Cell')).toHaveCount(5);
   const noKernel = page.getByRole('dialog').getByRole('button', { name: 'No Kernel' });
   if (await noKernel.isVisible()) await noKernel.click();
   const cell = page.locator('.jp-Notebook .jp-Cell').nth(3);
