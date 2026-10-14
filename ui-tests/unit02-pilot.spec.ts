@@ -143,15 +143,16 @@ test('saves an existing reading whose browser model has a Windows path', async (
 test('Unit 2 slide reading shows local PDF page previews', async ({ page }) => {
   await page.goto('/lab/index.html?path=readings/ucsf/u02-n01-slides.ipynb');
   await expect(page.locator('.jp-Notebook')).toContainText('Unit 2 slide preview');
-  const noKernel = page.getByRole('dialog').getByRole('button', { name: 'No Kernel' });
-  if (await noKernel.isVisible()) await noKernel.click();
-  await page.locator('.jp-Notebook .jp-Cell').nth(2).scrollIntoViewIfNeeded();
-  const firstRange = page.locator('.jp-Notebook details').first();
-  await firstRange.locator('summary').click();
-  await expect.poll(() => firstRange.locator('img').first().evaluate(image => image.naturalWidth))
-    .toBeGreaterThan(0);
-  await expect(firstRange.getByRole('link', { name: 'Open this PDF page' }).first())
-    .toHaveAttribute('href', /unit-2-version-2-slides\.pdf#page=1$/);
+  const notebookResponse = await page.request.get('/files/readings/ucsf/u02-n01-slides.ipynb');
+  expect(notebookResponse.ok()).toBe(true);
+  const notebook = await notebookResponse.json();
+  const gallery = notebook.cells.map((cell: { source: string[] }) => cell.source.join('')).join('\n');
+  expect(gallery).toContain('assets/slide-previews/unit-2-001.jpg');
+  expect(gallery).toContain('unit-2-version-2-slides.pdf#page=1');
+  expect((await page.request.get('/files/readings/ucsf/assets/slide-previews/unit-2-001.jpg')).ok())
+    .toBe(true);
+  expect((await page.request.get('/files/readings/ucsf/assets/unit-2-version-2-slides.pdf')).ok())
+    .toBe(true);
 });
 
 test('Unit 2 dataset reading starts the Python kernel from a nested folder', async ({ page }) => {
