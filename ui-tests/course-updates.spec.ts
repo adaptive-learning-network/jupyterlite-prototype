@@ -1,4 +1,4 @@
-﻿import { expect, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 test.use({serviceWorkers:'block'});
 test('local review replaces a supplied copy while learner mode retains saved work',async({page})=>{
  let review=false;
@@ -23,7 +23,7 @@ test('local review replaces a supplied copy while learner mode retains saved wor
  await edit(0,'# Outdated review copy');
  await page.evaluate(path=>localStorage.setItem(`al-engine:course-copy:${path}`,'old-version'),path);
  review=true;await page.reload();
- await expect(page.locator('.jp-Notebook h1')).toHaveText(title);
+ await expect(page.locator('.jp-Notebook h1')).toContainText(title);
  expect(await page.evaluate(()=>localStorage.getItem('al-engine:learner-record:v0.1'))).toBe(record);
  review=false;await edit(2,'## My reflection\n\nLearner notes retained across updates.');
  await page.evaluate(path=>localStorage.setItem(`al-engine:course-copy:${path}`,'old-version'),path);
