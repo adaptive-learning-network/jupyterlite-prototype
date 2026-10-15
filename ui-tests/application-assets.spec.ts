@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 test('adaptive resources load outside the learner contents drive', async ({ page, request }) => {
   const listing = await (await request.get('/api/contents/all.json')).json();
   const names = listing.content.map((item: { name: string }) => item.name);
-  expect(names).toEqual(expect.arrayContaining(['exercises', 'readings']));
+  expect(names).toEqual(['notebooks']);
   expect(names).not.toContain('al');
   expect(names).not.toContain('checks');
   expect((await request.get('/files/al/catalog.json')).status()).toBe(404);
@@ -19,21 +19,23 @@ test('adaptive resources load outside the learner contents drive', async ({ page
 
   await page.goto('/lab/index.html');
   await expect(page.locator('#al-engine-learning')).toBeVisible();
-  await expect(page.locator('.jp-DirListing-itemText').filter({ hasText: /^exercises$/ })).toBeVisible();
+  await expect(page.locator('.jp-DirListing-itemText').filter({ hasText: /^notebooks$/ })).toBeVisible();
   await expect(page.locator('.jp-DirListing-itemText').filter({ hasText: /^(al|checks)$/ })).toHaveCount(0);
 });
 
 test('an unavailable check preserves the learner record and can be retried', async ({ page }) => {
-  await page.goto('/lab/index.html?path=exercises/python/u01-n01-data-to-decision.ipynb');
+  await page.goto('/lab/index.html?path=notebooks/u01-n01-data-to-decision.ipynb');
   const panel = page.locator('#al-engine-learning');
   await expect(panel).toBeVisible();
   await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]'))
     .toHaveCount(1, { timeout: 180_000 });
-  const setup = page.locator('.jp-Notebook .jp-Cell').nth(1);
+  const setup = page.locator('.jp-Notebook .jp-Cell[data-windowed-list-index="1"]');
+  await setup.scrollIntoViewIfNeeded();
   await setup.locator('.cm-content').click();
   await page.keyboard.press('Shift+Enter');
   await expect(setup.locator('.jp-OutputArea')).toContainText('Kambia', { timeout: 180_000 });
-  const exercise = page.locator('.jp-Notebook .jp-Cell').nth(2);
+  const exercise = page.locator('.jp-Notebook .jp-Cell[data-windowed-list-index="2"]');
+  await exercise.scrollIntoViewIfNeeded();
   await exercise.locator('.cm-content').click();
   await page.keyboard.press('Shift+Enter');
   await expect(panel.locator('.al-feedback')).toContainText('Not finished yet');

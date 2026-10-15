@@ -16,3 +16,5 @@ lib-test/
 /pypi/
 .cache/
 .yarn/
+
+.course-content/

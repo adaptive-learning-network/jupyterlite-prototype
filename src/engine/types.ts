@@ -95,6 +95,8 @@ export interface LearnerRecord {
   observations: Observation[];
   /** Highest facilitation-ladder level revealed per activity. */
   guidance: Record<string, number>;
+  /** Unscored, explicitly recorded reflections, grouped by stable course section. */
+  reflections?: Record<string, { prompt: string; answer: string; savedAt: string }[]>;
   /** Present only after the learner consents to link an external identity. */
   identity?: IdentityBinding;
 }

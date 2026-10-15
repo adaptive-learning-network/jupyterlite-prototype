@@ -43,7 +43,7 @@ def publish_adaptive_assets(output: Path) -> str:
              *sorted((source / "checks").glob("*.R"))]
     if not (source / "catalog.json").is_file() or not list((source / "checks").glob("*.py")):
         raise ValueError("Generate the adaptive-learning catalog and checks before building the site")
-    for notebook in sorted((ROOT / "content").rglob("*.ipynb")):
+    for notebook in sorted((ROOT / ".course-content").rglob("*.ipynb")):
         document = json.loads(notebook.read_text(encoding="utf-8"))
         language = document["metadata"].get("kernelspec", {}).get("language", "").lower()
         extension = {"python": "py", "r": "R"}.get(language)
@@ -55,8 +55,8 @@ def publish_adaptive_assets(output: Path) -> str:
     for path in files:
         digest.update(path.relative_to(source).as_posix().encode("utf-8") + b"\0")
         digest.update(hashlib.sha256(path.read_bytes()).digest())
-    versions = {path.relative_to(ROOT / "content").as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-                for path in sorted((ROOT / "content").rglob("*.ipynb"))}
+    versions = {path.relative_to(ROOT / ".course-content").as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+                for path in sorted((ROOT / ".course-content").rglob("*.ipynb"))}
     manifest = (json.dumps(versions, sort_keys=True, indent=2) + "\n").encode("utf-8")
     digest.update(b"notebooks.json\0" + hashlib.sha256(manifest).digest())
     relative = f"assets/adaptive-learning/{digest.hexdigest()[:20]}"

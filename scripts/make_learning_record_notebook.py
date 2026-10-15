@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-OUTPUT = ROOT / "content/exercises/python/08-my-learning-record.ipynb"
+OUTPUT = ROOT / "content/exercises/python/u03-n08-my-learning-record.ipynb"
 
 
 def cell(kind, source, cell_id):
@@ -17,7 +17,9 @@ def cell(kind, source, cell_id):
 
 def main():
     viewer = (ROOT / "scripts/learning_record_view.py").read_text(encoding="utf-8")
-    intro = """# My learning record: what did the adaptive system record?
+    intro = """**Course outline:** Unit 03 | Notebook 08 | Python
+
+# My learning record: what did the adaptive system record?
 
 This final, **unscored** notebook shows your own learner graph. It does not submit an answer or add an observation.
 

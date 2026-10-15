@@ -6,13 +6,13 @@ import { expect, Page, test } from '@playwright/test';
 async function openNotebook(page: Page, path: string): Promise<void> {
   await page.goto(`/lab/index.html?path=${path}`);
   await expect(page.locator('#al-engine-learning')).toBeVisible();
-  await expect(page.locator('.jp-Notebook .jp-Cell').nth(2)).toBeVisible();
   // Wait for the Jupyter kernel to be idle before running cells.
   await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]')).toBeVisible({ timeout: 180_000 });
 }
 
 async function runCell(page: Page, index: number, source?: string): Promise<void> {
-  const cell = page.locator('.jp-Notebook .jp-Cell').nth(index);
+  const cell = page.locator(`.jp-Notebook .jp-Cell[data-windowed-list-index="${index}"]`);
+  await cell.scrollIntoViewIfNeeded();
   await cell.locator('.cm-content').click();
   if (source !== undefined) {
     await page.keyboard.press('ControlOrMeta+a');
@@ -24,7 +24,7 @@ async function runCell(page: Page, index: number, source?: string): Promise<void
 const panel = (page: Page) => page.locator('#al-engine-learning');
 
 test('Python: exploring the register becomes evidence and unlocks filtering', async ({ page }) => {
-  await openNotebook(page, 'exercises/python/02-explore-dataset.ipynb');
+  await openNotebook(page, 'notebooks/u03-n02-explore-dataset.ipynb');
   await expect(panel(page).locator('.al-rec-title').first()).toHaveText('1. Unit 1: From data to a public health decision');
   await expect(panel(page).locator('.al-rec-title').filter({ hasText: 'Data or information?' })).toHaveCount(1);
 
@@ -57,7 +57,7 @@ test('Python: exploring the register becomes evidence and unlocks filtering', as
 });
 
 test('R: coverage after a hint counts; the same engine serves the R Jupyter kernel', async ({ page }) => {
-  await openNotebook(page, 'exercises/r/04-coverage.ipynb');
+  await openNotebook(page, 'notebooks/r/u03-n04-coverage.ipynb');
   await panel(page).getByRole('button', { name: 'Show a hint' }).click();
   await expect(panel(page).locator('.al-hint')).toContainText('Hint 1');
 
@@ -71,7 +71,7 @@ test('R: coverage after a hint counts; the same engine serves the R Jupyter kern
 
 test('the Unit 3 knowledge check opens from the learning panel', async ({ page, context }) => {
   await context.route('https://forms.gle/**', route => route.fulfill({ contentType: 'text/html', body: '<title>Quiz</title>' }));
-  await openNotebook(page, 'exercises/python/u03-n01-data-or-information.ipynb');
+  await openNotebook(page, 'notebooks/u03-n01-data-or-information.ipynb');
   const popup = page.waitForEvent('popup');
   await panel(page).getByRole('button', { name: 'Open: Unit 3 knowledge check' }).click();
   expect((await popup).url()).toBe('https://forms.gle/Y4yG5gMbFznczrBd9');

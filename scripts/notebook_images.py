@@ -11,7 +11,7 @@ import re
 from pathlib import Path
 
 ASSETS = Path(__file__).resolve().parent.parent / "content/exercises/assets"
-IMAGE_REF = re.compile(r"\.\./assets/([a-z0-9-]+\.png)")
+IMAGE_REF = re.compile(r"\.\./assets/([a-z0-9-]+\.(?:png|jpg))")
 HTML_IMAGE = re.compile(r'<img src="(\.\./assets/[a-z0-9-]+\.png)" width="\d+" alt="([^"]+)">')
 
 
@@ -25,7 +25,8 @@ def embed_images(cell: dict) -> dict:
         image = ASSETS / name
         if not image.is_file():
             raise FileNotFoundError(image)
-        attachments[name] = {"image/png": base64.b64encode(image.read_bytes()).decode("ascii")}
+        mime = {".png": "image/png", ".jpg": "image/jpeg"}[image.suffix]
+        attachments[name] = {mime: base64.b64encode(image.read_bytes()).decode("ascii")}
         return f"attachment:{name}"
 
     def convert_html(match: re.Match) -> str:

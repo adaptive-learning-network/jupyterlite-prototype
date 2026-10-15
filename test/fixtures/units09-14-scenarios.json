@@ -1,0 +1,335 @@
+[
+  {
+    "unit": 9,
+    "id": "u09-dictionary-value-map",
+    "path": "notebooks/u09-n01-dictionary-value-map.ipynb",
+    "controls": [
+      {
+        "key": "id_type",
+        "label": "Case identifier type",
+        "kind": "choice",
+        "options": [
+          [
+            "Text (preserve leading zeros)",
+            "text"
+          ],
+          [
+            "Whole number",
+            "integer"
+          ]
+        ]
+      },
+      {
+        "key": "pending",
+        "label": "Meaning of PEND",
+        "kind": "choice",
+        "options": [
+          [
+            "Pending result",
+            "pending"
+          ],
+          [
+            "Negative result",
+            "negative"
+          ]
+        ]
+      },
+      {
+        "key": "unknown",
+        "label": "Action for unmapped code X",
+        "kind": "choice",
+        "options": [
+          [
+            "Flag for source review",
+            "flag"
+          ],
+          [
+            "Discard silently",
+            "drop"
+          ]
+        ]
+      }
+    ],
+    "correct": {
+      "id_type": "text",
+      "pending": "pending",
+      "unknown": "flag"
+    }
+  },
+  {
+    "unit": 10,
+    "id": "u10-table-design-data-flow",
+    "path": "notebooks/u10-n01-table-design-data-flow.ipynb",
+    "controls": [
+      {
+        "key": "key",
+        "label": "Case table primary key",
+        "kind": "choice",
+        "options": [
+          [
+            "case_id",
+            "case_id"
+          ],
+          [
+            "district",
+            "district"
+          ]
+        ]
+      },
+      {
+        "key": "relationship",
+        "label": "Case to laboratory relationship",
+        "kind": "choice",
+        "options": [
+          [
+            "One case to many laboratory records",
+            "one_many"
+          ],
+          [
+            "One district to one case",
+            "one_one"
+          ]
+        ]
+      },
+      {
+        "key": "flow",
+        "label": "Data flow",
+        "kind": "choice",
+        "options": [
+          [
+            "Collect \u2192 store \u2192 authorized view \u2192 summary",
+            "collect_store_view_summary"
+          ],
+          [
+            "Summary \u2192 view \u2192 store \u2192 collect",
+            "reverse"
+          ]
+        ]
+      }
+    ],
+    "correct": {
+      "key": "case_id",
+      "relationship": "one_many",
+      "flow": "collect_store_view_summary"
+    }
+  },
+  {
+    "unit": 11,
+    "id": "u11-recode-reconcile",
+    "path": "notebooks/u11-n01-recode-reconcile.ipynb",
+    "controls": [
+      {
+        "key": "boundary",
+        "label": "Under-five boundary (exclusive)",
+        "kind": "integer",
+        "options": null
+      },
+      {
+        "key": "rows",
+        "label": "Expected output rows",
+        "kind": "integer",
+        "options": null
+      },
+      {
+        "key": "missing",
+        "label": "Policy for missing ages",
+        "kind": "choice",
+        "options": [
+          [
+            "Retain case with unknown age group",
+            "retain_unknown"
+          ],
+          [
+            "Drop the case",
+            "drop"
+          ]
+        ]
+      }
+    ],
+    "correct": {
+      "boundary": 5,
+      "rows": 4,
+      "missing": "retain_unknown"
+    }
+  },
+  {
+    "unit": 12,
+    "id": "u12-link-exchange",
+    "path": "notebooks/u12-n01-link-exchange.ipynb",
+    "controls": [
+      {
+        "key": "join",
+        "label": "Join for a complete case view",
+        "kind": "choice",
+        "options": [
+          [
+            "Keep every case (left join)",
+            "left"
+          ],
+          [
+            "Keep matched cases only (inner join)",
+            "inner"
+          ]
+        ]
+      },
+      {
+        "key": "conflicts",
+        "label": "Number of case keys with multiple lab rows",
+        "kind": "integer",
+        "options": null
+      },
+      {
+        "key": "unknown",
+        "label": "Import policy for invalid or conflicting rows",
+        "kind": "choice",
+        "options": [
+          [
+            "Quarantine for review",
+            "quarantine"
+          ],
+          [
+            "Send all rows",
+            "send"
+          ]
+        ]
+      }
+    ],
+    "correct": {
+      "join": "left",
+      "conflicts": 1,
+      "unknown": "quarantine"
+    }
+  },
+  {
+    "unit": 13,
+    "id": "u13-analysis-dashboard",
+    "path": "notebooks/u13-n01-analysis-dashboard.ipynb",
+    "controls": [
+      {
+        "key": "kambia",
+        "label": "Kambia reported case count",
+        "kind": "integer",
+        "options": null
+      },
+      {
+        "key": "denominator",
+        "label": "Denominator for share of reports",
+        "kind": "choice",
+        "options": [
+          [
+            "All reported cases in this extract",
+            "reported_cases"
+          ],
+          [
+            "District population (not supplied)",
+            "population"
+          ]
+        ]
+      },
+      {
+        "key": "chart",
+        "label": "Chart for the timing of illness",
+        "kind": "choice",
+        "options": [
+          [
+            "Cases by onset date",
+            "onset"
+          ],
+          [
+            "Cases by district",
+            "district"
+          ]
+        ]
+      },
+      {
+        "key": "rate",
+        "label": "Population disease rate",
+        "kind": "choice",
+        "options": [
+          [
+            "Unavailable without population and time at risk",
+            "unavailable"
+          ],
+          [
+            "Use the share of reports as the rate",
+            "share"
+          ]
+        ]
+      }
+    ],
+    "correct": {
+      "kambia": 3,
+      "denominator": "reported_cases",
+      "chart": "onset",
+      "rate": "unavailable"
+    }
+  },
+  {
+    "unit": 14,
+    "id": "u14-interpret-with-ai",
+    "path": "notebooks/u14-n01-interpret-with-ai.ipynb",
+    "controls": [
+      {
+        "key": "supported",
+        "label": "Claims supported by this extract",
+        "kind": "multi",
+        "options": [
+          [
+            "Claim 1: share of reports",
+            "counts"
+          ],
+          [
+            "Claim 2: population risk",
+            "risk"
+          ],
+          [
+            "Claim 3: reporting caused difference",
+            "cause"
+          ],
+          [
+            "Claim 4: laboratory follow-up",
+            "followup"
+          ]
+        ]
+      },
+      {
+        "key": "risk",
+        "label": "Evidence needed for a risk comparison",
+        "kind": "choice",
+        "options": [
+          [
+            "Population denominators and comparable ascertainment",
+            "needs_population"
+          ],
+          [
+            "More confident wording",
+            "confidence"
+          ]
+        ]
+      },
+      {
+        "key": "release",
+        "label": "Decision before sharing",
+        "kind": "choice",
+        "options": [
+          [
+            "Human review with limitations and AI disclosure",
+            "human_review"
+          ],
+          [
+            "Publish the draft unchanged",
+            "publish"
+          ]
+        ]
+      }
+    ],
+    "correct": {
+      "supported": [
+        "counts",
+        "followup"
+      ],
+      "risk": "needs_population",
+      "release": "human_review"
+    }
+  }
+]

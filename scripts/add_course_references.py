@@ -19,7 +19,12 @@ ROOT = Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "content"
 READINGS = CONTENT / "readings/ucsf"
 SOURCE_LABELS = {name: label for name, _, label, _, _ in SOURCES}
-VERIFIED_EXTERNAL_REFERENCES: set[str] = set()
+# Optional source videos; YouTube oEmbed titles/publishers verified 2026-10-15.
+VERIFIED_EXTERNAL_REFERENCES: set[str] = {
+    "https://www.youtube.com/watch?v=fLUygA8Hpfo",
+    "https://www.youtube.com/watch?v=Fzc3j8QG_Mw",
+    "https://www.youtube.com/watch?v=KSEUh-wj7Y0",
+}
 IMAGE_RE = re.compile(r'!\[[^]]*\]\(([^)]+)\)|<img\b[^>]*\bsrc=["\']([^"\']+)', re.I)
 URL_RE = re.compile(r'https?://[^\s)>"`]+')
 EDITORIAL_RE = re.compile(
@@ -52,10 +57,20 @@ def references(path: Path) -> str:
             source = "UCSF-IGHS, *FETP JupyterBook*, Unit 1 informatics lesson; adapted with synthetic weekly reports."
         elif name == "u02-n01-system-map":
             source = "UCSF-IGHS, *FETP JupyterBook*, Unit 2 HIS case study and group work; adapted with a local system map."
-        slides = [1] if name.startswith("u01-") else [2]
+        elif name.startswith(tuple(f"u{unit:02d}-n01-" for unit in range(4, 9))):
+            from make_units04_08 import UNITS
+            spec = next(row for row in UNITS if name == f"u{row['unit']:02d}-n01-{row['slug']}")
+            source = spec["references"]
+        elif name.startswith(tuple(f"u{unit:02d}-n01-" for unit in range(9, 15))):
+            from make_units09_14 import UNITS
+            spec = next(row for row in UNITS if name == f"u{row['unit']:02d}-n01-{row['slug']}")
+            source = spec["references"]
+        slides = [1] if name.startswith(("u01-", "u06-")) else [2]
+        if name.startswith("u05-"):
+            slides = []
         if name.startswith("u00-"):
             slides = [1, 2]
-        if name == "08-my-learning-record":
+        if name == "u03-n08-my-learning-record":
             source = "Public Health Informatics for FETP, learner progress and adaptive practice."
             slides = []
         prefix = "../../readings/ucsf/assets/"
@@ -93,10 +108,20 @@ def update(path: Path, check: bool) -> bool:
     if changed and not check:
         path.write_text(json.dumps(notebook, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     if check:
+        needs_reflection = (path.parent == READINGS and path.stem in SOURCE_LABELS) or path.stem in {
+            "u01-n01-data-to-decision", "u02-n01-system-map"} or path.stem.startswith(tuple(f"u{unit:02d}-n01-" for unit in range(4, 15)))
+        if needs_reflection:
+            controls = [cell for cell in cells if cell["cell_type"] == "code" and
+                        '_reflection_section(' in "".join(cell["source"])]
+            if (not controls or any('description="Record"' not in "".join(cell["source"]) for cell in controls)
+                    or notebook["metadata"].get("kernelspec", {}).get("language") != "python"):
+                raise ValueError(f"reflection requires response fields and a Python Jupyter kernel: {path}")
         for cell in cells:
             if cell["cell_type"] != "markdown":
                 continue
             source = "".join(cell["source"])
+            if re.search(r"Write your reasoning here|Enter your response here|Replace this prompt|Double-click this cell to write", source, re.I):
+                raise ValueError(f"response placeholder requires an entry field and Record control: {path}")
             editorial = EDITORIAL_RE.search(source)
             if editorial and not source.startswith("## References\n"):
                 raise ValueError(f"editorial material belongs in repository docs: {path}: {editorial.group()}")

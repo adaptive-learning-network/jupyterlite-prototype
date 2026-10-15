@@ -2,7 +2,7 @@ import { expect, Page, test } from '@playwright/test';
 
 // Each test gets a fresh browser context. These scenarios operate the real
 // JupyterLite notebook and Learning panel without asking a tester to solve it.
-const NOTEBOOK = 'exercises/python/07-dhis2-query.ipynb';
+const NOTEBOOK = 'notebooks/u03-n07-dhis2-query.ipynb';
 
 const answer = [
   'units = api.get("/api/organisationUnits")["organisationUnits"]',
@@ -24,14 +24,14 @@ const achieved = (page: Page, capability: string) => panel(page).locator('.al-ga
 async function openPilot(page: Page): Promise<void> {
   await page.goto(`/lab/index.html?path=${NOTEBOOK}`);
   await expect(panel(page)).toBeVisible();
-  await expect(page.locator('.jp-Notebook .jp-Cell').nth(2)).toBeVisible();
   await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]'))
     .toBeVisible({ timeout: 180_000 });
   await runCell(page, 1);
 }
 
 async function runCell(page: Page, index: number, source?: string): Promise<void> {
-  const cell = page.locator('.jp-Notebook .jp-Cell').nth(index);
+  const cell = page.locator(`.jp-Notebook .jp-Cell[data-windowed-list-index="${index}"]`);
+  await cell.scrollIntoViewIfNeeded();
   await cell.locator('.cm-content').click();
   if (source !== undefined) {
     await page.keyboard.press('ControlOrMeta+a');
@@ -117,9 +117,8 @@ test('DHIS2: three hints leave a correct attempt outside capability evidence', a
 });
 
 test('final notebook displays an exported learner graph without adding an observation', async ({ page }) => {
-  await page.goto('/lab/index.html?path=exercises/python/08-my-learning-record.ipynb');
+  await page.goto('/lab/index.html?path=notebooks/u03-n08-my-learning-record.ipynb');
   await expect(panel(page)).toBeVisible();
-  await expect(page.locator('.jp-Notebook .jp-Cell').nth(2)).toBeVisible();
   await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]'))
     .toBeVisible({ timeout: 180_000 });
   await runCell(page, 1);

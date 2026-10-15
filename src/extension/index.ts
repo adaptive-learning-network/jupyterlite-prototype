@@ -11,6 +11,7 @@ import { ExerciseObserver } from './observer';
 import { readOidcConfig } from './oidc';
 import { LearningPanel } from './panel';
 import { LearnerStore } from './store';
+import { enableReflections } from './reflections';
 
 // JupyterLite's browser contents store uses POSIX paths. An older Windows
 // build put backslashes in notebook models; those paths remain in open tabs
@@ -81,6 +82,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       return;
     }
     const store = new LearnerStore(catalog.audiences[0].iri);
+    enableReflections(tracker, store);
     const observer = new ExerciseObserver(catalog, store, tracker, loadCheck);
     const panel = new LearningPanel(catalog, store, tracker, docManager, new StaticHintGuide(), observer, readOidcConfig());
     void enableCourseReviewUpdates(tracker, docManager).catch(error => {

@@ -2,13 +2,9 @@
 
 ## Open the course notebooks
 
-The site currently includes **37 notebooks**: 19 case reading and index
-notebooks under `readings/ucsf`, 11 Python notebooks under `exercises/python`,
-6 R notebooks under `exercises/r`, and one local practice-question
-notebook under `readings/ucsf`. The Learning panel's **Suggested next**
-list shows up to three adaptive exercise recommendations, not the full library.
-In JupyterLite, click the `/` breadcrumb in the left file browser to switch
-between the `readings` and `exercises` folders.
+The learner site has one course sequence under **`notebooks/`**: 22 Python notebooks, with 6 existing R alternatives under `notebooks/r/`. Each Python notebook combines the explanation, relevant local course visuals/slides, practice questions, computation, adaptive checks, and reflection fields. There is no separate reading-notebook route.
+
+Start with Notebook 00 and follow the course table of contents. The Learning panel shows up to three adaptive suggestions, not the complete sequence. New R development is deferred while Python is stabilized.
 
 - **[CDC GitLab Pages: launch JupyterLite](https://jupyterlite-prototype-4a4d87.gitpages.cdc.gov/)** (CDC sign-in required)
 - **[GitHub Pages: launch JupyterLite](https://adaptive-learning-network.github.io/jupyterlite-prototype/)** (public)
@@ -19,31 +15,43 @@ evidence, estimates capabilities, and recommends what to do next.
 
 The course combines local readings, slide previews, practice files, and browser-based exercises. Learners can work through the core activities without opening Google Drive, Google Forms, ScribeHow, or the UCSF server. The curriculum, targets, evidence rules, and estimator policy are data in the `al:` upper ontology (`../adaptive-learning-ontology`). Everything runs in the browser.
 
-**Start with** [Notebook 00](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/u00-n00-start-here.ipynb)
+**Start with** [Notebook 00](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=notebooks/u00-n00-start-here.ipynb)
 on GitHub Pages, then try the
-[Unit 1 Notebook 01 Python pilot](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/u01-n01-data-to-decision.ipynb),
-[Unit 2 Notebook 01 system map](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/u02-n01-system-map.ipynb),
-[Unit 3 Python exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/python/u03-n01-data-or-information.ipynb),
-[Unit 3 R exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=exercises/r/u03-n01-data-or-information.ipynb).
+[Unit 1 Notebook 01 Python pilot](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=notebooks/u01-n01-data-to-decision.ipynb),
+[Unit 2 Notebook 01 system map](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=notebooks/u02-n01-system-map.ipynb),
+[Unit 3 Python exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=notebooks/u03-n01-data-or-information.ipynb),
+[Unit 3 R exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=notebooks/r/u03-n01-data-or-information.ipynb).
+The Python narratives continue with:
+
+| Notebook | Decision and artifact |
+| --- | --- |
+| `u04-n01-source-inventory.ipynb` | Select sources; inspect a case/laboratory join and unknown results. |
+| `u05-n01-access-and-safe-release.ipynb` | Limit an internal extract; withhold small public counts under a training rule. |
+| `u06-n01-ai-use-and-review.ipynb` | Compare a supplied draft with computed evidence and choose human review. |
+| `u07-n01-form-design-validation.ipynb` | Design constraints and test valid and invalid submissions. |
+| `u08-n01-quality-audit-repair.ipynb` | Audit four quality dimensions; produce a cleaned copy and source-backed correction log. |
+| `u09-n01-dictionary-value-map.ipynb` | Specify field meaning; reconcile codes and expose unknown values. |
+| `u10-n01-table-design-data-flow.ipynb` | Audit a key; trace a case from collection to a district summary. |
+| `u11-n01-recode-reconcile.ipynb` | Recode a working copy; reconcile rows and identifier multiplicities. |
+| `u12-n01-link-exchange.ipynb` | Retain unmatched cases; block conflicting/unmapped laboratory rows from exchange. |
+| `u13-n01-analysis-dashboard.ipynb` | Build person/place/time summaries and a local chart; distinguish shares from rates. |
+| `u14-n01-interpret-with-ai.ipynb` | Review a supplied draft against computed evidence, uncertainty, and disclosure needs. |
+
+Each includes a local Laila comic, a one-verb learning objective, controls,
+retry feedback, adaptive checks and hints, and recordable reflections. Source
+coverage and unresolved gaps are in [Units 4-8 implementation notes](docs/design/units04-08.md) and [Units 9-14 implementation notes](docs/design/units09-14.md).
+
+All 11 planned new Python narratives for Units 4-14 now have prototypes.
+Source coverage, enrichment, and browser stability work remain; the optional
+communication narrative still needs a course home. New R variants are deferred.
+
 The site is rebuilt and published by CI on every push to `main` on GitHub and
 GitLab.
 
-Notebook 00 is an unscored orientation with the course cast and slide visuals.
-The [practice-question library](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=readings/ucsf/u00-n02-version3-form-library.ipynb)
-preserves reviewed Unit 1, 2, 4, 5, and 7 quiz choices and case-study prompts from the
-supplied PDF archive, without account details or participant responses. Its practice
-questions use local radio buttons and checkboxes with **provisional practice
-feedback** derived from the course material; this is not the official form key.
-Choose **Python (Pyodide)**
-and run the quiz cell for the unit you want to review. The reading knowledge checks
-and case responses also provide text fields for unscored reflections.
-The [provisional feedback review sheet](docs/review/provisional-quiz-feedback.md)
-lists every proposed choice and explanation for course-owner review.
-**Read Laila's case:** [Unit 1 and Unit 2 index on GitHub Pages](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb)
-or [the same index on CDC GitLab Pages](https://jupyterlite-prototype-4a4d87.gitpages.cdc.gov/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb).
-The index links to lessons, cases, and assignments in learning order.
-Its notebook links stay on whichever JupyterLite host you opened.
-For other text-only readings, select **No Kernel** if JupyterLite asks.
+Notebook 00 provides the cast and course contents. Units 1, 2, 4, 5, and 7 include the local practice quizzes with **provisional feedback**, pending course-owner review. Written case questions and reflections have response fields and **Record** buttons; responses stay with the browser-local learner record. Run those cells again to restore recorded text. The RDF evidence export currently excludes reflection text.
+
+The authoring inputs remain in `content/exercises` and `content/readings/ucsf`. `scripts/assemble_course.py` integrates them into the generated `.course-content/notebooks` tree used by JupyterLite. The original source notebooks are repository evidence, not an additional learner assignment set. See [the integration design](docs/design/unified-course.md) and [source coverage map](docs/audit/unified-course-coverage.json).
+
 The Notebook 01 pilot uses `u03-n01-data-or-information.ipynb` in both language
 folders: `uNN-nNN-topic.ipynb` means unit number, notebook number, and topic.
 The Python U03 N01 notebook now uses a drag-and-drop board with **Data** and
@@ -92,11 +100,11 @@ the diagram; the access-permissions reflection is unscored. Its source reading
 `u02-n02-knowledge-check.ipynb` includes a local answer section and is unscored here.
 
 A [Python-only DHIS2 adapter pilot](docs/design/dhis2-adapter-pilot.md) adds a
-generated notebook at `content/exercises/python/07-dhis2-query.ipynb`. It uses
+generated notebook at `content/exercises/python/u03-n07-dhis2-query.ipynb`. It uses
 synthetic case events and a browser-local, read-only API-shaped adapter. This
 pilot is available in the Python exercises as notebook 07.
 
-The unscored final notebook, `content/exercises/python/08-my-learning-record.ipynb`,
+The unscored final notebook, `content/exercises/python/u03-n08-my-learning-record.ipynb`,
 reads a `learner-record.nq` export from the Learning panel. It shows attempts,
 evidence, capability estimates, gaps, and recommendations. Upload successive
 exports beside the notebook to see how the learner graph changes after retries.
@@ -171,7 +179,7 @@ installs the Playwright browser. Use `SKIP_PLAYWRIGHT=1` to skip the browser.
 ```bash
 jlpm build:site          # catalog → exercises → engine tests → extension → _output/
 python -m http.server 8765 --directory _output
-# open http://127.0.0.1:8765/lab/index.html?path=exercises/python/u03-n01-data-or-information.ipynb
+# open http://127.0.0.1:8765/lab/index.html?path=notebooks/u03-n01-data-or-information.ipynb
 ```
 
 The build downloads a checksum-verified Pyodide 314.0.6 core and the pinned

@@ -243,7 +243,7 @@ export class LearningPanel extends Widget {
             ? 'Correct. Recorded, but with this much help it does not count as evidence.'
             : 'Correct. Recorded as evidence.'
           : o!.outcome.endsWith('#Incomplete')
-            ? 'Not finished yet: replace the placeholder with your answer and run the cell again.'
+            ? 'Not finished yet: complete your response, then run the check cell again.'
             : 'Not yet correct. Try again or use a hint.';
       node.append(el('div', { className: `al-feedback ${o?.outcome.endsWith('#Correct') ? 'al-ok' : ''}` }, text));
     }
@@ -277,10 +277,8 @@ export class LearningPanel extends Widget {
 
     const library = el('section', { className: 'al-section' }, el('h3', {}, 'Notebook library'));
     const start = el('button', { className: 'jp-Button al-library-open' }, 'Course start');
-    start.onclick = () => void this.docManager.openOrReveal('exercises/python/u00-n00-start-here.ipynb');
-    const readings = el('button', { className: 'jp-Button al-library-open' }, 'Unit 1–2 readings');
-    readings.onclick = () => void this.docManager.openOrReveal('readings/ucsf/u00-n01-reading-index.ipynb');
-    library.append(start, readings, el('p', { className: 'al-meta' }, 'Use the left file browser for all Python and R exercises and UCSF readings.'));
+    start.onclick = () => void this.docManager.openOrReveal('notebooks/u00-n00-start-here.ipynb');
+    library.append(start, el('p', { className: 'al-meta' }, 'Open notebooks in course order from Course start. Each includes its explanations, slides, practice, and computation.'));
     node.append(library);
 
     // Current exercise and hints.

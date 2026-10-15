@@ -17,7 +17,8 @@ test('local review replaces an old lesson while learner mode retains saved work'
   const record = await page.evaluate(() => localStorage.getItem('al-engine:learner-record:v0.1'));
 
   async function editMarkdown(index: number, text: string) {
-    const cell = page.locator('.jp-Notebook .jp-Cell').nth(index);
+    const cell = page.locator(`.jp-Notebook .jp-Cell[data-windowed-list-index="${index}"]`);
+  await cell.scrollIntoViewIfNeeded();
     await cell.dblclick();
     await cell.locator('.cm-content').click();
     await page.keyboard.press('ControlOrMeta+a');

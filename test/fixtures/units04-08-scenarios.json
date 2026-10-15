@@ -1,0 +1,271 @@
+[
+  {
+    "unit": 4,
+    "id": "u04-source-inventory",
+    "path": "notebooks/u04-n01-source-inventory.ipynb",
+    "controls": [
+      {
+        "key": "sources",
+        "label": "Sources",
+        "kind": "multi",
+        "options": [
+          [
+            "Case register",
+            "case"
+          ],
+          [
+            "Laboratory extract",
+            "lab"
+          ],
+          [
+            "Weekly aggregate",
+            "weekly"
+          ]
+        ]
+      },
+      {
+        "key": "grain",
+        "label": "Required grain",
+        "kind": "choice",
+        "options": [
+          [
+            "One case",
+            "case"
+          ],
+          [
+            "One district-week",
+            "district-week"
+          ]
+        ]
+      }
+    ],
+    "correct": {
+      "sources": [
+        "case",
+        "lab"
+      ],
+      "grain": "case"
+    }
+  },
+  {
+    "unit": 5,
+    "id": "u05-access-and-safe-release",
+    "path": "notebooks/u05-n01-access-and-safe-release.ipynb",
+    "controls": [
+      {
+        "key": "fields",
+        "label": "Internal extract fields",
+        "kind": "multi",
+        "options": [
+          [
+            "case_id",
+            "case_id"
+          ],
+          [
+            "district",
+            "district"
+          ],
+          [
+            "onset_date",
+            "onset_date"
+          ],
+          [
+            "age",
+            "age"
+          ],
+          [
+            "contact_label",
+            "contact_label"
+          ]
+        ]
+      },
+      {
+        "key": "suppress",
+        "label": "Withhold public counts for",
+        "kind": "multi",
+        "options": [
+          [
+            "Kambia",
+            "Kambia"
+          ],
+          [
+            "Port Loko",
+            "Port Loko"
+          ]
+        ]
+      }
+    ],
+    "correct": {
+      "fields": [
+        "case_id",
+        "district",
+        "onset_date"
+      ],
+      "suppress": [
+        "Port Loko"
+      ]
+    }
+  },
+  {
+    "unit": 6,
+    "id": "u06-ai-use-and-review",
+    "path": "notebooks/u06-n01-ai-use-and-review.ipynb",
+    "controls": [
+      {
+        "key": "claims",
+        "label": "Unsupported claims",
+        "kind": "multi",
+        "options": [
+          [
+            "All cases laboratory-positive",
+            "all_positive"
+          ],
+          [
+            "No follow-up needed",
+            "no_followup"
+          ],
+          [
+            "Water caused the cluster",
+            "water_caused"
+          ]
+        ]
+      },
+      {
+        "key": "review",
+        "label": "Before sharing",
+        "kind": "choice",
+        "options": [
+          [
+            "Human evidence and disclosure review",
+            "human_review"
+          ],
+          [
+            "Share the draft automatically",
+            "auto_release"
+          ]
+        ]
+      }
+    ],
+    "correct": {
+      "claims": [
+        "all_positive",
+        "no_followup",
+        "water_caused"
+      ],
+      "review": "human_review"
+    }
+  },
+  {
+    "unit": 7,
+    "id": "u07-form-design-validation",
+    "path": "notebooks/u07-n01-form-design-validation.ipynb",
+    "controls": [
+      {
+        "key": "required",
+        "label": "Required fields",
+        "kind": "multi",
+        "options": [
+          [
+            "case_id",
+            "case_id"
+          ],
+          [
+            "district",
+            "district"
+          ],
+          [
+            "age",
+            "age"
+          ]
+        ]
+      },
+      {
+        "key": "age_max",
+        "label": "Maximum age",
+        "kind": "integer",
+        "options": null
+      },
+      {
+        "key": "district_control",
+        "label": "District control",
+        "kind": "choice",
+        "options": [
+          [
+            "Controlled district list",
+            "list"
+          ],
+          [
+            "Unrestricted text",
+            "free_text"
+          ]
+        ]
+      }
+    ],
+    "correct": {
+      "required": [
+        "case_id",
+        "district",
+        "age"
+      ],
+      "age_max": 120,
+      "district_control": "list"
+    }
+  },
+  {
+    "unit": 8,
+    "id": "u08-quality-audit-repair",
+    "path": "notebooks/u08-n01-quality-audit-repair.ipynb",
+    "controls": [
+      {
+        "key": "missing",
+        "label": "Missing district rows",
+        "kind": "integer",
+        "options": null
+      },
+      {
+        "key": "duplicates",
+        "label": "Extra duplicate-ID rows",
+        "kind": "integer",
+        "options": null
+      },
+      {
+        "key": "invalid",
+        "label": "Invalid age rows",
+        "kind": "integer",
+        "options": null
+      },
+      {
+        "key": "late",
+        "label": "Late report rows",
+        "kind": "integer",
+        "options": null
+      },
+      {
+        "key": "repair",
+        "label": "Repair approach",
+        "kind": "choice",
+        "options": [
+          [
+            "Verify sources; preserve originals and log decisions",
+            "verify_and_log"
+          ],
+          [
+            "Guess missing values and overwrite originals",
+            "overwrite"
+          ],
+          [
+            "Delete every row with a repeated ID",
+            "delete_all"
+          ]
+        ]
+      }
+    ],
+    "correct": {
+      "missing": 1,
+      "duplicates": 1,
+      "invalid": 1,
+      "late": 1,
+      "repair": "verify_and_log"
+    }
+  }
+]

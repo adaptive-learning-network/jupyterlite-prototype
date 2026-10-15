@@ -44,10 +44,20 @@ no backup copy is created. This setting is false in normal published builds.
 The application asset manifest lists supplied notebook paths and versions;
 personal notebooks outside that manifest are never replaced by review mode.
 
-Production must preserve learner answers and reflection notes independently of
-course revisions and Jupyter kernel restarts. The existing learner record persists
-observations and guidance, not the text entered in reflection widgets. Those
-widgets currently hold text for the live Jupyter kernel session. Durable response
-storage, restore behavior, and export need implementation and validation before
-the course is considered ready for production learners. Automatic replacement of
-learner notebooks remains disabled in the published prototype.
+Reflection sections now provide **Record**. This explicitly saves every response
+in that section under `reflections` in the same browser-local learner record as
+observations and guidance. Entries contain the prompt, answer, and saved timestamp.
+Stable section identifiers keep notebook and unit responses separate. Rerunning
+the response cell restores recorded answers by matching the prompt text; changed
+prompts do not silently receive an answer to a different question. Recording again
+replaces that section's answers, including intentionally cleared fields.
+
+Widgets use a Jupyter comm to the extension; only the extension writes browser
+storage. A confirmation follows a successful storage write. A quota or storage
+failure keeps the previous recorded version and reports that the new text was not
+recorded. Unsaved edits remain drafts. Reflections are unscored and do not create
+observations, capability evidence, or recommendations. Reset learner record also
+clears recorded reflections. Browser storage is specific to the site and browser;
+clearing it removes the record. The existing RDF evidence export does not yet
+include reflection text. Cross-device reflection export/import remains future work.
+Automatic replacement of learner notebooks remains disabled in published builds.

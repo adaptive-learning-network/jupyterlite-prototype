@@ -97,6 +97,16 @@ export class LearnerStore {
     this.update(newRecord(this.defaultAudience));
   }
 
+  recordReflections(section: string, entries: { prompt: string; answer: string }[]): void {
+    const savedAt = new Date().toISOString();
+    const next = { ...this._record, reflections: { ...this._record.reflections,
+      [section]: entries.map(entry => ({ ...entry, savedAt })) } };
+    // Acknowledge only after storage succeeds; never silently claim a durable save.
+    globalThis.localStorage.setItem(KEY, JSON.stringify(next));
+    this._record = next;
+    this._changed.emit(next);
+  }
+
   private update(record: LearnerRecord): void {
     this._record = record;
     this.save();

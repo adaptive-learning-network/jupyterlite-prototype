@@ -210,7 +210,7 @@ EXERCISES = [
         ],
     },
     {
-        "file": "02-explore-dataset", "check": "explore-dataset", "slides": "51–57", "activity": "act-explore-dataset",
+        "file": "u03-n02-explore-dataset", "check": "explore-dataset", "slides": "51–57", "activity": "act-explore-dataset",
         "title": "Explore the immunization register",
         "objective": "Use software to explore a dataset",
         "context": (
@@ -243,7 +243,7 @@ EXERCISES = [
         ],
     },
     {
-        "file": "03-filter-records", "check": "filter-records", "slides": "56–57", "activity": "act-filter-records",
+        "file": "u03-n03-filter-records", "check": "filter-records", "slides": "56–57", "activity": "act-filter-records",
         "title": "Filter the records you need",
         "objective": OBJECTIVES[2],
         "context": (
@@ -262,7 +262,7 @@ EXERCISES = [
         ],
     },
     {
-        "file": "04-coverage", "check": "coverage", "slides": "7–17", "activity": "act-coverage",
+        "file": "u03-n04-coverage", "check": "coverage", "slides": "7–17", "activity": "act-coverage",
         "title": "Turn data into information: vaccination coverage",
         "objective": OBJECTIVES[2],
         "context": (
@@ -283,7 +283,7 @@ EXERCISES = [
         ],
     },
     {
-        "file": "05-machine-readable", "check": "machine-readable", "slides": "28–32", "activity": "act-machine-readable",
+        "file": "u03-n05-machine-readable", "check": "machine-readable", "slides": "28–32", "activity": "act-machine-readable",
         "title": "Machine-readable or human-readable?",
         "objective": OBJECTIVES[3],
         "context": (
@@ -302,7 +302,7 @@ EXERCISES = [
         ],
     },
     {
-        "file": "06-case-or-aggregate", "check": "case-or-aggregate", "slides": "38–39", "activity": "act-case-or-aggregate",
+        "file": "u03-n06-case-or-aggregate", "check": "case-or-aggregate", "slides": "38–39", "activity": "act-case-or-aggregate",
         "title": "Case-based or aggregate?",
         "objective": OBJECTIVES[3],
         "context": (
@@ -382,15 +382,17 @@ def placeholder(language: str, variables: dict) -> str:
     return "\n".join(f"{name} <- NULL  # replace NULL with your answer" for name in variables) + "\n"
 
 
-def references(ex: dict) -> str:
+def references(ex: dict, language: str = "python") -> str:
     next_task = {
-        "u03-n01-data-or-information": ("inspect the available fields", "02-explore-dataset.ipynb"),
-        "02-explore-dataset": ("filter records for Laila's question", "03-filter-records.ipynb"),
-        "03-filter-records": ("calculate a coverage measure", "04-coverage.ipynb"),
-        "04-coverage": ("inspect the dataset structure", "05-machine-readable.ipynb"),
-        "05-machine-readable": ("choose the right level of records", "06-case-or-aggregate.ipynb"),
-        "06-case-or-aggregate": ("query the simulated reporting system", "07-dhis2-query.ipynb"),
+        "u03-n01-data-or-information": ("inspect the available fields", "u03-n02-explore-dataset.ipynb"),
+        "u03-n02-explore-dataset": ("filter records for Laila's question", "u03-n03-filter-records.ipynb"),
+        "u03-n03-filter-records": ("calculate a coverage measure", "u03-n04-coverage.ipynb"),
+        "u03-n04-coverage": ("inspect the dataset structure", "u03-n05-machine-readable.ipynb"),
+        "u03-n05-machine-readable": ("choose the right level of records", "u03-n06-case-or-aggregate.ipynb"),
+        "u03-n06-case-or-aggregate": ("query the simulated reporting system", "u03-n07-dhis2-query.ipynb"),
     }[ex["file"]]
+    if language == "r" and ex["file"] == "u03-n06-case-or-aggregate":
+        next_task = (next_task[0], "../python/" + next_task[1])
     return ("## Continue Laila's investigation\n\n"
             f"Next, [{next_task[0]}]({next_task[1]}). "
             "The **Learning** panel can recommend a different step based on your attempts.")
@@ -405,7 +407,7 @@ def cell(cell_type: str, source: str, cell_id: str, metadata: dict | None = None
 
 def notebook(ex: dict, language: str) -> dict:
     name = "Python" if language == "python" else "R"
-    pilot_outline = ""
+    pilot_outline = f"**Course outline:** Unit 03 | Notebook {ex['file'].split('-')[1][1:]} | {name}\n\n"
     pilot_cue = ""
     if ex["file"] == "u03-n01-data-or-information":
         pilot_outline = f"**Course outline:** Unit 03 · Notebook 01 · {name}\n\n"
@@ -484,7 +486,7 @@ information_items = collect_choices()
             cell("markdown", intro, "0"),
             cell("code", setup, "1", {"jupyter": {"source_hidden": True}} if choice_pilot else None),
             cell("code", exercise, "2", {"al": al_meta, "tags": ["al-exercise"]}),
-            cell("markdown", references(ex), "3"),
+            cell("markdown", references(ex, language), "3"),
         ],
         "metadata": {
             "kernelspec": KERNELSPEC[language],
@@ -527,6 +529,10 @@ def main() -> None:
     make_learning_record_notebook()
     from make_course_orientation import main as make_course_orientation
     make_course_orientation()
+    from make_units04_08 import main as make_units04_08
+    make_units04_08()
+    from make_units09_14 import main as make_units09_14
+    make_units09_14()
 
 
 if __name__ == "__main__":

@@ -1,9 +1,9 @@
 {
   "schema": "al-catalog-projection/0.1",
-  "sourceDigest": "a7bb78cf0a548c9f2c4267882b367f5b63df8c27b870577d9494b835af7f814c",
+  "sourceDigest": "7b39fa964f4bc8ecf54e2fb496c00043f7d1070d222c799f557fa262658c98e2",
   "framework": {
     "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#framework",
-    "title": "Public health informatics: Units 1–3 pilot",
+    "title": "Public health informatics: Units 1–14 prototype",
     "scale": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#scale"
   },
   "levels": [
@@ -103,6 +103,105 @@
       "prerequisites": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-machine-readable"
       ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u04-source-inventory",
+      "notation": "u04-source-inventory",
+      "label": "Compare data sources for an investigation",
+      "ordinal": 10,
+      "prerequisites": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-case-vs-aggregate"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u05-access-and-safe-release",
+      "notation": "u05-access-and-safe-release",
+      "label": "Evaluate access and safe release",
+      "ordinal": 11,
+      "prerequisites": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u04-source-inventory"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u06-ai-use-and-review",
+      "notation": "u06-ai-use-and-review",
+      "label": "Evaluate an AI-assisted draft",
+      "ordinal": 12,
+      "prerequisites": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u05-access-and-safe-release"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u07-form-design-validation",
+      "notation": "u07-form-design-validation",
+      "label": "Design and test case-form validation",
+      "ordinal": 13,
+      "prerequisites": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u06-ai-use-and-review"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u08-quality-audit-repair",
+      "notation": "u08-quality-audit-repair",
+      "label": "Audit data quality and preserve corrections",
+      "ordinal": 14,
+      "prerequisites": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u07-form-design-validation"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u09-dictionary-value-map",
+      "notation": "u09-dictionary-value-map",
+      "label": "Give every field and code a meaning",
+      "ordinal": 15,
+      "prerequisites": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u08-quality-audit-repair"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u10-table-design-data-flow",
+      "notation": "u10-table-design-data-flow",
+      "label": "Follow a case through linked tables",
+      "ordinal": 16,
+      "prerequisites": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u09-dictionary-value-map"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u11-recode-reconcile",
+      "notation": "u11-recode-reconcile",
+      "label": "Transform a copy without losing cases",
+      "ordinal": 17,
+      "prerequisites": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u10-table-design-data-flow"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u12-link-exchange",
+      "notation": "u12-link-exchange",
+      "label": "Link records before an exchange",
+      "ordinal": 18,
+      "prerequisites": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u11-recode-reconcile"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u13-analysis-dashboard",
+      "notation": "u13-analysis-dashboard",
+      "label": "Build a district briefing from the records",
+      "ordinal": 19,
+      "prerequisites": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u12-link-exchange"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u14-interpret-with-ai",
+      "notation": "u14-interpret-with-ai",
+      "label": "Challenge an AI-assisted briefing",
+      "ordinal": 20,
+      "prerequisites": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u13-analysis-dashboard"
+      ]
     }
   ],
   "audiences": [
@@ -183,6 +282,105 @@
       "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-system-map",
       "level": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent",
       "critical": false
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#t-u04-source-inventory",
+      "audiences": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#aud-fetp-trainee"
+      ],
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u04-source-inventory",
+      "level": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent",
+      "critical": false
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#t-u05-access-and-safe-release",
+      "audiences": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#aud-fetp-trainee"
+      ],
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u05-access-and-safe-release",
+      "level": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent",
+      "critical": false
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#t-u06-ai-use-and-review",
+      "audiences": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#aud-fetp-trainee"
+      ],
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u06-ai-use-and-review",
+      "level": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent",
+      "critical": false
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#t-u07-form-design-validation",
+      "audiences": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#aud-fetp-trainee"
+      ],
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u07-form-design-validation",
+      "level": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent",
+      "critical": false
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#t-u08-quality-audit-repair",
+      "audiences": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#aud-fetp-trainee"
+      ],
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u08-quality-audit-repair",
+      "level": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent",
+      "critical": false
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#t-u09-dictionary-value-map",
+      "audiences": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#aud-fetp-trainee"
+      ],
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u09-dictionary-value-map",
+      "level": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent",
+      "critical": false
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#t-u10-table-design-data-flow",
+      "audiences": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#aud-fetp-trainee"
+      ],
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u10-table-design-data-flow",
+      "level": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent",
+      "critical": false
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#t-u11-recode-reconcile",
+      "audiences": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#aud-fetp-trainee"
+      ],
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u11-recode-reconcile",
+      "level": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent",
+      "critical": false
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#t-u12-link-exchange",
+      "audiences": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#aud-fetp-trainee"
+      ],
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u12-link-exchange",
+      "level": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent",
+      "critical": false
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#t-u13-analysis-dashboard",
+      "audiences": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#aud-fetp-trainee"
+      ],
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u13-analysis-dashboard",
+      "level": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent",
+      "critical": false
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#t-u14-interpret-with-ai",
+      "audiences": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#aud-fetp-trainee"
+      ],
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u14-interpret-with-ai",
+      "level": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#competent",
+      "critical": false
     }
   ],
   "activities": [
@@ -195,7 +393,7 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-data-to-decision"
       ],
       "notebooks": {
-        "python": "exercises/python/u01-n01-data-to-decision.ipynb"
+        "python": "notebooks/u01-n01-data-to-decision.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u01-data-to-decision"
@@ -210,7 +408,7 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-system-map"
       ],
       "notebooks": {
-        "python": "exercises/python/u02-n01-system-map.ipynb"
+        "python": "notebooks/u02-n01-system-map.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u02-system-map"
@@ -225,8 +423,8 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-data-vs-information"
       ],
       "notebooks": {
-        "python": "exercises/python/u03-n01-data-or-information.ipynb",
-        "r": "exercises/r/u03-n01-data-or-information.ipynb"
+        "python": "notebooks/u03-n01-data-or-information.ipynb",
+        "r": "notebooks/r/u03-n01-data-or-information.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-data-or-information"
@@ -241,8 +439,8 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-explore-dataset"
       ],
       "notebooks": {
-        "python": "exercises/python/02-explore-dataset.ipynb",
-        "r": "exercises/r/02-explore-dataset.ipynb"
+        "python": "notebooks/u03-n02-explore-dataset.ipynb",
+        "r": "notebooks/r/u03-n02-explore-dataset.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-explore-dataset"
@@ -257,8 +455,8 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-filter-records"
       ],
       "notebooks": {
-        "python": "exercises/python/03-filter-records.ipynb",
-        "r": "exercises/r/03-filter-records.ipynb"
+        "python": "notebooks/u03-n03-filter-records.ipynb",
+        "r": "notebooks/r/u03-n03-filter-records.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-filter-records"
@@ -273,8 +471,8 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-combine-variables"
       ],
       "notebooks": {
-        "python": "exercises/python/04-coverage.ipynb",
-        "r": "exercises/r/04-coverage.ipynb"
+        "python": "notebooks/u03-n04-coverage.ipynb",
+        "r": "notebooks/r/u03-n04-coverage.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-coverage"
@@ -289,8 +487,8 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-machine-readable"
       ],
       "notebooks": {
-        "python": "exercises/python/05-machine-readable.ipynb",
-        "r": "exercises/r/05-machine-readable.ipynb"
+        "python": "notebooks/u03-n05-machine-readable.ipynb",
+        "r": "notebooks/r/u03-n05-machine-readable.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-machine-readable"
@@ -305,8 +503,8 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-case-vs-aggregate"
       ],
       "notebooks": {
-        "python": "exercises/python/06-case-or-aggregate.ipynb",
-        "r": "exercises/r/06-case-or-aggregate.ipynb"
+        "python": "notebooks/u03-n06-case-or-aggregate.ipynb",
+        "r": "notebooks/r/u03-n06-case-or-aggregate.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-case-or-aggregate"
@@ -338,10 +536,175 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-explore-dataset"
       ],
       "notebooks": {
-        "python": "exercises/python/07-dhis2-query.ipynb"
+        "python": "notebooks/u03-n07-dhis2-query.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-dhis2-query"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u04-source-inventory",
+      "title": "Unit 4: Find the data Laila needs",
+      "ordinal": 10,
+      "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
+      "capabilities": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u04-source-inventory"
+      ],
+      "notebooks": {
+        "python": "notebooks/u04-n01-source-inventory.ipynb"
+      },
+      "rules": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u04-source-inventory"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u05-access-and-safe-release",
+      "title": "Unit 5: Give access without releasing too much",
+      "ordinal": 11,
+      "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
+      "capabilities": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u05-access-and-safe-release"
+      ],
+      "notebooks": {
+        "python": "notebooks/u05-n01-access-and-safe-release.ipynb"
+      },
+      "rules": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u05-access-and-safe-release"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u06-ai-use-and-review",
+      "title": "Unit 6: Review an AI-assisted draft before acting",
+      "ordinal": 12,
+      "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
+      "capabilities": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u06-ai-use-and-review"
+      ],
+      "notebooks": {
+        "python": "notebooks/u06-n01-ai-use-and-review.ipynb"
+      },
+      "rules": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u06-ai-use-and-review"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u07-form-design-validation",
+      "title": "Unit 7: Design a form and test its rules",
+      "ordinal": 13,
+      "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
+      "capabilities": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u07-form-design-validation"
+      ],
+      "notebooks": {
+        "python": "notebooks/u07-n01-form-design-validation.ipynb"
+      },
+      "rules": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u07-form-design-validation"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u08-quality-audit-repair",
+      "title": "Unit 8: Audit quality and plan defensible repairs",
+      "ordinal": 14,
+      "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
+      "capabilities": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u08-quality-audit-repair"
+      ],
+      "notebooks": {
+        "python": "notebooks/u08-n01-quality-audit-repair.ipynb"
+      },
+      "rules": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u08-quality-audit-repair"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u09-dictionary-value-map",
+      "title": "Unit 9: Give every field and code a meaning",
+      "ordinal": 15,
+      "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
+      "capabilities": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u09-dictionary-value-map"
+      ],
+      "notebooks": {
+        "python": "notebooks/u09-n01-dictionary-value-map.ipynb"
+      },
+      "rules": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u09-dictionary-value-map"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u10-table-design-data-flow",
+      "title": "Unit 10: Follow a case through linked tables",
+      "ordinal": 16,
+      "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
+      "capabilities": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u10-table-design-data-flow"
+      ],
+      "notebooks": {
+        "python": "notebooks/u10-n01-table-design-data-flow.ipynb"
+      },
+      "rules": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u10-table-design-data-flow"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u11-recode-reconcile",
+      "title": "Unit 11: Transform a copy without losing cases",
+      "ordinal": 17,
+      "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
+      "capabilities": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u11-recode-reconcile"
+      ],
+      "notebooks": {
+        "python": "notebooks/u11-n01-recode-reconcile.ipynb"
+      },
+      "rules": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u11-recode-reconcile"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u12-link-exchange",
+      "title": "Unit 12: Link records before an exchange",
+      "ordinal": 18,
+      "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
+      "capabilities": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u12-link-exchange"
+      ],
+      "notebooks": {
+        "python": "notebooks/u12-n01-link-exchange.ipynb"
+      },
+      "rules": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u12-link-exchange"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u13-analysis-dashboard",
+      "title": "Unit 13: Build a district briefing from the records",
+      "ordinal": 19,
+      "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
+      "capabilities": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u13-analysis-dashboard"
+      ],
+      "notebooks": {
+        "python": "notebooks/u13-n01-analysis-dashboard.ipynb"
+      },
+      "rules": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u13-analysis-dashboard"
+      ]
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u14-interpret-with-ai",
+      "title": "Unit 14: Challenge an AI-assisted briefing",
+      "ordinal": 20,
+      "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
+      "capabilities": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u14-interpret-with-ai"
+      ],
+      "notebooks": {
+        "python": "notebooks/u14-n01-interpret-with-ai.ipynb"
+      },
+      "rules": [
+        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u14-interpret-with-ai"
       ]
     }
   ],
@@ -447,6 +810,138 @@
       "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u02-system-map",
       "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-u02-system-map",
       "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-system-map",
+      "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
+      "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
+      "acceptedOutcomes": [
+        "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Correct"
+      ],
+      "maximumGuidance": 2
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u04-source-inventory",
+      "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u04-source-inventory",
+      "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-u04-source-inventory",
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u04-source-inventory",
+      "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
+      "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
+      "acceptedOutcomes": [
+        "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Correct"
+      ],
+      "maximumGuidance": 2
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u05-access-and-safe-release",
+      "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u05-access-and-safe-release",
+      "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-u05-access-and-safe-release",
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u05-access-and-safe-release",
+      "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
+      "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
+      "acceptedOutcomes": [
+        "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Correct"
+      ],
+      "maximumGuidance": 2
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u06-ai-use-and-review",
+      "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u06-ai-use-and-review",
+      "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-u06-ai-use-and-review",
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u06-ai-use-and-review",
+      "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
+      "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
+      "acceptedOutcomes": [
+        "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Correct"
+      ],
+      "maximumGuidance": 2
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u07-form-design-validation",
+      "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u07-form-design-validation",
+      "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-u07-form-design-validation",
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u07-form-design-validation",
+      "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
+      "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
+      "acceptedOutcomes": [
+        "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Correct"
+      ],
+      "maximumGuidance": 2
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u08-quality-audit-repair",
+      "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u08-quality-audit-repair",
+      "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-u08-quality-audit-repair",
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u08-quality-audit-repair",
+      "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
+      "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
+      "acceptedOutcomes": [
+        "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Correct"
+      ],
+      "maximumGuidance": 2
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u09-dictionary-value-map",
+      "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u09-dictionary-value-map",
+      "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-u09-dictionary-value-map",
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u09-dictionary-value-map",
+      "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
+      "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
+      "acceptedOutcomes": [
+        "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Correct"
+      ],
+      "maximumGuidance": 2
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u10-table-design-data-flow",
+      "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u10-table-design-data-flow",
+      "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-u10-table-design-data-flow",
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u10-table-design-data-flow",
+      "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
+      "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
+      "acceptedOutcomes": [
+        "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Correct"
+      ],
+      "maximumGuidance": 2
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u11-recode-reconcile",
+      "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u11-recode-reconcile",
+      "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-u11-recode-reconcile",
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u11-recode-reconcile",
+      "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
+      "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
+      "acceptedOutcomes": [
+        "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Correct"
+      ],
+      "maximumGuidance": 2
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u12-link-exchange",
+      "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u12-link-exchange",
+      "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-u12-link-exchange",
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u12-link-exchange",
+      "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
+      "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
+      "acceptedOutcomes": [
+        "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Correct"
+      ],
+      "maximumGuidance": 2
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u13-analysis-dashboard",
+      "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u13-analysis-dashboard",
+      "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-u13-analysis-dashboard",
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u13-analysis-dashboard",
+      "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
+      "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
+      "acceptedOutcomes": [
+        "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Correct"
+      ],
+      "maximumGuidance": 2
+    },
+    {
+      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-u14-interpret-with-ai",
+      "activity": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u14-interpret-with-ai",
+      "criterion": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#crit-u14-interpret-with-ai",
+      "capability": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u14-interpret-with-ai",
       "stage": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Simulation",
       "requiredAction": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated",
       "acceptedOutcomes": [

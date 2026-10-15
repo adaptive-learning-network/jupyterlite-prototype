@@ -7,7 +7,7 @@ Guidance for coding agents and contributors working in this repository.
 A JupyterLite site plus a JupyterLab 4 extension. Learners do exercises in
 Python or R notebooks, and an **ontology-driven adaptive-learning engine**
 records observations, builds evidence, estimates capabilities, and recommends
-what to do next. Current scored content: Public Health Informatics for FETP, Units 1, 2, and 3
+what to do next. Current scored content: Public Health Informatics for FETP, Units 1–14
 (Version 3 course materials, used with permission). The repository is
 **public** and published to GitHub Pages.
 
@@ -21,6 +21,8 @@ scripts/build_catalog.py     validate catalog against al: shapes → app-assets/
 scripts/make_exercises.py    exercise SPEC → notebooks in content/, checks in app-assets/adaptive-learning/ (generated)
 scripts/configure_site.py    publish versioned application assets outside the learner contents drive
 scripts/make_unit01_pilot.py Python-only Unit 1 scored pilot (called by make_exercises.py)
+scripts/make_units04_08.py   Python narratives, fixtures, comics, and checks for Units 4–8
+scripts/make_units09_14.py   Python narratives, fixtures, comics, and checks for Units 9-14
 scripts/prepare_widget_wheels.py  checksum-pinned local piplite wheels for U03 N01 controls
 src/engine/                  adaptive-learning engine: pure, deterministic, no JupyterLab imports
 scripts/import_ucsf_readings.py  pinned UCSF source to unscored reading notebooks and images
@@ -32,6 +34,10 @@ test/                        engine and identity unit tests (Node)
 ui-tests/                    Playwright end-to-end tests + mock OIDC provider
 docs/design/                 capability packs, learner identity
 ```
+
+## Published course layout
+
+Authoring inputs stay in `content/`; run `scripts/assemble_course.py` after exercise/form generation and references checks. Only `.course-content/` is published by JupyterLite. The learner path is `notebooks/` with one integrated Python sequence; `notebooks/r/` holds the existing deferred R alternatives. Never publish `content/` directly or restore a separate reading route. `configure_site.py` hashes the assembled notebooks for review updates. Keep all source material traceable in `docs/audit/unified-course-coverage.json`.
 
 ## Commands
 
@@ -86,6 +92,12 @@ The `al:` ontology is expected at `../adaptive-learning-ontology`; override with
 11. **Update the local review preview.** After changing notebooks or application
     resources, update the site served in the VS Code browser and configure it with
     `scripts/configure_site.py --output <preview-directory> --course-review`.
+    The ignored `.tools/active-preview.txt` records the current served output path;
+    check it before assuming `_output` or an older preview directory is active.
+    On Windows, use a fresh output directory when a rebuild hits `WinError 5`.
+    Local previews with no source `jupyter-lite.json`/`jupyter-lite.ipynb` may add
+    `--disable-addons=lite` to avoid scanning the large tool/cache tree. Keep the
+    normal addon enabled for published builds or when source configs are added.
     Reviewer responses are disposable: this mode replaces outdated supplied
     notebook copies on open. Omit the flag for published learner builds. Production
     must preserve learner answers and reflection notes across course updates.

@@ -39,5 +39,5 @@ mkdirSync(dir, { recursive: true });
     const recommendations = assessment.recommendations.map(r => catalog.activities.find(a => a.iri === r.activity)?.title ?? r.activity);
     process.stdout.write(`${filename}: ${record.observations.length} attempts, ${assessment.evidence.length} evidence assertions; next: ${recommendations.join('; ')}\n`);
   }
-  process.stdout.write(`Upload the four files from ${dir} beside 08-my-learning-record.ipynb. These are synthetic demonstration records.\n`);
+  process.stdout.write(`Upload the four files from ${dir} beside u03-n08-my-learning-record.ipynb. These are synthetic demonstration records.\n`);
 })().catch(error => { console.error(error); process.exitCode = 1; });

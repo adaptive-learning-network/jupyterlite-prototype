@@ -21,7 +21,7 @@
 
 g:catalog {
   ex:framework a al:CapabilityFramework ;
-      dcterms:title "Public health informatics: Units 1–3 pilot"@en ;
+      dcterms:title "Public health informatics: Units 1–14 prototype"@en ;
       al:usesScale dreyfus:scale ;
       al:hasCapability ex:cap-data-to-decision, ex:cap-system-map, ex:cap-data-vs-information, ex:cap-explore-dataset, ex:cap-filter-records,
                        ex:cap-combine-variables, ex:cap-machine-readable, ex:cap-case-vs-aggregate .
@@ -104,21 +104,21 @@ g:activities {
       al:assessesCapability ex:cap-data-vs-information, ex:cap-explore-dataset, ex:cap-filter-records,
                             ex:cap-combine-variables, ex:cap-machine-readable, ex:cap-case-vs-aggregate .
 
-  ex:nb-u01-data-to-decision-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/u01-n01-data-to-decision.ipynb" .
-  ex:nb-u02-system-map-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/u02-n01-system-map.ipynb" .
-  ex:nb-case-or-aggregate-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/06-case-or-aggregate.ipynb" .
-  ex:nb-case-or-aggregate-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/06-case-or-aggregate.ipynb" .
-  ex:nb-dhis2-query-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/07-dhis2-query.ipynb" .
-  ex:nb-data-or-information-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/u03-n01-data-or-information.ipynb" .
-  ex:nb-data-or-information-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/u03-n01-data-or-information.ipynb" .
-  ex:nb-explore-dataset-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/02-explore-dataset.ipynb" .
-  ex:nb-explore-dataset-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/02-explore-dataset.ipynb" .
-  ex:nb-filter-records-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/03-filter-records.ipynb" .
-  ex:nb-filter-records-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/03-filter-records.ipynb" .
-  ex:nb-coverage-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/04-coverage.ipynb" .
-  ex:nb-coverage-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/04-coverage.ipynb" .
-  ex:nb-machine-readable-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "exercises/python/05-machine-readable.ipynb" .
-  ex:nb-machine-readable-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "exercises/r/05-machine-readable.ipynb" .
+  ex:nb-u01-data-to-decision-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u01-n01-data-to-decision.ipynb" .
+  ex:nb-u02-system-map-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u02-n01-system-map.ipynb" .
+  ex:nb-case-or-aggregate-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u03-n06-case-or-aggregate.ipynb" .
+  ex:nb-case-or-aggregate-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "notebooks/r/u03-n06-case-or-aggregate.ipynb" .
+  ex:nb-dhis2-query-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u03-n07-dhis2-query.ipynb" .
+  ex:nb-data-or-information-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u03-n01-data-or-information.ipynb" .
+  ex:nb-data-or-information-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "notebooks/r/u03-n01-data-or-information.ipynb" .
+  ex:nb-explore-dataset-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u03-n02-explore-dataset.ipynb" .
+  ex:nb-explore-dataset-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "notebooks/r/u03-n02-explore-dataset.ipynb" .
+  ex:nb-filter-records-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u03-n03-filter-records.ipynb" .
+  ex:nb-filter-records-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "notebooks/r/u03-n03-filter-records.ipynb" .
+  ex:nb-coverage-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u03-n04-coverage.ipynb" .
+  ex:nb-coverage-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "notebooks/r/u03-n04-coverage.ipynb" .
+  ex:nb-machine-readable-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u03-n05-machine-readable.ipynb" .
+  ex:nb-machine-readable-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "notebooks/r/u03-n05-machine-readable.ipynb" .
 
   ex:rubric a al:Rubric ; dcterms:title "Exercise result matches the expected value"@en ;
       al:criterion ex:crit-u01-data-to-decision, ex:crit-u02-system-map, ex:crit-data-or-information, ex:crit-explore-dataset, ex:crit-filter-records, ex:crit-coverage, ex:crit-machine-readable, ex:crit-case-or-aggregate .
@@ -162,4 +162,206 @@ g:governance {
   ex:ceil-check a al:StageCeiling ; al:ceilingStage al:KnowledgeCheck ; al:ceilingLevel dreyfus:advanced-beginner .
   ex:ceil-sim a al:StageCeiling ; al:ceilingStage al:Simulation ; al:ceilingLevel dreyfus:competent .
   ex:ceil-practice a al:StageCeiling ; al:ceilingStage al:ReviewedPractice ; al:ceilingLevel dreyfus:expert .
+}
+
+# Unit 4 Python computational narrative.
+g:catalog {
+  ex:framework al:hasCapability ex:cap-u04-source-inventory .
+  ex:cap-u04-source-inventory a al:Capability ; skos:inScheme ex:framework ; skos:notation "u04-source-inventory" ; al:ordinal 10 ;
+    skos:prefLabel "Compare data sources for an investigation"@en ; al:prerequisite ex:cap-case-vs-aggregate .
+  ex:t-u04-source-inventory a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-u04-source-inventory ;
+    al:targetLevel dreyfus:competent ; al:isCritical false .
+}
+g:activities {
+  ex:act-u04-source-inventory a al:LearningActivity ; dcterms:title "Unit 4: Find the data Laila needs"@en ; al:ordinal 10 ;
+    al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-u04-source-inventory ;
+    al:usesAsset ex:nb-u04-source-inventory-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u04-source-inventory .
+  ex:nb-u04-source-inventory-python a al:LearningAsset ; schema:programmingLanguage "python" ;
+    schema:contentUrl "notebooks/u04-n01-source-inventory.ipynb" .
+  ex:rubric al:criterion ex:crit-u04-source-inventory .
+  ex:crit-u04-source-inventory a al:RubricCriterion ; al:criterionCapability ex:cap-u04-source-inventory .
+  ex:rule-u04-source-inventory a al:EvidenceRule ; al:supportsCriterion ex:crit-u04-source-inventory ; al:evidenceStage al:Simulation ;
+    al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
+}
+
+# Unit 5 Python computational narrative.
+g:catalog {
+  ex:framework al:hasCapability ex:cap-u05-access-and-safe-release .
+  ex:cap-u05-access-and-safe-release a al:Capability ; skos:inScheme ex:framework ; skos:notation "u05-access-and-safe-release" ; al:ordinal 11 ;
+    skos:prefLabel "Evaluate access and safe release"@en ; al:prerequisite ex:cap-u04-source-inventory .
+  ex:t-u05-access-and-safe-release a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-u05-access-and-safe-release ;
+    al:targetLevel dreyfus:competent ; al:isCritical false .
+}
+g:activities {
+  ex:act-u05-access-and-safe-release a al:LearningActivity ; dcterms:title "Unit 5: Give access without releasing too much"@en ; al:ordinal 11 ;
+    al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-u05-access-and-safe-release ;
+    al:usesAsset ex:nb-u05-access-and-safe-release-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u05-access-and-safe-release .
+  ex:nb-u05-access-and-safe-release-python a al:LearningAsset ; schema:programmingLanguage "python" ;
+    schema:contentUrl "notebooks/u05-n01-access-and-safe-release.ipynb" .
+  ex:rubric al:criterion ex:crit-u05-access-and-safe-release .
+  ex:crit-u05-access-and-safe-release a al:RubricCriterion ; al:criterionCapability ex:cap-u05-access-and-safe-release .
+  ex:rule-u05-access-and-safe-release a al:EvidenceRule ; al:supportsCriterion ex:crit-u05-access-and-safe-release ; al:evidenceStage al:Simulation ;
+    al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
+}
+
+# Unit 6 Python computational narrative.
+g:catalog {
+  ex:framework al:hasCapability ex:cap-u06-ai-use-and-review .
+  ex:cap-u06-ai-use-and-review a al:Capability ; skos:inScheme ex:framework ; skos:notation "u06-ai-use-and-review" ; al:ordinal 12 ;
+    skos:prefLabel "Evaluate an AI-assisted draft"@en ; al:prerequisite ex:cap-u05-access-and-safe-release .
+  ex:t-u06-ai-use-and-review a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-u06-ai-use-and-review ;
+    al:targetLevel dreyfus:competent ; al:isCritical false .
+}
+g:activities {
+  ex:act-u06-ai-use-and-review a al:LearningActivity ; dcterms:title "Unit 6: Review an AI-assisted draft before acting"@en ; al:ordinal 12 ;
+    al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-u06-ai-use-and-review ;
+    al:usesAsset ex:nb-u06-ai-use-and-review-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u06-ai-use-and-review .
+  ex:nb-u06-ai-use-and-review-python a al:LearningAsset ; schema:programmingLanguage "python" ;
+    schema:contentUrl "notebooks/u06-n01-ai-use-and-review.ipynb" .
+  ex:rubric al:criterion ex:crit-u06-ai-use-and-review .
+  ex:crit-u06-ai-use-and-review a al:RubricCriterion ; al:criterionCapability ex:cap-u06-ai-use-and-review .
+  ex:rule-u06-ai-use-and-review a al:EvidenceRule ; al:supportsCriterion ex:crit-u06-ai-use-and-review ; al:evidenceStage al:Simulation ;
+    al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
+}
+
+# Unit 7 Python computational narrative.
+g:catalog {
+  ex:framework al:hasCapability ex:cap-u07-form-design-validation .
+  ex:cap-u07-form-design-validation a al:Capability ; skos:inScheme ex:framework ; skos:notation "u07-form-design-validation" ; al:ordinal 13 ;
+    skos:prefLabel "Design and test case-form validation"@en ; al:prerequisite ex:cap-u06-ai-use-and-review .
+  ex:t-u07-form-design-validation a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-u07-form-design-validation ;
+    al:targetLevel dreyfus:competent ; al:isCritical false .
+}
+g:activities {
+  ex:act-u07-form-design-validation a al:LearningActivity ; dcterms:title "Unit 7: Design a form and test its rules"@en ; al:ordinal 13 ;
+    al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-u07-form-design-validation ;
+    al:usesAsset ex:nb-u07-form-design-validation-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u07-form-design-validation .
+  ex:nb-u07-form-design-validation-python a al:LearningAsset ; schema:programmingLanguage "python" ;
+    schema:contentUrl "notebooks/u07-n01-form-design-validation.ipynb" .
+  ex:rubric al:criterion ex:crit-u07-form-design-validation .
+  ex:crit-u07-form-design-validation a al:RubricCriterion ; al:criterionCapability ex:cap-u07-form-design-validation .
+  ex:rule-u07-form-design-validation a al:EvidenceRule ; al:supportsCriterion ex:crit-u07-form-design-validation ; al:evidenceStage al:Simulation ;
+    al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
+}
+
+# Unit 8 Python computational narrative.
+g:catalog {
+  ex:framework al:hasCapability ex:cap-u08-quality-audit-repair .
+  ex:cap-u08-quality-audit-repair a al:Capability ; skos:inScheme ex:framework ; skos:notation "u08-quality-audit-repair" ; al:ordinal 14 ;
+    skos:prefLabel "Audit data quality and preserve corrections"@en ; al:prerequisite ex:cap-u07-form-design-validation .
+  ex:t-u08-quality-audit-repair a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-u08-quality-audit-repair ;
+    al:targetLevel dreyfus:competent ; al:isCritical false .
+}
+g:activities {
+  ex:act-u08-quality-audit-repair a al:LearningActivity ; dcterms:title "Unit 8: Audit quality and plan defensible repairs"@en ; al:ordinal 14 ;
+    al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-u08-quality-audit-repair ;
+    al:usesAsset ex:nb-u08-quality-audit-repair-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u08-quality-audit-repair .
+  ex:nb-u08-quality-audit-repair-python a al:LearningAsset ; schema:programmingLanguage "python" ;
+    schema:contentUrl "notebooks/u08-n01-quality-audit-repair.ipynb" .
+  ex:rubric al:criterion ex:crit-u08-quality-audit-repair .
+  ex:crit-u08-quality-audit-repair a al:RubricCriterion ; al:criterionCapability ex:cap-u08-quality-audit-repair .
+  ex:rule-u08-quality-audit-repair a al:EvidenceRule ; al:supportsCriterion ex:crit-u08-quality-audit-repair ; al:evidenceStage al:Simulation ;
+    al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
+}
+
+# Unit 9 Python computational narrative.
+g:catalog {
+ ex:framework al:hasCapability ex:cap-u09-dictionary-value-map .
+ ex:cap-u09-dictionary-value-map a al:Capability ; skos:inScheme ex:framework ; skos:notation "u09-dictionary-value-map" ; al:ordinal 15 ;
+   skos:prefLabel "Give every field and code a meaning"@en ; al:prerequisite ex:cap-u08-quality-audit-repair .
+ ex:t-u09-dictionary-value-map a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-u09-dictionary-value-map ; al:targetLevel dreyfus:competent ; al:isCritical false .
+}
+g:activities {
+ ex:act-u09-dictionary-value-map a al:LearningActivity ; dcterms:title "Unit 9: Give every field and code a meaning"@en ; al:ordinal 15 ;
+   al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-u09-dictionary-value-map ;
+   al:usesAsset ex:nb-u09-dictionary-value-map-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u09-dictionary-value-map .
+ ex:nb-u09-dictionary-value-map-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u09-n01-dictionary-value-map.ipynb" .
+ ex:rubric al:criterion ex:crit-u09-dictionary-value-map .
+ ex:crit-u09-dictionary-value-map a al:RubricCriterion ; al:criterionCapability ex:cap-u09-dictionary-value-map .
+ ex:rule-u09-dictionary-value-map a al:EvidenceRule ; al:supportsCriterion ex:crit-u09-dictionary-value-map ; al:evidenceStage al:Simulation ; al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
+}
+
+# Unit 10 Python computational narrative.
+g:catalog {
+ ex:framework al:hasCapability ex:cap-u10-table-design-data-flow .
+ ex:cap-u10-table-design-data-flow a al:Capability ; skos:inScheme ex:framework ; skos:notation "u10-table-design-data-flow" ; al:ordinal 16 ;
+   skos:prefLabel "Follow a case through linked tables"@en ; al:prerequisite ex:cap-u09-dictionary-value-map .
+ ex:t-u10-table-design-data-flow a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-u10-table-design-data-flow ; al:targetLevel dreyfus:competent ; al:isCritical false .
+}
+g:activities {
+ ex:act-u10-table-design-data-flow a al:LearningActivity ; dcterms:title "Unit 10: Follow a case through linked tables"@en ; al:ordinal 16 ;
+   al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-u10-table-design-data-flow ;
+   al:usesAsset ex:nb-u10-table-design-data-flow-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u10-table-design-data-flow .
+ ex:nb-u10-table-design-data-flow-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u10-n01-table-design-data-flow.ipynb" .
+ ex:rubric al:criterion ex:crit-u10-table-design-data-flow .
+ ex:crit-u10-table-design-data-flow a al:RubricCriterion ; al:criterionCapability ex:cap-u10-table-design-data-flow .
+ ex:rule-u10-table-design-data-flow a al:EvidenceRule ; al:supportsCriterion ex:crit-u10-table-design-data-flow ; al:evidenceStage al:Simulation ; al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
+}
+
+# Unit 11 Python computational narrative.
+g:catalog {
+ ex:framework al:hasCapability ex:cap-u11-recode-reconcile .
+ ex:cap-u11-recode-reconcile a al:Capability ; skos:inScheme ex:framework ; skos:notation "u11-recode-reconcile" ; al:ordinal 17 ;
+   skos:prefLabel "Transform a copy without losing cases"@en ; al:prerequisite ex:cap-u10-table-design-data-flow .
+ ex:t-u11-recode-reconcile a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-u11-recode-reconcile ; al:targetLevel dreyfus:competent ; al:isCritical false .
+}
+g:activities {
+ ex:act-u11-recode-reconcile a al:LearningActivity ; dcterms:title "Unit 11: Transform a copy without losing cases"@en ; al:ordinal 17 ;
+   al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-u11-recode-reconcile ;
+   al:usesAsset ex:nb-u11-recode-reconcile-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u11-recode-reconcile .
+ ex:nb-u11-recode-reconcile-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u11-n01-recode-reconcile.ipynb" .
+ ex:rubric al:criterion ex:crit-u11-recode-reconcile .
+ ex:crit-u11-recode-reconcile a al:RubricCriterion ; al:criterionCapability ex:cap-u11-recode-reconcile .
+ ex:rule-u11-recode-reconcile a al:EvidenceRule ; al:supportsCriterion ex:crit-u11-recode-reconcile ; al:evidenceStage al:Simulation ; al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
+}
+
+# Unit 12 Python computational narrative.
+g:catalog {
+ ex:framework al:hasCapability ex:cap-u12-link-exchange .
+ ex:cap-u12-link-exchange a al:Capability ; skos:inScheme ex:framework ; skos:notation "u12-link-exchange" ; al:ordinal 18 ;
+   skos:prefLabel "Link records before an exchange"@en ; al:prerequisite ex:cap-u11-recode-reconcile .
+ ex:t-u12-link-exchange a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-u12-link-exchange ; al:targetLevel dreyfus:competent ; al:isCritical false .
+}
+g:activities {
+ ex:act-u12-link-exchange a al:LearningActivity ; dcterms:title "Unit 12: Link records before an exchange"@en ; al:ordinal 18 ;
+   al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-u12-link-exchange ;
+   al:usesAsset ex:nb-u12-link-exchange-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u12-link-exchange .
+ ex:nb-u12-link-exchange-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u12-n01-link-exchange.ipynb" .
+ ex:rubric al:criterion ex:crit-u12-link-exchange .
+ ex:crit-u12-link-exchange a al:RubricCriterion ; al:criterionCapability ex:cap-u12-link-exchange .
+ ex:rule-u12-link-exchange a al:EvidenceRule ; al:supportsCriterion ex:crit-u12-link-exchange ; al:evidenceStage al:Simulation ; al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
+}
+
+# Unit 13 Python computational narrative.
+g:catalog {
+ ex:framework al:hasCapability ex:cap-u13-analysis-dashboard .
+ ex:cap-u13-analysis-dashboard a al:Capability ; skos:inScheme ex:framework ; skos:notation "u13-analysis-dashboard" ; al:ordinal 19 ;
+   skos:prefLabel "Build a district briefing from the records"@en ; al:prerequisite ex:cap-u12-link-exchange .
+ ex:t-u13-analysis-dashboard a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-u13-analysis-dashboard ; al:targetLevel dreyfus:competent ; al:isCritical false .
+}
+g:activities {
+ ex:act-u13-analysis-dashboard a al:LearningActivity ; dcterms:title "Unit 13: Build a district briefing from the records"@en ; al:ordinal 19 ;
+   al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-u13-analysis-dashboard ;
+   al:usesAsset ex:nb-u13-analysis-dashboard-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u13-analysis-dashboard .
+ ex:nb-u13-analysis-dashboard-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u13-n01-analysis-dashboard.ipynb" .
+ ex:rubric al:criterion ex:crit-u13-analysis-dashboard .
+ ex:crit-u13-analysis-dashboard a al:RubricCriterion ; al:criterionCapability ex:cap-u13-analysis-dashboard .
+ ex:rule-u13-analysis-dashboard a al:EvidenceRule ; al:supportsCriterion ex:crit-u13-analysis-dashboard ; al:evidenceStage al:Simulation ; al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
+}
+
+# Unit 14 Python computational narrative.
+g:catalog {
+ ex:framework al:hasCapability ex:cap-u14-interpret-with-ai .
+ ex:cap-u14-interpret-with-ai a al:Capability ; skos:inScheme ex:framework ; skos:notation "u14-interpret-with-ai" ; al:ordinal 20 ;
+   skos:prefLabel "Challenge an AI-assisted briefing"@en ; al:prerequisite ex:cap-u13-analysis-dashboard .
+ ex:t-u14-interpret-with-ai a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-u14-interpret-with-ai ; al:targetLevel dreyfus:competent ; al:isCritical false .
+}
+g:activities {
+ ex:act-u14-interpret-with-ai a al:LearningActivity ; dcterms:title "Unit 14: Challenge an AI-assisted briefing"@en ; al:ordinal 20 ;
+   al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-u14-interpret-with-ai ;
+   al:usesAsset ex:nb-u14-interpret-with-ai-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u14-interpret-with-ai .
+ ex:nb-u14-interpret-with-ai-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u14-n01-interpret-with-ai.ipynb" .
+ ex:rubric al:criterion ex:crit-u14-interpret-with-ai .
+ ex:crit-u14-interpret-with-ai a al:RubricCriterion ; al:criterionCapability ex:cap-u14-interpret-with-ai .
+ ex:rule-u14-interpret-with-ai a al:EvidenceRule ; al:supportsCriterion ex:crit-u14-interpret-with-ai ; al:evidenceStage al:Simulation ; al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
 }

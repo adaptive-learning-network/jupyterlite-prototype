@@ -1,0 +1,102 @@
+[
+  {
+    "source": "u00-n01-reading-index",
+    "destination": "u00-n00-start-here",
+    "integration": "navigation replaced by unified course contents"
+  },
+  {
+    "source": "u01-n01-slides",
+    "destination": "u01-n01-data-to-decision",
+    "integration": "local collapsible slide previews and PDF page links"
+  },
+  {
+    "source": "u01-n02-lesson",
+    "destination": "u01-n01-data-to-decision",
+    "integration": "explanation and visuals in opening narrative"
+  },
+  {
+    "source": "u01-n03-knowledge-check",
+    "destination": "u01-n01-data-to-decision",
+    "integration": "knowledge-check reflection fields"
+  },
+  {
+    "source": "u02-n01-slides",
+    "destination": "u02-n01-system-map",
+    "integration": "local collapsible slide previews and PDF page links"
+  },
+  {
+    "source": "u02-n02-knowledge-check",
+    "destination": "u02-n01-system-map",
+    "integration": "knowledge-check reflection fields"
+  },
+  {
+    "source": "u02-n03-his-context",
+    "destination": "u02-n01-system-map",
+    "integration": "explanation and visuals in opening narrative"
+  },
+  {
+    "source": "u02-n04-case-study",
+    "destination": "u02-n01-system-map",
+    "integration": "explanation and visuals in opening narrative"
+  },
+  {
+    "source": "u02-n05-group-work",
+    "destination": "u02-n01-system-map",
+    "integration": "question-by-question Record fields"
+  },
+  {
+    "source": "u02-n06-assignment-1",
+    "destination": "u02-n01-system-map",
+    "integration": "question-by-question Record fields"
+  },
+  {
+    "source": "u02-n07-explore-datasets",
+    "destination": "u03-n02-explore-dataset",
+    "integration": "explanation and visuals in opening narrative"
+  },
+  {
+    "source": "u02-n08-assignment-2",
+    "destination": "u03-n02-explore-dataset",
+    "integration": "question-by-question Record fields"
+  },
+  {
+    "source": "u02-n09-assignment-3",
+    "destination": "u09-n01-dictionary-value-map",
+    "integration": "question-by-question Record fields"
+  },
+  {
+    "source": "u02-n10-data-quality",
+    "destination": "u08-n01-quality-audit-repair",
+    "integration": "explanation and visuals in opening narrative"
+  },
+  {
+    "source": "u02-n11-assignment-4",
+    "destination": "u08-n01-quality-audit-repair",
+    "integration": "question-by-question Record fields"
+  },
+  {
+    "source": "u02-n12-compile-analyze",
+    "destination": "u12-n01-link-exchange",
+    "integration": "explanation and visuals in opening narrative"
+  },
+  {
+    "source": "u02-n13-analyze-visualize",
+    "destination": "u13-n01-analysis-dashboard",
+    "integration": "explanation and visuals in opening narrative"
+  },
+  {
+    "source": "u02-n14-assignment-5",
+    "destination": "u12-n01-link-exchange",
+    "integration": "question-by-question Record fields"
+  },
+  {
+    "source": "u02-n15-assignment-6",
+    "destination": "u13-n01-analysis-dashboard",
+    "integration": "question-by-question Record fields"
+  },
+  {
+    "source": "u00-n02-version3-form-library",
+    "destination": "Units 1, 2, 4, 5, 7",
+    "integration": "interactive quiz and written-case sections within their units; provisional feedback retained"
+  }
+]

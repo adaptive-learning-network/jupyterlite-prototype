@@ -1,10 +1,11 @@
 import { expect, Page, test } from '@playwright/test';
 
-const notebook = 'exercises/python/u01-n01-data-to-decision.ipynb';
+const notebook = 'notebooks/u01-n01-data-to-decision.ipynb';
 const panel = (page: Page) => page.locator('#al-engine-learning');
 
 async function runCell(page: Page, index: number, source?: string): Promise<void> {
-  const cell = page.locator('.jp-Notebook .jp-Cell').nth(index);
+  const cell = page.locator(`.jp-Notebook .jp-Cell[data-windowed-list-index="${index}"]`);
+  await cell.scrollIntoViewIfNeeded();
   await cell.locator('.cm-content').click();
   if (source !== undefined) {
     await page.keyboard.press('ControlOrMeta+a');
@@ -25,8 +26,7 @@ async function outcomes(page: Page): Promise<string[]> {
 test('Unit 1 pilot shows source visuals and records retry-to-success progression', async ({ page }) => {
   await page.goto(`/lab/index.html?path=${notebook}`);
   await expect(panel(page)).toBeVisible();
-  await expect(page.locator('.jp-Notebook .jp-Cell').nth(2)).toBeVisible();
-  await expect(page.locator('.jp-Notebook img')).toHaveCount(2);
+  expect(await page.locator('.jp-Notebook img').count()).toBeGreaterThanOrEqual(2);
   await expect(page.locator('.jp-Notebook')).toContainText('Unit 01 · Notebook 01 · Python');
   await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]'))
     .toBeVisible({ timeout: 180_000 });

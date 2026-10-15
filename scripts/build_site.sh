@@ -14,6 +14,10 @@ python scripts/make_exercises.py          # Python + R notebooks and checks from
 python scripts/make_form_library.py       # reviewed local text from supplied form exports
 python scripts/add_course_references.py   # local references at the end of each notebook
 python scripts/add_course_references.py --check  # reject missing media, external links, and editorial notes
+python scripts/assemble_course.py          # one integrated learner sequence
+python -m unittest discover -s test -p 'test_unified_course.py'
+python -m unittest discover -s test -p 'test_units09_14.py'
+python -m unittest discover -s test -p 'test_units04_08.py'  # new Python narratives
 jlpm test                                 # engine unit tests (writes test-results/learner-export.nq)
 python scripts/validate_export.py test-results/learner-export.nq
 jlpm build                                # compile extension and labextension

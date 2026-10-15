@@ -86,9 +86,12 @@ increase = None
 recommended_step = None
 """
     meta = {"al": {"activity": EX + "act-u01-data-to-decision", "object": EX + "act-u01-data-to-decision-exercise", "check": "checks/u01-data-to-decision", "hints": ["For each district, pair its previous and current rows before comparing counts.", "Subtract previous from current for every district; choose the largest increase, not merely the largest current count.", "A reported increase is a signal. Verify the reports and investigate before declaring a confirmed outbreak."]}, "tags": ["al-exercise"]}
-    reflection = "## Your reflection\n\nReplace this prompt with one sentence: *Why is the chosen action justified, and what remains uncertain?*\n\n" + ENDING
+    from reflection_widgets import reflection_code
+    reflection = "## Your reflection\n\nRun the next cell to enter your reflection. Select **Record** to save it in this browser. Your response is unscored."
     notebook = {
-        "cells": [cell("markdown", INTRO, "0"), cell("code", setup, "1"), cell("code", exercise, "2", meta), cell("markdown", reflection, "3")],
+        "cells": [cell("markdown", INTRO, "0"), cell("code", setup, "1"), cell("code", exercise, "2", meta), cell("markdown", reflection, "3"),
+                  cell("code", reflection_code("exercise:u01-n01", ["Why is the chosen action justified, and what remains uncertain?"]), "reflection-fields", {"jupyter": {"source_hidden": True}}),
+                  cell("markdown", ENDING, "continue")],
         "metadata": {"kernelspec": {"name": "python", "display_name": "Python (Pyodide)", "language": "python"}, "language_info": {"name": "python"}, "al": {"activity": EX + "act-u01-data-to-decision", "language": "python", "generatedBy": "scripts/make_unit01_pilot.py"}, "title": "Unit 01 Notebook 01: From data to a public health decision (Python)"},
         "nbformat": 4, "nbformat_minor": 5,
     }

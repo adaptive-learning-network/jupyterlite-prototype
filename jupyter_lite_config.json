@@ -1,6 +1,8 @@
 {
   "LiteBuildConfig": {
-    "contents": ["content"],
+    "contents": [
+      ".course-content"
+    ],
     "output_dir": "_output"
   }
 }

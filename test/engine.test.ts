@@ -157,10 +157,28 @@ test('the assessment does not depend on observation order', () => {
 });
 
 test('a learner who completes every exercise has no open gates', () => {
-  const all = ['act-u01-data-to-decision', 'act-u02-system-map', 'act-data-or-information', 'act-explore-dataset', 'act-filter-records', 'act-coverage', 'act-machine-readable', 'act-case-or-aggregate'];
+  const all = catalog.activities.filter(activity => activity.rules.length > 0).map(activity => activity.iri.slice(EX.length));
   const a = assess(catalog, record(all.map(x => obs(x, OUTCOME.correct))));
   assert.ok(a.gaps.every(g => g.state === GAP.achieved && !g.gateBlocked));
   assert.equal(a.recommendations.length, 0);
+});
+
+test('Units 4–14 retries preserve attempts and unlock the next narrative only after success', () => {
+  const chain = ['u04-source-inventory', 'u05-access-and-safe-release', 'u06-ai-use-and-review', 'u07-form-design-validation', 'u08-quality-audit-repair', 'u09-dictionary-value-map', 'u10-table-design-data-flow', 'u11-recode-reconcile', 'u12-link-exchange', 'u13-analysis-dashboard', 'u14-interpret-with-ai'];
+  const completed = catalog.activities.filter(a => a.rules.length > 0 && !chain.some(id => a.iri === EX + 'act-' + id))
+    .map(a => obs(a.iri.slice(EX.length), OUTCOME.correct));
+  for (let i = 0; i < chain.length; i++) {
+    const id = chain[i];
+    const retries = [...completed, obs('act-' + id, OUTCOME.incomplete), obs('act-' + id, OUTCOME.incorrect), obs('act-' + id, OUTCOME.incorrect)];
+    const before = assess(catalog, record(retries));
+    assert.equal(gapOf(before, 'cap-' + id).state, GAP.unknown);
+    assert.ok(before.recommendations.some(r => r.capability === EX + 'cap-' + id));
+    if (i < chain.length - 1) assert.ok(!before.recommendations.some(r => r.capability === EX + 'cap-' + chain[i + 1]));
+    completed.push(...retries.slice(completed.length), obs('act-' + id, OUTCOME.correct));
+    const after = assess(catalog, record(completed));
+    assert.equal(gapOf(after, 'cap-' + id).state, GAP.achieved);
+    if (i < chain.length - 1) assert.ok(after.recommendations.some(r => r.capability === EX + 'cap-' + chain[i + 1]));
+  }
 });
 
 test('invalid input fails closed with a stable code', () => {

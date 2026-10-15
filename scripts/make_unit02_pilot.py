@@ -121,11 +121,7 @@ print("Case path:", " → ".join(system_map["case"]))
 print("Lab path: ", " → ".join(system_map["lab"]))
 '''
 
-ENDING = """## Reflect on system use
-
-Who needs each case or laboratory report? Name one access question you would verify with the district team. Your reflection is not automatically scored.
-
-## Continue the case
+ENDING = """## Continue the case
 
 Use the **Learning** panel for the next activity. If a route was incorrect,
 follow each arrow in the diagram and try the same map again.
@@ -139,6 +135,7 @@ def cell(kind: str, source: str, cell_id: str, metadata: dict | None = None) -> 
 
 
 def main() -> None:
+    from reflection_widgets import reflection_code
     meta = {"al": {"activity": EX + "act-u02-system-map", "object": EX + "act-u02-system-map-exercise",
                     "check": "checks/u02-system-map", "hints": [
                         "Start each path with its source record, then follow the arrows in the country HIS diagram.",
@@ -149,7 +146,9 @@ def main() -> None:
         "cells": [cell("markdown", INTRO, "0"),
                   cell("code", SETUP, "1", {"jupyter": {"source_hidden": True}}),
                   cell("code", EXERCISE, "2", meta),
-                  cell("markdown", ENDING, "3")],
+                  cell("markdown", "## Reflect on system use\n\nRun the next cell to enter your reflections. Select **Record** to save them in this browser. Your responses are unscored.", "3"),
+                  cell("code", reflection_code("exercise:u02-n01", ["Who needs each case or laboratory report?", "What access question would you verify with the district team?"]), "reflection-fields", {"jupyter": {"source_hidden": True}}),
+                  cell("markdown", ENDING, "continue")],
         "metadata": {"kernelspec": {"name": "python", "display_name": "Python (Pyodide)", "language": "python"},
                      "language_info": {"name": "python"},
                      "al": {"activity": EX + "act-u02-system-map", "language": "python", "generatedBy": "scripts/make_unit02_pilot.py"},

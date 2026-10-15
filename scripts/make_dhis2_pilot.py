@@ -72,7 +72,9 @@ class CourseDhis2Adapter:
 api = CourseDhis2Adapter(FIXTURE)
 '''
 
-INTRO = """# Explore case events through a DHIS2-shaped adapter
+INTRO = """**Course outline:** Unit 03 | Notebook 07 | Python
+
+# Explore case events through a DHIS2-shaped adapter
 
 This is a **local course simulation**, not a DHIS2 server. It uses synthetic measles case events. The adapter answers three read-only requests in the Python Jupyter kernel; it makes no network requests or changes to a real health information system.
 
@@ -130,7 +132,7 @@ last_onset = None
         "metadata": {"kernelspec": {"name": "python", "display_name": "Python (Pyodide)", "language": "python"}, "language_info": {"name": "python"}, "al": {"activity": EX + "act-dhis2-query", "language": "python", "generatedBy": "scripts/make_dhis2_pilot.py"}, "title": "Explore case events through a DHIS2-shaped adapter (Python)"},
         "nbformat": 4, "nbformat_minor": 5,
     }
-    path = OUT / "exercises/python/07-dhis2-query.ipynb"
+    path = OUT / "exercises/python/u03-n07-dhis2-query.ipynb"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(notebook, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
 

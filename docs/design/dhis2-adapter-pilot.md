@@ -2,7 +2,7 @@
 
 **Status:** Python-only source, native checks, and a Python-only JupyterLite static build have passed. The scripted Chromium browser scenarios verified the Jupyter kernel, Learning panel, browser-local record, retries, recommendations, repeats, and hint ceiling in a local build. The R runtime was excluded from this Windows build.
 
-The pilot is a JupyterLite notebook at `content/exercises/python/07-dhis2-query.ipynb`. Its setup cell contains a read-only `CourseDhis2Adapter` and seven synthetic measles events. Learners query two metadata lists and a district's events, then report the number of records, the range of nonblank rash-onset dates, and the number of missing onset dates. The existing Learning panel runs `app-assets/adaptive-learning/checks/dhis2-query.py` after the learner's exercise cell and records a simulation-stage observation against the dataset-exploration capability.
+The pilot is a JupyterLite notebook at `content/exercises/python/u03-n07-dhis2-query.ipynb`. Its setup cell contains a read-only `CourseDhis2Adapter` and seven synthetic measles events. Learners query two metadata lists and a district's events, then report the number of records, the range of nonblank rash-onset dates, and the number of missing onset dates. The existing Learning panel runs `app-assets/adaptive-learning/checks/dhis2-query.py` after the learner's exercise cell and records a simulation-stage observation against the dataset-exploration capability.
 
 ## Course basis
 
@@ -47,7 +47,7 @@ After building the site with `jlpm build:site`, run `jlpm test:dhis2`. Playwrigh
 
 The matching engine test in `test/engine.test.ts` checks the recommendation transition without a browser. The browser test also checks that the real Jupyter kernel, observer, browser storage, and panel agree. These scripted outcomes test system behavior; they do not measure whether a learner can solve the exercise. The retry, repeat, third-hint, and learner-record-view scenarios passed locally in Chromium.
 
-The unscored `08-my-learning-record.ipynb` notebook reads the learner's own N-Quads export from the Learning panel. With sequential exports uploaded beside the notebook, it reports attempt history, graph counts, current interpretation, and graph changes between exports. It reads snapshots and does not add learning observations.
+The unscored `u03-n08-my-learning-record.ipynb` notebook reads the learner's own N-Quads export from the Learning panel. With sequential exports uploaded beside the notebook, it reports attempt history, graph counts, current interpretation, and graph changes between exports. It reads snapshots and does not add learning observations.
 For a no-coding demo, `jlpm demo:dhis2-graph` generates four synthetic exports under `.tools/dhis2-graph-demo/`; the final notebook can read them in order. The browser test verified that the notebook renders a local graph and leaves the observation count unchanged. The native viewer also parsed the four real N-Quads exports from the demo generator.
 
 ## Next slice

@@ -124,11 +124,11 @@ def localize_form(filename: str, body: str, prior_url: str | None = None) -> tup
             "Write a response for each case prompt. Your reflections are unscored.")
     if filename == "u01-n02-lesson":
         return (body, "## Reflect on Laila's report\n\nRun the next cell to write in the response fields. "
-                "Select **Show my reflection** to review your text. To keep it after a kernel restart, "
-                "copy the summary into a note in your saved notebook. This reflection is not scored.", source_url)
+                "Select **Record** to save your reflections in this browser with your learner record. "
+                "Recorded text returns when you run this section again. This reflection is not scored.", source_url)
     response = ("## Your responses\n\n" + note +
-                "\n\nRun the next cell to write in the response fields. Select **Show my reflection** "
-                "to review your text. Copy anything you want to keep before restarting the Jupyter kernel.")
+                "\n\nRun the next cell to write in the response fields. Select **Record** "
+                "to save in this browser with your learner record. Run this section again to restore recorded text.")
     return body, response, source_url
 IMAGE_ALT = {
     "laila_2.png": "Laila's current data-access problems and the quality dataset she needs",
@@ -213,39 +213,11 @@ def cell(source: str, cell_id: str) -> dict:
     return {"cell_type": "markdown", "id": cell_id, "metadata": {}, "source": source.splitlines(keepends=True)}
 
 
-def response_widget(prompts: list[str]) -> dict:
-    source = '''# Run this cell to write your reflection in the fields below.
-try:
-    import ipywidgets as widgets
-except ImportError:
-    import piplite
-    await piplite.install("ipywidgets==8.1.7")
-    import ipywidgets as widgets
-from html import escape
-from IPython.display import display
-
-prompts = ''' + repr(prompts) + '''
-fields = []
-for number, prompt in enumerate(prompts, 1):
-    label = widgets.HTML(value=f"<strong>{number}. {escape(prompt)}</strong>")
-    field = widgets.Textarea(placeholder="Write your reflection here", rows=5,
-                             layout=widgets.Layout(width="100%"))
-    fields.append(field)
-    display(widgets.VBox([label, field]))
-
-summary = widgets.Output()
-button = widgets.Button(description="Show my reflection", button_style="info")
-def show_reflection(_):
-    with summary:
-        summary.clear_output()
-        for number, field in enumerate(fields, 1):
-            print(f"{number}. {field.value.strip() or '[No response yet]'}\\n")
-button.on_click(show_reflection)
-display(button, summary)
-'''
+def response_widget(section: str, prompts: list[str]) -> dict:
+    from reflection_widgets import reflection_code
     return {"cell_type": "code", "id": "reflection-fields",
             "metadata": {"jupyter": {"source_hidden": True}},
-            "source": source.splitlines(keepends=True),
+            "source": reflection_code("reading:" + section, prompts).splitlines(keepends=True),
             "execution_count": None, "outputs": []}
 
 
@@ -286,6 +258,18 @@ def localize_dependencies(filename: str, body: str) -> str:
     body = body.replace("- Excel\n\n**Practice with the local files below**", "")
     body = body.replace("### Resources\n\nUse the headings", "### Report structure\n\nUse the headings")
     if filename == "u01-n02-lesson":
+        videos = (
+            "## 4.1 Additional Materials\n\n"
+            "### Optional videos\n\n"
+            "- [Public Health Informatics: translating knowledge for health](https://www.youtube.com/watch?v=fLUygA8Hpfo) "
+            "— Public Health Informatics Institute. How does the translator analogy apply to Laila's work?\n"
+            "- [Introduction to Public Health Informatics](https://www.youtube.com/watch?v=Fzc3j8QG_Mw) "
+            "— CDC. Consider the public health mission, the informatician's role, and how informatics differs from information technology.\n"
+            "- [Standards and Interoperability in Digital Health: Explained](https://www.youtube.com/watch?v=KSEUh-wj7Y0) "
+            "— TechChange. What would help Laila exchange information across reporting systems?\n\n"
+            "The videos open on YouTube. You can complete this lesson using the explanations and local visuals above.\n\n"
+        )
+        body = re.sub(r"## 4\.1 Additional Materials\b.*?(?=\n# 5 Summary)", videos, body, flags=re.S)
         # The archived page put this image and 39px text in nested HTML divs.
         # Markdown renders more reliably in JupyterLite's narrow reading pane.
         body = re.sub(
@@ -389,9 +373,9 @@ def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
     if position + 1 < len(names):
         adjacent.append(f"[Next reading]({lab_link(names[position + 1])})")
     reflection = ("## Try it\n\n" + prompt + "\n\n"
-                  "Double-click this cell to write a short answer in your own notebook copy. "
-                  "Choose **No Kernel** if asked; this reading has no code to run.\n\n"
-                  "_Write your reasoning here._")
+                  "Choose **Python (Pyodide)** and run the next cell to enter your response. "
+                  "Select **Record** to save it with your learner record in this browser. "
+                  "Run the response cell again to restore your recorded text. Your response is unscored.")
     navigation = ("## Continue learning\n\n" + " · ".join(adjacent) + "\n\n"
                   "For a scored exercise, open the **Learning** panel. Your notes in this reading are for practice.")
     slide_cells = []
@@ -412,16 +396,16 @@ def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
             slide_cells.append(cell("\n".join(lines), f"slide-{first:03d}"))
     if response:
         notebook_cells = [cell(outline, "0"), cell(body, "1"), cell(response, "2")]
-        notebook_cells.append(response_widget(LOCAL_RESPONSES[filename]))
+        notebook_cells.append(response_widget(filename, LOCAL_RESPONSES[filename]))
         notebook_cells.append(cell(navigation, "3"))
     else:
         notebook_cells = [cell(outline, "0"), cell(body, "1"), *slide_cells,
-                          cell(reflection, "2"), cell(navigation, "3")]
+                          cell(reflection, "2"), response_widget(filename, [prompt]), cell(navigation, "3")]
     notebook = {
         "cells": notebook_cells,
         "metadata": {"title": learner_title, "generatedBy": "scripts/import_ucsf_readings.py",
                      **({"kernelspec": {"name": "python", "display_name": "Python (Pyodide)", "language": "python"},
-                         "language_info": {"name": "python"}} if response else {}),
+                         "language_info": {"name": "python"}}),
                      **({"sourceFormUrl": source_form_url} if source_form_url else {})},
         "nbformat": 4,
         "nbformat_minor": 5,
@@ -445,8 +429,8 @@ def write_index() -> None:
                  "Your written notes stay in this browser.", "0"),
             cell("## Unit 1: From data to decisions\n\n" + links("u01-"), "1"),
             cell("## Unit 2: Follow a report through the system\n\n" + links("u02-"), "2"),
-            cell("## Continue Laila's case\n\nMost text-only readings use **No Kernel**. "
-                 "For reflection fields, case responses, and the optional practice quiz, choose **Python (Pyodide)** and run their response cells. "
+            cell("## Continue Laila's case\n\nChoose **Python (Pyodide)** and run a response cell to enter your reflections. "
+                 "Select **Record** to save them in this browser; run the cell again to restore recorded text. "
                  "Return to the [Unit 1 computational notebook](../../exercises/python/u01-n01-data-to-decision.ipynb) "
                  "or use the **Learning** panel for the next scored exercise. "
                  "[Optional practice questions](u00-n02-version3-form-library.ipynb) offer another way to review the ideas.", "3"),

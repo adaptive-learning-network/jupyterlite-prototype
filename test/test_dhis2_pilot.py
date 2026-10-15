@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-NOTEBOOK = ROOT / "content/exercises/python/07-dhis2-query.ipynb"
+NOTEBOOK = ROOT / "content/exercises/python/u03-n07-dhis2-query.ipynb"
 CHECK = ROOT / "app-assets/adaptive-learning/checks/dhis2-query.py"
 
 

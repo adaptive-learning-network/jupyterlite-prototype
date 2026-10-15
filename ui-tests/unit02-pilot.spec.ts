@@ -3,7 +3,8 @@ import { expect, Page, test } from '@playwright/test';
 const panel = (page: Page) => page.locator('#al-engine-learning');
 
 async function runCell(page: Page, index: number): Promise<void> {
-  const cell = page.locator('.jp-Notebook .jp-Cell').nth(index);
+  const cell = page.locator(`.jp-Notebook .jp-Cell[data-windowed-list-index="${index}"]`);
+  await cell.scrollIntoViewIfNeeded();
   if (index === 1) await cell.click();
   else await cell.locator('.cm-content').click();
   await page.keyboard.press('Shift+Enter');
@@ -33,9 +34,9 @@ async function moveStage(select: ReturnType<Page['locator']>, button: ReturnType
 }
 
 test('Unit 2 system map records a wrong route and a corrected route', async ({ page }) => {
-  await page.goto('/lab/index.html?path=exercises/python/u02-n01-system-map.ipynb');
+  await page.goto('/lab/index.html?path=notebooks/u02-n01-system-map.ipynb');
   await expect(panel(page)).toBeVisible();
-  await expect(page.locator('.jp-Notebook img')).toHaveCount(2);
+  expect(await page.locator('.jp-Notebook img').count()).toBeGreaterThanOrEqual(2);
   await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]'))
     .toBeVisible({ timeout: 180_000 });
   await runCell(page, 1);

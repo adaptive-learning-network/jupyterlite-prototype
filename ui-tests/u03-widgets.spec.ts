@@ -3,7 +3,8 @@ import { expect, Page, test } from '@playwright/test';
 const panel = (page: Page) => page.locator('#al-engine-learning');
 
 async function runCell(page: Page, index: number): Promise<void> {
-  const cell = page.locator('.jp-Notebook .jp-Cell').nth(index);
+  const cell = page.locator(`.jp-Notebook .jp-Cell[data-windowed-list-index="${index}"]`);
+  await cell.scrollIntoViewIfNeeded();
   if (index === 1) await cell.click(); // the infrastructure source is collapsed
   else await cell.locator('.cm-content').click();
   await page.keyboard.press('Shift+Enter');
@@ -23,7 +24,7 @@ test('U03 N01 drag bins record incomplete, wrong, and correct attempts', async (
     if (new URL(route.request().url()).hostname === '127.0.0.1') return route.continue();
     return route.abort();
   });
-  await page.goto('/lab/index.html?path=exercises/python/u03-n01-data-or-information.ipynb');
+  await page.goto('/lab/index.html?path=notebooks/u03-n01-data-or-information.ipynb');
   await expect(panel(page)).toBeVisible();
   await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]'))
     .toBeVisible({ timeout: 180_000 });
