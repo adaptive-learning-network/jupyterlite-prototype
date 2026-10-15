@@ -36,7 +36,7 @@ async function moveStage(select: ReturnType<Page['locator']>, button: ReturnType
 test('Unit 2 system map records a wrong route and a corrected route', async ({ page }) => {
   await page.goto('/lab/index.html?path=notebooks/u02-n01-system-map.ipynb');
   await expect(panel(page)).toBeVisible();
-  expect(await page.locator('.jp-Notebook img').count()).toBeGreaterThanOrEqual(2);
+  await expect.poll(() => page.locator('.jp-Notebook img').count()).toBeGreaterThanOrEqual(2);
   await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]'))
     .toBeVisible({ timeout: 180_000 });
   await runCell(page, 1);

@@ -26,7 +26,7 @@ async function outcomes(page: Page): Promise<string[]> {
 test('Unit 1 pilot shows source visuals and records retry-to-success progression', async ({ page }) => {
   await page.goto(`/lab/index.html?path=${notebook}`);
   await expect(panel(page)).toBeVisible();
-  expect(await page.locator('.jp-Notebook img').count()).toBeGreaterThanOrEqual(2);
+  await expect.poll(() => page.locator('.jp-Notebook img').count()).toBeGreaterThanOrEqual(2);
   await expect(page.locator('.jp-Notebook')).toContainText('Unit 01 · Notebook 01 · Python');
   await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]'))
     .toBeVisible({ timeout: 180_000 });
