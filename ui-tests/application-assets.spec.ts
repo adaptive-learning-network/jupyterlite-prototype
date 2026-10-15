@@ -20,7 +20,7 @@ test('adaptive resources load outside the learner contents drive', async ({ page
   await page.goto('/lab/index.html');
   await expect(page.locator('#al-engine-learning')).toBeVisible();
   await expect(page.locator('.jp-DirListing-itemText').filter({ hasText: /^notebooks$/ })).toBeVisible();
-  await expect(page.locator('.jp-DirListing-itemText').filter({ hasText: /^(al|checks)$/ })).toHaveCount(0);
+  await expect(page.locator('.jp-DirListing-itemText').filter({ hasText: /^(al|checks|readings|exercises)$/ })).toHaveCount(0);
 });
 
 test('an unavailable check preserves the learner record and can be retried', async ({ page }) => {

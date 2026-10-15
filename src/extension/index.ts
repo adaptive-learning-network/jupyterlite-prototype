@@ -41,11 +41,11 @@ function normalizeBrowserContentsPaths(app: JupyterFrontEnd): void {
 }
 
 // A browser may retain notebooks from an older site build after the bundled
-// readings directory disappears. Recreate only the missing directory entries;
+// course directory is missing. Recreate only the required directory entries;
 // never replace a learner's notebook or clear browser storage.
-async function ensureReadingDirectories(app: JupyterFrontEnd): Promise<void> {
+async function ensureCourseDirectories(app: JupyterFrontEnd): Promise<void> {
   const contents = app.serviceManager.contents;
-  for (const path of ['readings', 'readings/ucsf']) {
+  for (const path of ['notebooks', 'notebooks/r']) {
     const existing = await contents.get(path, { content: false }).catch(() => null);
     if (existing?.type === 'directory') continue;
     if (existing) throw new Error(`${path} exists but is not a directory`);
@@ -70,7 +70,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
   activate: async (app: JupyterFrontEnd, shell: ILabShell, tracker: INotebookTracker, docManager: IDocumentManager) => {
     normalizeBrowserContentsPaths(app);
     try {
-      await ensureReadingDirectories(app);
+      await ensureCourseDirectories(app);
     } catch (error) {
       console.warn('al-engine: could not repair reading directories.', error);
     }

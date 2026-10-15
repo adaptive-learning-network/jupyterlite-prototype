@@ -69,99 +69,62 @@ test('Unit 2 system map records a wrong route and a corrected route', async ({ p
   await expect(panel(page).locator('.al-rec').filter({ hasText: 'Data or information?' })).toHaveCount(1);
 });
 
-test('Unit 2 knowledge check reading saves in a fresh browser', async ({ page }) => {
-  await page.goto('/lab/index.html?path=readings/ucsf/u02-n02-knowledge-check.ipynb');
-  await expect(page.locator('.jp-Notebook .jp-Cell')).toHaveCount(6);
-  await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]')).toHaveCount(1, { timeout: 180_000 });
-  const cell = page.locator('.jp-Notebook .jp-Cell').nth(2);
-  await cell.click();
-  await page.keyboard.press('Enter');
-  await cell.locator('.cm-content').click();
-  await page.keyboard.press('ControlOrMeta+a');
-  await page.keyboard.insertText('Local save test');
-  await page.keyboard.press('ControlOrMeta+s');
-  await expect(page.getByRole('dialog', { name: 'File Save Error' })).toHaveCount(0);
-  await page.goto('/lab/index.html?path=readings/ucsf/u02-n02-knowledge-check.ipynb');
-  await expect(page.locator('.jp-Notebook')).toContainText('Local save test');
-});
-
-test('repairs a missing browser reading directory before saving', async ({ page }) => {
-  // Reproduce an older static site whose notebook is present but whose parent
-  // directory is absent from JupyterLite's contents index.
-  await page.route('**/api/contents/readings/all.json', async route => {
-    const response = await route.fetch();
-    const index = await response.json();
-    index.content = index.content.filter((item: { name: string }) => item.name !== 'ucsf');
-    await route.fulfill({ response, json: index });
+async function learnerMode(page: Page) {
+  await page.route('**/jupyter-lite.json', async route => {
+    const response=await route.fetch();const config=await response.json();
+    config['jupyter-config-data']={...config['jupyter-config-data'],alCourseReviewMode:false};
+    await route.fulfill({response,json:config});
   });
-  await page.goto('/lab/index.html?path=readings/ucsf/u02-n02-knowledge-check.ipynb');
-  await expect(page.locator('.jp-Notebook .jp-Cell')).toHaveCount(6);
-  const missingDirDialog = page.getByRole('dialog', { name: 'Directory not found' });
-  if (await missingDirDialog.isVisible()) {
-    await missingDirDialog.getByRole('button', { name: 'Close' }).click();
-  }
-  const noKernel = page.getByRole('dialog').getByRole('button', { name: 'No Kernel' });
-  if (await noKernel.isVisible()) await noKernel.click();
-  const responseCell = page.locator('.jp-Notebook .jp-Cell').nth(2);
-  await responseCell.click();
-  await page.keyboard.press('Enter');
-  await responseCell.locator('.cm-content').click();
-  await page.keyboard.press('ControlOrMeta+a');
-  await page.keyboard.insertText('Recovered local response');
+}
+async function saveAndReload(page: Page, marker: string) {
+  await page.goto('/lab/index.html?path=notebooks/u00-n00-start-here.ipynb');
+  await expect(panel(page)).toBeVisible();
+  const cell=page.locator('.jp-Cell[data-windowed-list-index="2"]');
+  await cell.scrollIntoViewIfNeeded();await cell.dblclick();
+  await cell.locator('.cm-content').click();await page.keyboard.press('ControlOrMeta+a');
+  await page.keyboard.insertText(marker);await page.keyboard.press('Shift+Enter');
   await page.keyboard.press('ControlOrMeta+s');
-  await expect(page.getByRole('dialog', { name: 'File Save Error' })).toHaveCount(0);
-  await page.goto('/lab/index.html?path=readings/ucsf/u02-n02-knowledge-check.ipynb');
-  await expect(page.locator('.jp-Notebook')).toContainText('Recovered local response');
+  await expect(page.locator('.jp-mod-dirty')).toHaveCount(0);
+  await expect(page.getByRole('dialog',{name:'File Save Error'})).toHaveCount(0);
+  await page.reload();await expect(panel(page)).toBeVisible();
+  await expect(page.locator('.jp-Notebook')).toContainText(marker);
+}
+test('the unified course notebook saves in a fresh learner browser',async({page})=>{
+  await learnerMode(page);await saveAndReload(page,'Local course save test');
 });
-
-test('saves an existing reading whose browser model has a Windows path', async ({ page }) => {
-  await page.route('**/api/contents/readings/ucsf/all.json', async route => {
-    const response = await route.fetch();
-    const index = await response.json();
-    for (const item of index.content as { name: string; path: string }[]) {
-      if (item.name === 'u00-n01-reading-index.ipynb') {
-        item.path = item.path.replaceAll('/', '\\');
-      }
+test('repairs a missing browser course directory before saving',async({page})=>{
+  await learnerMode(page);
+  await page.route('**/api/contents/all.json',async route=>{
+    const response=await route.fetch();const index=await response.json();
+    index.content=index.content.filter((item:{name:string})=>item.name!=='notebooks');
+    await route.fulfill({response,json:index});
+  });
+  await saveAndReload(page,'Recovered local course response');
+});
+test('saves a course notebook whose browser model has a Windows path',async({page})=>{
+  await learnerMode(page);
+  await page.route('**/api/contents/notebooks/all.json',async route=>{
+    const response=await route.fetch();const index=await response.json();
+    for(const item of index.content as {name:string;path:string}[]) {
+      if(item.name==='u00-n00-start-here.ipynb') item.path=item.path.replaceAll('/','\\');
     }
-    await route.fulfill({ response, json: index });
+    await route.fulfill({response,json:index});
   });
-  await page.goto('/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb');
-  await expect(page.locator('.jp-Notebook .jp-Cell')).toHaveCount(5);
-  const noKernel = page.getByRole('dialog').getByRole('button', { name: 'No Kernel' });
-  await noKernel.waitFor({ state: 'visible', timeout: 30_000 }).catch(() => undefined);
-  if (await noKernel.isVisible()) await noKernel.click();
-  const cell = page.locator('.jp-Notebook .jp-Cell').nth(3);
-  await cell.click();
-  await page.keyboard.press('Enter');
-  await cell.locator('.cm-content').click();
-  await page.keyboard.press('ControlOrMeta+a');
-  await page.keyboard.insertText('Windows path save recovered');
-  await page.keyboard.press('ControlOrMeta+s');
-  await expect(page.getByRole('dialog', { name: 'File Save Error' })).toHaveCount(0);
-  await page.goto('/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb');
-  await expect(page.locator('.jp-Notebook')).toContainText('Windows path save recovered');
+  await saveAndReload(page,'Windows path save recovered');
 });
-
-test('Unit 2 slide reading shows local PDF page previews', async ({ page }) => {
-  await page.goto('/lab/index.html?path=readings/ucsf/u02-n01-slides.ipynb');
-  await expect(page.locator('.jp-Notebook')).toContainText('Unit 2 slide preview');
-  const notebookResponse = await page.request.get('/files/readings/ucsf/u02-n01-slides.ipynb');
-  expect(notebookResponse.ok()).toBe(true);
-  const notebook = await notebookResponse.json();
-  const gallery = notebook.cells.map((cell: { source: string[] }) => cell.source.join('')).join('\n');
+test('Unit 2 includes local slide previews and PDF pages',async({page})=>{
+  await page.goto('/lab/index.html?path=notebooks/u02-n01-system-map.ipynb');
+  await expect(panel(page)).toBeVisible();
+  const notebook=await(await page.request.get('/files/notebooks/u02-n01-system-map.ipynb')).json();
+  const gallery=notebook.cells.map((cell:{source:string[]})=>cell.source.join('')).join('\n');
   expect(gallery).toContain('assets/slide-previews/unit-2-001.jpg');
   expect(gallery).toContain('unit-2-version-2-slides.pdf#page=1');
-  expect((await page.request.get('/files/readings/ucsf/assets/slide-previews/unit-2-001.jpg')).ok())
-    .toBe(true);
-  expect((await page.request.get('/files/readings/ucsf/assets/unit-2-version-2-slides.pdf')).ok())
-    .toBe(true);
+  expect((await page.request.get('/files/notebooks/assets/slide-previews/unit-2-001.jpg')).ok()).toBe(true);
+  expect((await page.request.get('/files/notebooks/assets/unit-2-version-2-slides.pdf')).ok()).toBe(true);
 });
-
-test('Unit 2 dataset reading starts the Python kernel from a nested folder', async ({ page }) => {
-  await page.goto('/lab/index.html?path=readings/ucsf/u02-n07-explore-datasets.ipynb');
-  await expect(page.locator('.jp-Notebook')).toContainText('Explore a surveillance dataset');
-  const select = page.getByRole('dialog').getByRole('button', { name: 'Select', exact: true });
-  if (await select.isVisible()) await select.click();
-  await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]'))
-    .toBeVisible({ timeout: 180_000 });
+test('the integrated dataset lesson starts the Python kernel in the course folder',async({page})=>{
+  await page.goto('/lab/index.html?path=notebooks/u03-n02-explore-dataset.ipynb');
+  await expect(panel(page)).toBeVisible();
+  await expect(page.locator('.jp-Notebook')).toContainText('Using Software to Explore Datasets');
+  await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]')).toBeVisible({timeout:180000});
 });
