@@ -16,17 +16,20 @@ test('local review replaces a supplied copy while learner mode retains saved wor
  const record=await page.evaluate(()=>localStorage.getItem('al-engine:learner-record:v0.1'));
  async function edit(index:number,text:string){
   const cell=page.locator(`.jp-Cell[data-windowed-list-index="${index}"]`);
-  await expect(async()=>{await cell.scrollIntoViewIfNeeded();}).toPass({timeout:30000});await cell.dblclick();await cell.locator('.cm-content').click();
+  await expect(async()=>{await cell.scrollIntoViewIfNeeded();}).toPass({timeout:30000});await cell.click({position:{x:8,y:8}});await page.keyboard.press('Enter');await cell.locator('.cm-content').click();
   await page.keyboard.press('ControlOrMeta+a');await page.keyboard.insertText(text);
-  await page.keyboard.press('Shift+Enter');await page.keyboard.press('ControlOrMeta+s');
+  await page.keyboard.press('Shift+Enter');
+  await expect(cell.locator('.jp-RenderedMarkdown')).toContainText(text.split('\n').at(-1)!.replace(/^#+ /,''));
+  await expect(page.locator('.jp-mod-dirty')).not.toHaveCount(0);
+  await page.keyboard.press('ControlOrMeta+s');
   await expect(page.locator('.jp-mod-dirty')).toHaveCount(0);
  }
  await edit(0,'# Outdated review copy');
  await page.evaluate(path=>localStorage.setItem(`al-engine:course-copy:${path}`,'old-version'),path);
- review=true;await page.reload();
+ review=true;await page.goto(`/lab/index.html?path=${path}`);
  await expect(page.locator('.jp-Notebook h1')).toContainText(title);
  expect(await page.evaluate(()=>localStorage.getItem('al-engine:learner-record:v0.1'))).toBe(record);
  review=false;await edit(2,'## My reflection\n\nLearner notes retained across updates.');
  await page.evaluate(path=>localStorage.setItem(`al-engine:course-copy:${path}`,'old-version'),path);
- await page.reload();await expect(page.locator('.jp-Notebook')).toContainText('Learner notes retained across updates.');
+ await page.goto(`/lab/index.html?path=${path}`);await expect(page.locator('.jp-Notebook')).toContainText('Learner notes retained across updates.');
 });

@@ -80,13 +80,16 @@ async function saveAndReload(page: Page, marker: string) {
   await page.goto('/lab/index.html?path=notebooks/u00-n00-start-here.ipynb');
   await expect(panel(page)).toBeVisible();
   const cell=page.locator('.jp-Cell[data-windowed-list-index="2"]');
-  await cell.scrollIntoViewIfNeeded();await cell.dblclick();
+  await cell.scrollIntoViewIfNeeded();await cell.click({position:{x:8,y:8}});await page.keyboard.press('Enter');
   await cell.locator('.cm-content').click();await page.keyboard.press('ControlOrMeta+a');
   await page.keyboard.insertText(marker);await page.keyboard.press('Shift+Enter');
+  await expect(cell.locator('.jp-RenderedMarkdown')).toContainText(marker);
+  await expect(page.locator('.jp-mod-dirty')).not.toHaveCount(0);
   await page.keyboard.press('ControlOrMeta+s');
   await expect(page.locator('.jp-mod-dirty')).toHaveCount(0);
   await expect(page.getByRole('dialog',{name:'File Save Error'})).toHaveCount(0);
-  await page.reload();await expect(panel(page)).toBeVisible();
+  // Reopen explicitly: workspace tab restoration is debounced separately from file saving.
+  await page.goto('/lab/index.html?path=notebooks/u00-n00-start-here.ipynb');await expect(panel(page)).toBeVisible();
   await expect(page.locator('.jp-Notebook')).toContainText(marker);
 }
 test.describe('saved learner work',()=>{
