@@ -12,10 +12,11 @@ test('local review replaces a supplied copy while learner mode retains saved wor
  const title=doc.cells[0].source.join('').match(/^# (.+)$/m)![1];
  await page.goto(`/lab/index.html?path=${path}`);
  await expect(page.locator('#al-engine-learning')).toBeVisible();
+ await expect(page.locator('.jp-Notebook h1')).toContainText(title);
  const record=await page.evaluate(()=>localStorage.getItem('al-engine:learner-record:v0.1'));
  async function edit(index:number,text:string){
   const cell=page.locator(`.jp-Cell[data-windowed-list-index="${index}"]`);
-  await cell.scrollIntoViewIfNeeded();await cell.dblclick();await cell.locator('.cm-content').click();
+  await expect(async()=>{await cell.scrollIntoViewIfNeeded();}).toPass({timeout:30000});await cell.dblclick();await cell.locator('.cm-content').click();
   await page.keyboard.press('ControlOrMeta+a');await page.keyboard.insertText(text);
   await page.keyboard.press('Shift+Enter');await page.keyboard.press('ControlOrMeta+s');
   await expect(page.locator('.jp-mod-dirty')).toHaveCount(0);

@@ -41,6 +41,7 @@ def read(path):return json.loads(path.read_text(encoding='utf-8'))
 def markdown(source,ident):return {'cell_type':'markdown','id':ident,'metadata':{},'source':source.splitlines(keepends=True)}
 def transform(source,language='python',reading=False):
     asset='assets/' if language=='python' else '../assets/'
+    source=source.replace('`exercises/python`','`notebooks`')
     if reading:source=re.sub(r'(?<![/\w-])assets/',asset,source)
     # Explicit PDF preview links are browser URLs, rather than contents paths.
     source=source.replace('../files/readings/ucsf/assets/',asset)
@@ -95,7 +96,7 @@ def validate(folder):
         for c in doc['cells']:
             if c['cell_type']!='markdown':continue
             s=text(c)
-            if 'readings/ucsf' in s:raise ValueError('Separate reading route remains: '+str(p))
+            if re.search(r'(?:exercises|readings)/',s):raise ValueError('Retired learner path remains: '+str(p))
             for target in re.findall(r'!?\[[^\]]*\]\(([^)]+)\)',s):
                 if target.startswith(('http:','https:','attachment:','#')):continue
                 if target.startswith('../files/'):raise ValueError('Use contents-relative PDF links: '+target)

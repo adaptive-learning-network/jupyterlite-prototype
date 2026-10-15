@@ -89,7 +89,9 @@ async function saveAndReload(page: Page, marker: string) {
   await page.reload();await expect(panel(page)).toBeVisible();
   await expect(page.locator('.jp-Notebook')).toContainText(marker);
 }
-test('the unified course notebook saves in a fresh learner browser',async({page})=>{
+test.describe('saved learner work',()=>{
+ test.use({serviceWorkers:'block'});
+ test('the unified course notebook saves in a fresh learner browser',async({page})=>{
   await learnerMode(page);await saveAndReload(page,'Local course save test');
 });
 test('repairs a missing browser course directory before saving',async({page})=>{
@@ -112,6 +114,8 @@ test('saves a course notebook whose browser model has a Windows path',async({pag
   });
   await saveAndReload(page,'Windows path save recovered');
 });
+});
+
 test('Unit 2 includes local slide previews and PDF pages',async({page})=>{
   await page.goto('/lab/index.html?path=notebooks/u02-n01-system-map.ipynb');
   await expect(panel(page)).toBeVisible();
