@@ -8,7 +8,7 @@ import { checkAssertedIdentity, CONSENT_REVISION, IdentityBindingError, newBindi
 import { codeChallenge, createPkcePair, randomToken } from '../src/identity/pkce';
 
 const ROOT = join(__dirname, '..', '..');
-const catalog: Catalog = JSON.parse(readFileSync(join(ROOT, 'content/al/catalog.json'), 'utf8'));
+const catalog: Catalog = JSON.parse(readFileSync(join(ROOT, 'app-assets/adaptive-learning/catalog.json'), 'utf8'));
 const EX = 'https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#';
 const ISSUER = 'https://login.example.org/realms/fetp';
 const NOW = '2026-10-02T12:00:00Z';

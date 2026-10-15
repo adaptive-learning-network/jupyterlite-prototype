@@ -102,3 +102,16 @@ test('Unit 1 lesson offers text fields for local reflection', async ({ page }) =
   await reflection.getByRole('button', { name: 'Show my reflection' }).click();
   await expect(reflection).toContainText('Check completeness before acting.');
 });
+
+test('reading knowledge checks and case assignments provide entry fields', async ({ page }) => {
+  for (const [filename, count] of [['u02-n02-knowledge-check', 3], ['u02-n08-assignment-2', 4]] as const) {
+    await page.goto(`/lab/index.html?path=readings/ucsf/${filename}.ipynb`);
+    await expect(page.locator('.jp-NotebookPanel:visible .jp-Notebook-ExecutionIndicator[data-status="idle"]'))
+      .toHaveCount(1, { timeout: 180_000 });
+    await expect(page.locator('.jp-Notebook:visible')).not.toContainText('Enter your response here.');
+    const fields = page.locator('.jp-Notebook:visible .jp-Cell').nth(3);
+    await fields.click();
+    await page.keyboard.press('Shift+Enter');
+    await expect(fields.locator('.jp-OutputArea textarea')).toHaveCount(count, { timeout: 180_000 });
+  }
+});

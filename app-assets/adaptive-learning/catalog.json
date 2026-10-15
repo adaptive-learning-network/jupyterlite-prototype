@@ -1,9 +1,9 @@
 {
   "schema": "al-catalog-projection/0.1",
-  "sourceDigest": "7bd05af793b5c3d91b559889973bac8b2bac6620544e45fb51422c24b2aab15c",
+  "sourceDigest": "a7bb78cf0a548c9f2c4267882b367f5b63df8c27b870577d9494b835af7f814c",
   "framework": {
     "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#framework",
-    "title": "Public health informatics: Units 1–3 pilot",
+    "title": "Public health informatics: Units 1â€“3 pilot",
     "scale": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#scale"
   },
   "levels": [

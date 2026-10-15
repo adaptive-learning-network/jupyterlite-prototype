@@ -6,7 +6,7 @@ The TriG catalog is the source of truth. This script:
      ontology repository;
   2. validates the catalog against shapes/al-core.shacl.ttl and stops on any
      violation;
-  3. projects the catalog to content/al/catalog.json, a bounded, sorted,
+  3. projects the catalog to app-assets/adaptive-learning/catalog.json, a bounded, sorted,
      deterministic structure the adaptive-learning engine consumes.
 
 Usage:
@@ -27,7 +27,7 @@ from rdflib import Dataset, Graph
 
 ROOT = Path(__file__).resolve().parent.parent
 CATALOG = ROOT / "catalog/informatics-unit-03.trig"
-OUTPUT = ROOT / "content/al/catalog.json"
+OUTPUT = ROOT / "app-assets/adaptive-learning/catalog.json"
 
 PREFIXES = """
 PREFIX al:      <https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#>
@@ -138,7 +138,7 @@ def main() -> int:
 
     digest = hashlib.sha256(CATALOG.read_bytes()).hexdigest()
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT.write_text(json.dumps(project(data, digest), indent=2, ensure_ascii=False) + "\n")
+    OUTPUT.write_text(json.dumps(project(data, digest), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"catalog conforms to al-core shapes; wrote {OUTPUT.relative_to(ROOT)}")
     return 0
 

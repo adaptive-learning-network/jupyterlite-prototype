@@ -27,5 +27,13 @@ test('Unit 1 lesson loads every course visual locally', async ({ page }) => {
   await expect(page.locator('.jp-Notebook')).not.toContainText('Open source illustration');
   await expect(page.locator('.jp-Notebook h2').filter({ hasText: 'References' })).toHaveCount(1);
   await expect(page.locator('.jp-Notebook')).not.toContainText('Source and visual attribution');
+  await expect(page.locator('.jp-Notebook')).not.toContainText('Source media:');
+  await expect(page.locator('.jp-Notebook')).not.toContainText('Original PDF link');
+  await expect(page.locator('.jp-Notebook')).not.toContainText('Available course deck for context:');
+  const slides = page.locator('.jp-Notebook').getByRole('link', { name: 'Explore the Unit 1 slides' });
+  await expect(slides).toHaveAttribute('href', /\/files\/readings\/ucsf\/u01-n01-slides\.ipynb$/);
+  expect(new URL((await slides.getAttribute('href'))!, page.url()).origin).toBe(new URL(page.url()).origin);
   expect(externalCourseRequests).toEqual([]);
+  await slides.click();
+  await expect(page.locator('.jp-Notebook:visible')).toContainText('Unit 1 slide preview');
 });

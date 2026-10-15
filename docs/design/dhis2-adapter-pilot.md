@@ -2,7 +2,7 @@
 
 **Status:** Python-only source, native checks, and a Python-only JupyterLite static build have passed. The scripted Chromium browser scenarios verified the Jupyter kernel, Learning panel, browser-local record, retries, recommendations, repeats, and hint ceiling in a local build. The R runtime was excluded from this Windows build.
 
-The pilot is a JupyterLite notebook at `content/exercises/python/07-dhis2-query.ipynb`. Its setup cell contains a read-only `CourseDhis2Adapter` and seven synthetic measles events. Learners query two metadata lists and a district's events, then report the number of records, the range of nonblank rash-onset dates, and the number of missing onset dates. The existing Learning panel runs `content/checks/dhis2-query.py` after the learner's exercise cell and records a simulation-stage observation against the dataset-exploration capability.
+The pilot is a JupyterLite notebook at `content/exercises/python/07-dhis2-query.ipynb`. Its setup cell contains a read-only `CourseDhis2Adapter` and seven synthetic measles events. Learners query two metadata lists and a district's events, then report the number of records, the range of nonblank rash-onset dates, and the number of missing onset dates. The existing Learning panel runs `app-assets/adaptive-learning/checks/dhis2-query.py` after the learner's exercise cell and records a simulation-stage observation against the dataset-exploration capability.
 
 ## Course basis
 
@@ -25,7 +25,7 @@ The adapter is an in-memory Python object. `get()` returns copies, rejects unsup
 
 ## Rebuild and verify
 
-`scripts/make_dhis2_pilot.py` is the source of the notebook, fixture, and check. `scripts/make_exercises.py` calls it after generating the existing paired Python and R exercises. `catalog/informatics-unit-03.trig` is the source of the Learning panel activity and asset; `scripts/build_catalog.py` projects it to `content/al/catalog.json`.
+`scripts/make_dhis2_pilot.py` is the source of the notebook, fixture, and check. `scripts/make_exercises.py` calls it after generating the existing paired Python and R exercises. `catalog/informatics-unit-03.trig` is the source of the Learning panel activity and asset; `scripts/build_catalog.py` projects it to `app-assets/adaptive-learning/catalog.json`.
 
 Run the Python-only native check with:
 

@@ -102,7 +102,7 @@ jobs:
           name: test-results
           path: |
             jupyterlite-prototype/test-results/
-            jupyterlite-prototype/content/al/catalog.json
+            jupyterlite-prototype/app-assets/adaptive-learning/catalog.json
           if-no-files-found: ignore
 
       - name: Upload site for Pages

@@ -12,7 +12,7 @@ if (compile.error) throw compile.error;
 if (compile.status !== 0) process.exit(compile.status ?? 1);
 
 const { ACTION, OUTCOME, assess, exportNQuads } = require(join(root, 'lib-test/src/engine'));
-const catalog = JSON.parse(readFileSync(join(root, 'content/al/catalog.json'), 'utf8'));
+const catalog = JSON.parse(readFileSync(join(root, 'app-assets/adaptive-learning/catalog.json'), 'utf8'));
 const ex = 'https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#';
 const learner = 'urn:uuid:11111111-1111-4111-8111-111111111111';
 const record = {

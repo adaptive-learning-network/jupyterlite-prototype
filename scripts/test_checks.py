@@ -78,14 +78,14 @@ def main() -> int:
         for mode, want in expected.items():
             got = {}
             for language, ext, runner in (("python", "py", run_python), ("r", "R", run_r)):
-                check = (ROOT / "content/checks" / f"{ex['check']}.{ext}").read_text()
+                check = (ROOT / "app-assets/adaptive-learning/checks" / f"{ex['check']}.{ext}").read_text()
                 got[language] = runner(ex["setup"][language] + "\n" + answers(language, ex["variables"], mode) + check)
             ok = got["python"] == got["r"] == want
             failures += not ok
             print(f"  {'ok  ' if ok else 'FAIL'}  {ex['check']:<22} {mode:<12} python={got['python']:<10} r={got['r']}")
     from make_unit01_pilot import REPORTS, expected as unit01_expected
     district, increase = unit01_expected()
-    check = (ROOT / "content/checks/u01-data-to-decision.py").read_text(encoding="utf-8")
+    check = (ROOT / "app-assets/adaptive-learning/checks/u01-data-to-decision.py").read_text(encoding="utf-8")
     cases = {
         "placeholder": ("priority_district = None\nincrease = None\nrecommended_step = None\n", "incomplete"),
         "wrong_district": (f"priority_district = 'Bombali'\nincrease = {increase}\nrecommended_step = 'verify_reports_and_investigate'\n", "incorrect"),
@@ -98,7 +98,7 @@ def main() -> int:
         failures += not ok
         print(f"  {'ok  ' if ok else 'FAIL'}  u01-data-to-decision {mode:<15} python={got}")
     from make_unit02_pilot import CASE_ROUTE, LAB_ROUTE
-    check = (ROOT / "content/checks/u02-system-map.py").read_text(encoding="utf-8")
+    check = (ROOT / "app-assets/adaptive-learning/checks/u02-system-map.py").read_text(encoding="utf-8")
     system_cases = {
         "untouched": (None, "incomplete"),
         "partial": ({"case": list(CASE_ROUTE), "lab": list(LAB_ROUTE), "case_moves": 1, "lab_moves": 0}, "incomplete"),

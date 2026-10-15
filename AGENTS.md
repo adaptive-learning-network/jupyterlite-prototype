@@ -17,8 +17,9 @@ Read [README.md](README.md) and the design notes in [docs/design/](docs/design/)
 
 ```text
 catalog/*.trig               curriculum in al: terms: SOURCE OF TRUTH for capabilities, targets, activities, rules
-scripts/build_catalog.py     validate catalog against al: shapes → content/al/catalog.json (generated)
-scripts/make_exercises.py    exercise SPEC → Python + R notebooks and checks in content/ (generated)
+scripts/build_catalog.py     validate catalog against al: shapes → app-assets/adaptive-learning/catalog.json (generated)
+scripts/make_exercises.py    exercise SPEC → notebooks in content/, checks in app-assets/adaptive-learning/ (generated)
+scripts/configure_site.py    publish versioned application assets outside the learner contents drive
 scripts/make_unit01_pilot.py Python-only Unit 1 scored pilot (called by make_exercises.py)
 scripts/prepare_widget_wheels.py  checksum-pinned local piplite wheels for U03 N01 controls
 src/engine/                  adaptive-learning engine: pure, deterministic, no JupyterLab imports
@@ -46,9 +47,9 @@ The `al:` ontology is expected at `../adaptive-learning-ontology`; override with
 
 ## Rules
 
-1. **Edit sources, not generated files.** Exercise notebooks and checks in
-   `content/` come from `scripts/make_exercises.py`; UCSF readings come from
-   `scripts/import_ucsf_readings.py`; `content/al/catalog.json` comes from the
+1. **Edit sources, not generated files.** Exercise notebooks in `content/` and
+   checks in `app-assets/adaptive-learning/` come from `scripts/make_exercises.py`; UCSF readings come from
+   `scripts/import_ucsf_readings.py`; `app-assets/adaptive-learning/catalog.json` comes from the
    TriG catalog. Change the source or generator, then regenerate.
 2. **Use the course material as much as possible:** verbatim learning objectives,
    slide examples and definitions, course scenarios, Excel How-To Scribes, and
@@ -82,6 +83,12 @@ The `al:` ontology is expected at `../adaptive-learning-ontology`; override with
 10. **Notebook cell IDs** must be unique. Core generated cells use numeric IDs;
     the final References cell uses its own ID, and slide preview cells use
     descriptive IDs.
+11. **Update the local review preview.** After changing notebooks or application
+    resources, update the site served in the VS Code browser and configure it with
+    `scripts/configure_site.py --output <preview-directory> --course-review`.
+    Reviewer responses are disposable: this mode replaces outdated supplied
+    notebook copies on open. Omit the flag for published learner builds. Production
+    must preserve learner answers and reflection notes across course updates.
 
 ## Before you commit
 

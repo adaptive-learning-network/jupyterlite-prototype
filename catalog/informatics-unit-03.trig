@@ -16,7 +16,7 @@
 # activities have Python and R notebooks bound to the same al: capability.
 #
 # This file is the source of truth. scripts/build_catalog.py validates it with
-# the al: shapes and projects it to content/al/catalog.json for the browser.
+# the al: shapes and projects it to app-assets/adaptive-learning/catalog.json for the browser.
 # It will become the unit module of the informatics capability pack.
 
 g:catalog {

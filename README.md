@@ -35,8 +35,8 @@ supplied PDF archive, without account details or participant responses. Its prac
 questions use local radio buttons and checkboxes with **provisional practice
 feedback** derived from the course material; this is not the official form key.
 Choose **Python (Pyodide)**
-and run the quiz cell for the unit you want to review. The Unit 1 lesson also
-has text fields for its unscored reflection.
+and run the quiz cell for the unit you want to review. The reading knowledge checks
+and case responses also provide text fields for unscored reflections.
 The [provisional feedback review sheet](docs/review/provisional-quiz-feedback.md)
 lists every proposed choice and explanation for course-owner review.
 **Read Laila's case:** [Unit 1 and Unit 2 index on GitHub Pages](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=readings/ucsf/u00-n01-reading-index.ipynb)
@@ -59,6 +59,12 @@ If an older open tab reports `Directory does not exist: readings\ucsf`, copy any
 unsaved cell text before reloading the page. The current site normalizes Windows
 paths when saving; reopen the notebook after the reload and save it. This does
 not clear or overwrite your browser-saved notebooks.
+
+For the local VS Code course review, run `python scripts/configure_site.py --output _output --course-review`
+after building. In this review mode, opening a supplied notebook replaces an outdated browser copy
+with the current course version. Reviewer responses are disposable; normal published builds keep
+this mode disabled. See [browser storage](docs/design/browser-storage.md) for the production
+requirement to preserve learner answers and reflection notes.
 The remaining existing exercise filenames will be converted after this pilot.
 The reading index opens 18 unscored pages with Laila's case, prompts, diagrams, and local slide previews. Unit 1 and Unit 2 slide notebooks contain 142 page previews and two PDFs served by this JupyterLite site. Local, synthetic practice CSV files and a data dictionary support the dataset and quality-check readings. The practice files are small teaching examples, not the original surveillance spreadsheets. Source mapping and unavailable-media details live in [slide preview notes](docs/slide-preview.md) and the [course link audit](../fetp-phi-course/docs/audit/form-links-audit.md). Scored Python pilots cover Units 1 and 2; the rest of Unit 2 remains planned in the [course notebook inventory](../fetp-phi-course/docs/notebook-inventory.md).
 
@@ -100,9 +106,16 @@ folder. These demonstration files are kept out of version control.
 
 ## How it works
 
+The learner file browser contains the course notebooks and their learning materials.
+The catalog and exercise checks are generated into `app-assets/adaptive-learning/`
+and published as versioned assets under `assets/adaptive-learning/`, outside the
+JupyterLite contents drive. The extension loads those assets directly; it does
+not put application files in `localStorage`. The learner record and preferences
+continue to use browser `localStorage`. See [browser storage and application assets](docs/design/browser-storage.md).
+
 ```text
-catalog/informatics-unit-03.trig ──build_catalog.py (SHACL-validated)──▶  content/al/catalog.json
-scripts/make_exercises.py       ──▶  content/exercises/{python,r}/*.ipynb + content/checks/*.{py,R}
+catalog/informatics-unit-03.trig ──build_catalog.py (SHACL-validated)──▶  app-assets/adaptive-learning/catalog.json
+scripts/make_exercises.py       ──▶  content/exercises/{python,r}/*.ipynb + app-assets/adaptive-learning/checks/*.{py,R}
 
 JupyterLite page
   extension "jupyterlite-al-engine"

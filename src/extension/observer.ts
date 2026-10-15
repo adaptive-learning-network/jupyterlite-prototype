@@ -3,7 +3,7 @@
 // kernel's language, and records one al:Observation. Learner-entered values
 // never leave the Jupyter kernel; only the outcome code is read.
 
-import { Contents, Kernel, KernelMessage } from '@jupyterlab/services';
+import { Kernel, KernelMessage } from '@jupyterlab/services';
 import { INotebookTracker, NotebookActions } from '@jupyterlab/notebook';
 import { ISignal, Signal } from '@lumino/signaling';
 
@@ -47,7 +47,7 @@ export class ExerciseObserver {
     private readonly catalog: Catalog,
     private readonly store: LearnerStore,
     private readonly tracker: INotebookTracker,
-    private readonly contents: Contents.IManager
+    private readonly loadCheck: (path: string) => Promise<string>
   ) {
     NotebookActions.executed.connect(this.onExecuted, this);
   }
@@ -80,8 +80,7 @@ export class ExerciseObserver {
     const extension = CHECK_EXTENSION[language];
     if (!extension) return { problem: `No checks for Jupyter kernel language "${language}"` };
 
-    const file = await this.contents.get(`${meta.check}.${extension}`, { content: true, format: 'text' });
-    const code = String(file.content);
+    const code = await this.loadCheck(`${meta.check}.${extension}`);
     const outcomeCode = await runCheck(kernel, code);
     const outcome = outcomeCode ? OUTCOME_BY_CODE[outcomeCode] : undefined;
     if (!outcome) return { problem: 'The exercise check did not report a result.' };

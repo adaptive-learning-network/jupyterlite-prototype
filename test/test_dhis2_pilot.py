@@ -10,13 +10,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 NOTEBOOK = ROOT / "content/exercises/python/07-dhis2-query.ipynb"
-CHECK = ROOT / "content/checks/dhis2-query.py"
+CHECK = ROOT / "app-assets/adaptive-learning/checks/dhis2-query.py"
 
 
 class PilotTests(unittest.TestCase):
     def setUp(self) -> None:
         notebook = json.loads(NOTEBOOK.read_text(encoding="utf-8"))
-        self.assertEqual([cell["id"] for cell in notebook["cells"]], ["0", "1", "2", "3"])
+        self.assertEqual([cell["id"] for cell in notebook["cells"][:4]], ["0", "1", "2", "3"])
+        self.assertEqual(notebook["cells"][-1]["id"], "references")
         self.assertEqual(notebook["cells"][2]["metadata"]["al"]["check"], "checks/dhis2-query")
         self.ns: dict = {}
         exec("".join(notebook["cells"][1]["source"]), self.ns)

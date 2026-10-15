@@ -31,7 +31,7 @@ INTRO = """**Course outline:** Unit 02 · Notebook 01 · Python
 
 ![Three-panel teaching comic: Laila reviews a clinical record, traces case and laboratory streams, and examines a district summary with a colleague.](../assets/laila-unit02-notebook01-comic.png)
 
-*Laila needs to know where a report begins and which systems carry it to the district. Original teaching illustration; no dialogue is taken from the slides.*
+*Laila needs to know where a report begins and which systems carry it to the district.*
 
 ![Source HIS diagram: electronic patient and community records feed case alerts and reports; laboratory records feed laboratory reports; both reach the district health information system and then MOH.](../assets/unit2-ucsf-his-context.png)
 
@@ -173,7 +173,9 @@ def _al_check():
 print("AL_OBSERVATION " + _al_json.dumps({{"outcome": _al_check()}}))
 del _al_check
 '''
-    (OUT / "checks/u02-system-map.py").write_text(check, encoding="utf-8")
+    checks = ROOT / "app-assets/adaptive-learning/checks"
+    checks.mkdir(parents=True, exist_ok=True)
+    (checks / "u02-system-map.py").write_text(check, encoding="utf-8")
     print("wrote Unit 02 Notebook 01 Python pilot and check")
 
 

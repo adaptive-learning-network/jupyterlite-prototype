@@ -14,7 +14,7 @@
   "files": [
     "lib/**/*.{d.ts,js,js.map}",
     "style/**/*.{css,js}",
-    "content/al/catalog.json"
+    "app-assets/adaptive-learning/**/*"
   ],
   "main": "lib/extension/index.js",
   "types": "lib/extension/index.d.ts",

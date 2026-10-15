@@ -22,6 +22,10 @@ SOURCE_LABELS = {name: label for name, _, label, _, _ in SOURCES}
 VERIFIED_EXTERNAL_REFERENCES: set[str] = set()
 IMAGE_RE = re.compile(r'!\[[^]]*\]\(([^)]+)\)|<img\b[^>]*\bsrc=["\']([^"\']+)', re.I)
 URL_RE = re.compile(r'https?://[^\s)>"`]+')
+EDITORIAL_RE = re.compile(
+    r"Source media:|Original PDF link|Available course deck for context:|"
+    r"Source and visual attribution|archived UCSF notebook|exact slides are unverified|"
+    r"Original teaching illustration|no dialogue is taken from the slides", re.I)
 
 
 def references(path: Path) -> str:
@@ -93,6 +97,9 @@ def update(path: Path, check: bool) -> bool:
             if cell["cell_type"] != "markdown":
                 continue
             source = "".join(cell["source"])
+            editorial = EDITORIAL_RE.search(source)
+            if editorial and not source.startswith("## References\n"):
+                raise ValueError(f"editorial material belongs in repository docs: {path}: {editorial.group()}")
             for url in URL_RE.findall(source):
                 if url not in VERIFIED_EXTERNAL_REFERENCES:
                     raise ValueError(f"unreviewed external course link: {path}: {url}")

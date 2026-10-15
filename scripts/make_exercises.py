@@ -503,7 +503,7 @@ def main() -> None:
         out.mkdir(parents=True, exist_ok=True)
         for stale in out.glob("*.ipynb"):
             stale.unlink()
-    checks = CONTENT / "checks"
+    checks = ROOT / "app-assets/adaptive-learning/checks"
     checks.mkdir(parents=True, exist_ok=True)
     for stale in checks.glob("*"):
         stale.unlink()

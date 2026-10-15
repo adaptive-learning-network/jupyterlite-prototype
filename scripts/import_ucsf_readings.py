@@ -121,16 +121,14 @@ def localize_form(filename: str, body: str, prior_url: str | None = None) -> tup
             "For more practice, open the [question library](u00-n02-version3-form-library.ipynb). "
             "Your response here is for reflection and is not scored."
             if is_quiz else
-            "Use these headings to organize your case response. Your notes stay in this browser and are not scored.")
+            "Write a response for each case prompt. Your reflections are unscored.")
     if filename == "u01-n02-lesson":
         return (body, "## Reflect on Laila's report\n\nRun the next cell to write in the response fields. "
                 "Select **Show my reflection** to review your text. To keep it after a kernel restart, "
                 "copy the summary into a note in your saved notebook. This reflection is not scored.", source_url)
-    prompts = "\n\n".join(f"**{i}. {prompt}**\n\n_Enter your response here._"
-                           for i, prompt in enumerate(LOCAL_RESPONSES[filename], 1))
-    response = ("## Local response section\n\n" + note +
-                "\n\nDouble-click this cell, replace each italic placeholder with your answer, "
-                "then press **Shift+Enter** and save the notebook. Responses remain in this browser.\n\n" + prompts)
+    response = ("## Your responses\n\n" + note +
+                "\n\nRun the next cell to write in the response fields. Select **Show my reflection** "
+                "to review your text. Copy anything you want to keep before restarting the Jupyter kernel.")
     return body, response, source_url
 IMAGE_ALT = {
     "laila_2.png": "Laila's current data-access problems and the quality dataset she needs",
@@ -414,8 +412,7 @@ def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
             slide_cells.append(cell("\n".join(lines), f"slide-{first:03d}"))
     if response:
         notebook_cells = [cell(outline, "0"), cell(body, "1"), cell(response, "2")]
-        if filename == "u01-n02-lesson":
-            notebook_cells.append(response_widget(LOCAL_RESPONSES[filename]))
+        notebook_cells.append(response_widget(LOCAL_RESPONSES[filename]))
         notebook_cells.append(cell(navigation, "3"))
     else:
         notebook_cells = [cell(outline, "0"), cell(body, "1"), *slide_cells,
@@ -424,7 +421,7 @@ def make_notebook(row: tuple[str, str, str, str, str], images: set[str],
         "cells": notebook_cells,
         "metadata": {"title": learner_title, "generatedBy": "scripts/import_ucsf_readings.py",
                      **({"kernelspec": {"name": "python", "display_name": "Python (Pyodide)", "language": "python"},
-                         "language_info": {"name": "python"}} if filename == "u01-n02-lesson" else {}),
+                         "language_info": {"name": "python"}} if response else {}),
                      **({"sourceFormUrl": source_form_url} if source_form_url else {})},
         "nbformat": 4,
         "nbformat_minor": 5,
@@ -446,10 +443,10 @@ def write_index() -> None:
                  "The scored Python notebooks provide the main case path, including the "
                  "explanation and visuals needed for each computation. These readings are optional. "
                  "Your written notes stay in this browser.", "0"),
-            cell("## Unit 1 ? From data to decisions\n\n" + links("u01-"), "1"),
-            cell("## Unit 2 ? Follow a report through the system\n\n" + links("u02-"), "2"),
+            cell("## Unit 1: From data to decisions\n\n" + links("u01-"), "1"),
+            cell("## Unit 2: Follow a report through the system\n\n" + links("u02-"), "2"),
             cell("## Continue Laila's case\n\nMost text-only readings use **No Kernel**. "
-                 "For the Unit 1 lesson's reflection fields and the optional practice quiz, choose **Python (Pyodide)** and run their response cells. "
+                 "For reflection fields, case responses, and the optional practice quiz, choose **Python (Pyodide)** and run their response cells. "
                  "Return to the [Unit 1 computational notebook](../../exercises/python/u01-n01-data-to-decision.ipynb) "
                  "or use the **Learning** panel for the next scored exercise. "
                  "[Optional practice questions](u00-n02-version3-form-library.ipynb) offer another way to review the ideas.", "3"),

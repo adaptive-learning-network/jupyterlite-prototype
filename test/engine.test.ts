@@ -20,7 +20,7 @@ import {
 } from '../src/engine';
 
 const ROOT = join(__dirname, '..', '..');
-const catalog: Catalog = JSON.parse(readFileSync(join(ROOT, 'content/al/catalog.json'), 'utf8'));
+const catalog: Catalog = JSON.parse(readFileSync(join(ROOT, 'app-assets/adaptive-learning/catalog.json'), 'utf8'));
 const EX = 'https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#';
 const LEARNER = 'urn:uuid:11111111-1111-4111-8111-111111111111';
 

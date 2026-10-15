@@ -30,7 +30,7 @@ INTRO = """**Course outline:** Unit 01 · Notebook 01 · Python
 
 ![Three-panel teaching comic: Laila reads anonymous counts, compares bars, and discusses a signal with a colleague.](../assets/laila-unit01-notebook01-comic.png)
 
-*Laila has more reports than time. She needs to find the clearest signal, then check it before drawing a conclusion. Original teaching illustration; no dialogue is taken from the slides.*
+*Laila has more reports than time. She needs to find the clearest signal, then check it before drawing a conclusion.*
 
 <img src="../assets/unit1-v2-data-wisdom-pyramid.png" width="360" alt="Course pyramid with data at the base, followed by information, knowledge, and wisdom.">
 
@@ -114,7 +114,9 @@ def _al_check():
 print("AL_OBSERVATION " + _al_json.dumps({{"outcome": _al_check()}}))
 del _al_check
 '''
-    (OUT / "checks/u01-data-to-decision.py").write_text(check, encoding="utf-8")
+    checks = ROOT / "app-assets/adaptive-learning/checks"
+    checks.mkdir(parents=True, exist_ok=True)
+    (checks / "u01-data-to-decision.py").write_text(check, encoding="utf-8")
     print("wrote Unit 01 Notebook 01 Python pilot and check")
 
 

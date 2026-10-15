@@ -156,7 +156,9 @@ def _al_check():
 print("AL_OBSERVATION " + _al_json.dumps({{"outcome": _al_check()}}))
 del _al_check
 '''
-    (OUT / "checks/dhis2-query.py").write_text(check, encoding="utf-8")
+    checks = ROOT / "app-assets/adaptive-learning/checks"
+    checks.mkdir(parents=True, exist_ok=True)
+    (checks / "dhis2-query.py").write_text(check, encoding="utf-8")
     print("wrote Python DHIS2 adapter pilot and check")
 
 
