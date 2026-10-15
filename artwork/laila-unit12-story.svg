@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 404" role="img"><title>Laila: Link records before an exchange</title><g transform="translate(0,0)"><rect x="4" y="4" width="188" height="194" rx="10" fill="#f4f8fc" stroke="#b6cadd"/>
+<path d="M18 15H178V115H108l-25 20 3-20H18z" fill="white" stroke="#b6cadd"/>
+<text font-family="sans-serif" font-size="16" y="23"><tspan x="20" dy="19">Two results match</tspan><tspan x="20" dy="19">the same case.</tspan></text>
+<circle cx="47" cy="151" r="14" fill="#915e46"/>
+<path d="M33 149q-4-26 14-20q20-2 14 22q-6-15-28-2" fill="#332a30"/>
+<path d="M23 193q0-27 24-27q25 0 25 27" fill="#287d8e"/>
+<text x="83" y="178" font-family="sans-serif" font-size="15" fill="#163b58">Laila</text></g><g transform="translate(0,0)"><rect x="204" y="4" width="188" height="194" rx="10" fill="#f4f8fc" stroke="#b6cadd"/>
+<path d="M218 15H378V115H308l-25 20 3-20H218z" fill="white" stroke="#b6cadd"/>
+<text font-family="sans-serif" font-size="16" y="23"><tspan x="220" dy="19">They disagree.</tspan><tspan x="220" dy="19">Please verify the</tspan><tspan x="220" dy="19">source.</tspan></text>
+<circle cx="247" cy="151" r="14" fill="#915e46"/>
+<path d="M233 149q-4-26 14-20q20-2 14 22q-6-15-28-2" fill="#332a30"/>
+<path d="M223 193q0-27 24-27q25 0 25 27" fill="#287d8e"/>
+<text x="283" y="178" font-family="sans-serif" font-size="15" fill="#163b58">Laboratory</text></g><g transform="translate(0,202)"><rect x="4" y="4" width="388" height="194" rx="10" fill="#f4f8fc" stroke="#b6cadd"/>
+<path d="M18 15H378V115H108l-25 20 3-20H18z" fill="white" stroke="#b6cadd"/>
+<text font-family="sans-serif" font-size="16" y="23"><tspan x="20" dy="19">I will keep unmatched cases visible and</tspan><tspan x="20" dy="19">block unresolved rows from exchange.</tspan></text>
+<circle cx="47" cy="151" r="14" fill="#915e46"/>
+<path d="M33 149q-4-26 14-20q20-2 14 22q-6-15-28-2" fill="#332a30"/>
+<path d="M23 193q0-27 24-27q25 0 25 27" fill="#287d8e"/>
+<text x="83" y="178" font-family="sans-serif" font-size="15" fill="#163b58">Laila</text></g></svg>
