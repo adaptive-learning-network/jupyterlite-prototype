@@ -305,9 +305,9 @@ EXERCISES = [
         "title": "Case-based or aggregate?",
         "objective": "Classify case-based and aggregate tables",
         "context": (
-            "**Case-based** datasets hold one row per person or case. **Aggregate** datasets contain counts or averages, with "
-            "no individual identifiers; they support trend analysis, resource allocation, and public reporting (for example, "
-            "allocating medical supplies based on district case counts)."
+            "**Case-based** datasets describe individual people or cases, one per row in these examples. "
+            "**Aggregate** datasets summarize groups, such as cases per district and week. "
+            "Read what each row represents: a report ID can identify a summary, and a number such as household size can describe one person."
         ),
         "task": "Look at the datasets listed by the setup cell. Which are **aggregate** datasets? Store their letters in "
                 "`aggregate_tables`.",
@@ -315,8 +315,8 @@ EXERCISES = [
         "variables": {"aggregate_tables": ("set", ["b", "c", "e"])},
         "hints": [
             "Does each row describe one person, or a group of people?",
-            "Columns such as Count, Total_Cases, or Malaria_Cases hold counts of people.",
-            "Tables with IDs, names, initials, or dates of birth describe individuals: those are case-based.",
+            "Compare two rows: are they separate cases, or summaries for different groups? A numeric column alone does not decide.",
+            "In the practice tables, A and D describe individual cases; B, C, and E summarize groups. Use the example rows to explain why.",
         ],
     },
 ]
@@ -443,8 +443,9 @@ def notebook(ex: dict, language: str) -> dict:
     elif dataset_pilot:
         task = "For each table below, select whether it is **Case-based** or **Aggregate**. Classify all five tables."
         next_step = ("Run the collapsed setup cell to display the choices, then select **Submit** "
-                     "for feedback on each table. Change a choice and submit again to retry; "
-                     "the **Learning** panel records each attempt and suggests what to do next.")
+                     "for feedback on each table. Use **Show a hint** or the suggested help when needed. "
+                     "Then select **Try another case** to classify different tables without hints. "
+                     "Practice completion and performance on a new case are recorded separately; neither certifies workplace proficiency.")
     else:
         task = ex["task"]
         next_step = (
@@ -568,7 +569,7 @@ _show_classification_task()
     elif dataset_pilot:
         from case_aggregate_widgets import setup_code
         setup = setup_code({chr(97 + i): table for i, table in enumerate(DATASET_TABLES)},
-                           list(ex["variables"]["aggregate_tables"][1]))
+                           list(ex["variables"]["aggregate_tables"][1]), hints=ex["hints"])
         al_meta["submission"] = "widget"
         exercise = "Select **Submit** below the table choices for feedback on all five classifications."
     else:
@@ -595,6 +596,10 @@ _show_classification_task()
         "nbformat": 4,
         "nbformat_minor": 5,
     }
+    if dataset_pilot:
+        from reflection_widgets import reflection_code
+        result['cells'].insert(-1, cell('markdown', '## Explain your classification\n\nChoose a table you found difficult. Name the table and explain what one row represents. Run the next cell to open the writing field, then select **Record** to save your reflection in this browser. This writing is unscored.', 'reflection-intro'))
+        result['cells'].insert(-1, cell('code', reflection_code('exercise:u03-case-aggregate', ['Which table did you find difficult, what does one row represent, and what evidence in its rows supports your classification?']), 'reflection-fields', {'jupyter': {'source_hidden': True}}))
     if language == 'python' and not widget_pilot:
         result['cells'].insert(3, cell('code', submission_code('2', fields=tuple(ex['variables'])), 'submit', {'jupyter': {'source_hidden': True}, 'al': {**al_meta, 'computation': False}}))
     return result
@@ -657,7 +662,12 @@ def main() -> None:
             path = CONTENT / "exercises" / language / f"{ex['file']}.ipynb"
             path.write_text(json.dumps(notebook(ex, language), indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     for ex in EXERCISES:
-        (checks / f"{ex['check']}.py").write_text(python_check(ex["variables"]), encoding="utf-8")
+        if ex['check'] == 'case-or-aggregate':
+            from case_aggregate_widgets import check_code
+            check = check_code()
+        else:
+            check = python_check(ex['variables'])
+        (checks / f"{ex['check']}.py").write_text(check, encoding="utf-8")
     print(f"wrote {len(EXERCISES)} Python notebooks and {len(EXERCISES)} checks; register has {len(REGISTER)} records")
     # Generate the remaining Python narratives. R will be rebuilt separately.
     from make_dhis2_pilot import main as make_dhis2_pilot

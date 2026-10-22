@@ -16,6 +16,7 @@ Read [README.md](README.md) and the design notes in [docs/design/](docs/design/)
 ## Layout
 
 ```text
+catalog/*.json               versioned assessment definitions referenced by TriG; edit and validate together
 catalog/*.trig               curriculum in al: terms: SOURCE OF TRUTH for capabilities, targets, activities, rules
 scripts/build_catalog.py     validate catalog against al: shapes → app-assets/adaptive-learning/catalog.json (generated)
 scripts/make_exercises.py    exercise SPEC → notebooks in content/, checks in app-assets/adaptive-learning/ (generated)

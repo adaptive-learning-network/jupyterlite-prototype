@@ -9,6 +9,7 @@ import { al } from './vocab';
 
 const RDF_TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type';
 const PROV = 'http://www.w3.org/ns/prov#';
+const TASK = 'https://adaptive-learning-network.github.io/jupyterlite-prototype/assessment#';
 const XSD = 'http://www.w3.org/2001/XMLSchema#';
 
 type Term = { iri: string } | { literal: string; datatype?: string };
@@ -51,6 +52,16 @@ export async function exportNQuads(catalog: Catalog, record: LearnerRecord, asse
     add(evidenceGraph, b.consent.iri, al('consentRevision'), lit(b.consent.revision, XSD + 'string'));
     add(evidenceGraph, b.consent.iri, al('consentedAt'), lit(b.consent.consentedAt, XSD + 'dateTime'));
   }
+  for (const attempt of record.taskAttempts ?? []) {
+    add(evidenceGraph, attempt.id, RDF_TYPE, iri(TASK + 'TaskAttempt'));
+    add(evidenceGraph, attempt.id, TASK + 'activity', iri(attempt.activity));
+    add(evidenceGraph, attempt.id, TASK + 'taskId', lit(attempt.taskId, XSD + 'string'));
+    add(evidenceGraph, attempt.id, TASK + 'taskVersion', lit(attempt.version, XSD + 'string'));
+    add(evidenceGraph, attempt.id, TASK + 'mode', lit(attempt.mode, XSD + 'string'));
+    add(evidenceGraph, attempt.id, TASK + 'hintsUsed', lit(attempt.guidanceLevel, XSD + 'integer'));
+    add(evidenceGraph, attempt.id, TASK + 'completeSubmissions', lit(attempt.submissions, XSD + 'integer'));
+    add(evidenceGraph, attempt.id, PROV + 'startedAtTime', lit(attempt.startedAt, XSD + 'dateTime'));
+  }
   for (const obs of record.observations) {
     add(evidenceGraph, obs.iri, RDF_TYPE, iri(al('Observation')));
     add(evidenceGraph, obs.iri, al('learner'), iri(record.learner));
@@ -60,6 +71,20 @@ export async function exportNQuads(catalog: Catalog, record: LearnerRecord, asse
     add(evidenceGraph, obs.iri, al('outcome'), iri(obs.outcome));
     add(evidenceGraph, obs.iri, al('guidanceLevel'), lit(obs.guidanceLevel, XSD + 'integer'));
     add(evidenceGraph, obs.iri, PROV + 'generatedAtTime', lit(obs.at, XSD + 'dateTime'));
+    if (obs.attempt) {
+      add(evidenceGraph, obs.iri, TASK + 'attempt', iri(obs.attempt.id));
+      add(evidenceGraph, obs.attempt.id, TASK + 'mode', lit(obs.attempt.mode, XSD + 'string'));
+      add(evidenceGraph, obs.attempt.id, TASK + 'taskId', lit(obs.attempt.taskId, XSD + 'string'));
+      add(evidenceGraph, obs.attempt.id, TASK + 'taskVersion', lit(obs.attempt.version, XSD + 'string'));
+      add(evidenceGraph, obs.iri, TASK + 'completeSubmission', lit(obs.attempt.submissions, XSD + 'integer'));
+      for (const result of obs.criteria ?? []) {
+        const item = stableId(obs.iri, 'criterion', result.id);
+        add(evidenceGraph, obs.iri, TASK + 'criterionResult', iri(item));
+        add(evidenceGraph, item, TASK + 'criterionId', lit(result.id, XSD + 'string'));
+        add(evidenceGraph, item, TASK + 'result', lit(result.outcome, XSD + 'string'));
+        if (result.selection) add(evidenceGraph, item, TASK + 'classification', lit(result.selection, XSD + 'string'));
+      }
+    }
   }
   for (const e of assessment.evidence) {
     add(evidenceGraph, e.iri, RDF_TYPE, iri(al('EvidenceAssertion')));
@@ -97,6 +122,8 @@ export async function exportNQuads(catalog: Catalog, record: LearnerRecord, asse
     add(derivedGraph, gap.iri, al('gapState'), iri(gap.state));
     add(derivedGraph, gap.iri, al('profileStatus'), iri(gap.status));
     add(derivedGraph, gap.iri, al('criticalGateBlocked'), lit(gap.gateBlocked, XSD + 'boolean'));
+    const task = assessment.taskProgress.find(p => p.capability === gap.capability);
+    if (task) add(derivedGraph, gap.iri, TASK + 'progressLabel', lit(task.label, XSD + 'string'));
   }
   const pathway = stableId(record.learner, 'pathway');
   if (assessment.recommendations.length) add(derivedGraph, pathway, RDF_TYPE, iri(al('Pathway')));

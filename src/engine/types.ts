@@ -35,6 +35,7 @@ export interface CatalogActivity {
   rules: string[];
   /** External location, e.g. a quiz form launched from the learning panel. */
   url?: string;
+  assessment?: PracticeTransferPolicy;
 }
 
 export interface CatalogRule {
@@ -62,7 +63,7 @@ export interface Catalog {
   policy: { iri: string; version: string; ceilings: Record<string, string> };
 }
 
-/** What the application observed. Never contains learner-entered values. */
+/** What the application observed. No free-text answers; the pilot retains bounded classification choices. */
 export interface Observation {
   iri: string;
   activity: string;
@@ -75,6 +76,8 @@ export interface Observation {
   at: string;
   /** Jupyter kernel language the exercise ran in; informational. */
   language?: string;
+  attempt?: TaskAttempt;
+  criteria?: CriterionResult[];
 }
 
 /** Consented link to an external identity: issuer and opaque subject only. */
@@ -95,6 +98,7 @@ export interface LearnerRecord {
   observations: Observation[];
   /** Highest facilitation-ladder level revealed per activity. */
   guidance: Record<string, number>;
+  taskAttempts?: TaskAttempt[];
   /** Unscored, explicitly recorded reflections, grouped by stable course section. */
   reflections?: Record<string, ReflectionEntry[]>;
   /** Present only after the learner consents to link an external identity. */
@@ -151,6 +155,7 @@ export interface Assessment {
   estimates: CapabilityEstimate[];
   gaps: GapAssessment[];
   recommendations: Recommendation[];
+  taskProgress: TaskProgress[];
 }
 
 export class EngineInputError extends Error {
@@ -168,4 +173,33 @@ export interface ReflectionEntry {
   answer: string;
   savedAt: string;
   history?: { prompt: string; answer: string; savedAt: string }[];
+}
+
+/** Bounded, versioned formative task policy, authored in catalog/. */
+export interface PracticeTransferPolicy {
+  kind: 'practice-transfer/1';
+  version: string;
+  tasks: { id: string; mode: 'practice' | 'reassessment'; title: string;
+    tables: { id: string; title: string; rowUnit: 'case' | 'group'; columns: string[]; rows: (string | number)[][] }[] }[];
+  remediations: Record<string, string>;
+}
+export interface TaskAttempt {
+  id: string;
+  activity: string;
+  taskId: string;
+  version: string;
+  mode: 'practice' | 'reassessment';
+  guidanceLevel: number;
+  /** Number of complete submissions; incomplete submissions reveal no answers. */
+  submissions: number;
+  startedAt: string;
+}
+export interface CriterionResult { id: string; outcome: 'correct' | 'incorrect' | 'incomplete'; selection?: 'case' | 'aggregate' | null; }
+export interface TaskProgress {
+  activity: string;
+  capability: string;
+  label: string;
+  demonstrated: boolean;
+  recheck: boolean;
+  suggestions: string[];
 }

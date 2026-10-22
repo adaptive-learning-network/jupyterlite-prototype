@@ -87,40 +87,112 @@ test('U03 N05 radio choices provide inline feedback and record retries', async (
   await setup.screenshot({path:testInfo.outputPath('machine-readable-radio-feedback.png')});
 });
 
-test('U03 N06 classifies each table with radio choices and records retries', async ({ page }, testInfo) => {
+test('U03 N06: guided practice, targeted help, different cases and persistent reassessment', async ({page},testInfo)=>{
+  test.setTimeout(360000);
+  const key='al-engine:learner-record:v0.1';
+  const read=()=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)!),key);
   await page.goto('/lab/index.html?path=notebooks/u03-n06-case-or-aggregate.ipynb');
   await expect(panel(page)).toBeVisible();
   await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]')).toBeVisible({timeout:180000});
-  await runCell(page, 1);
-  const setup = page.locator('.jp-Cell[data-windowed-list-index="1"]');
-  const submit = setup.getByRole('button', {name:'Submit',exact:true});
+  await runCell(page,1);
+  const setup=page.locator('.jp-Cell[data-windowed-list-index="1"]');
+  const feedback=setup.locator('.al-classification-feedback');
+  const submit=setup.getByRole('button',{name:'Submit',exact:true});
+  const another=setup.getByRole('button',{name:'Try another case',exact:true});
+  const gap=panel(page).locator('.al-gap').filter({hasText:'Distinguish case-based and aggregate datasets'});
+  async function choose(values:Record<string,string>) {
+    for(const [id,value] of Object.entries(values))await setup.locator('.al-dataset-'+id).getByRole('radio',{name:value,exact:true}).check();
+  }
+  async function send() {
+    const count=(await read()).observations.length;
+    await submit.click();await expect.poll(async()=>(await read()).observations.length).toBe(count+1);
+    await expect(submit).toBeEnabled();
+  }
   await expect(setup.getByRole('radio')).toHaveCount(10);
   await expect(setup.locator('input[type="radio"]:checked')).toHaveCount(0);
-  await expect(setup.locator('.jp-InputArea')).toBeHidden();
-  await submit.click();
-  await expect.poll(()=>outcomes(page)).toEqual(['Incomplete']);
-  await expect(setup).toContainText('Choose a classification for table(s) A, B, C, D, E.');
-  await setup.locator('.al-dataset-a').getByRole('radio',{name:'Case-based',exact:true}).check();
-  await submit.click();
-  await expect.poll(()=>outcomes(page)).toEqual(['Incomplete','Incomplete']);
-  await expect(setup).toContainText('Choose a classification for table(s) B, C, D, E.');
-  for (const letter of ['b','c','d','e']) {
-    await setup.locator('.al-dataset-'+letter).getByRole('radio',{name:'Case-based',exact:true}).check();
+  await expect(another).toBeDisabled();
+  await send();await expect(feedback).toContainText('table(s) A, B, C, D, E');
+  for(let i=0;i<3;i++) {
+    await setup.getByRole('button',{name:'Show a hint',exact:true}).click();
+    await expect.poll(async()=>(await read()).taskAttempts.at(-1).guidanceLevel).toBe(i+1);
+    await expect(submit).toBeEnabled();
   }
-  await submit.click();
-  await expect.poll(()=>outcomes(page)).toEqual(['Incomplete','Incomplete','Incorrect']);
-  await expect(setup).toContainText('Table A: Correct.');
-  await expect(setup).toContainText('Table B: Incorrect.');
-  await expect(setup).toContainText('Table D: Correct.');
-  await submit.click();
-  await expect.poll(()=>outcomes(page)).toEqual(['Incomplete','Incomplete','Incorrect','Incorrect']);
-  for (const letter of ['b','c','e']) {
-    await setup.locator('.al-dataset-'+letter).getByRole('radio',{name:'Aggregate',exact:true}).check();
+  await choose({a:'Case-based',b:'Case-based',c:'Case-based',d:'Case-based',e:'Case-based'});
+  await send();await expect(feedback).toContainText('Table B: Incorrect.');
+  await expect(panel(page).locator('.al-task-help')).toContainText('grouped summary');
+  await choose({b:'Aggregate',c:'Aggregate',e:'Aggregate'});
+  await send();await expect(setup).toContainText('Practice completed with assistance');
+  await expect(gap).not.toHaveClass(/al-achieved/);await expect(gap).not.toContainText('Competent');
+  const practiceId=(await read()).taskAttempts.at(-1).id;
+  const before=(await read()).observations.length;
+  await runCell(page,1);await expect(another).toBeEnabled();
+  expect((await read()).taskAttempts.at(-1).id).toBe(practiceId);
+  expect((await read()).observations.length).toBe(before);
+  await expect(setup).toContainText('Hint 3:');
+  await another.click();await expect(setup.getByRole('radio')).toHaveCount(6);
+  let active=(await read()).taskAttempts.at(-1);expect(active.taskId).toBe('new-case-1');expect(active.guidanceLevel).toBe(0);
+  await expect(setup.getByRole('button',{name:'Show a hint',exact:true})).toBeDisabled();
+  await choose({a:'Case-based'});await send();
+  await expect(feedback).toContainText('No answer feedback is shown yet.');
+  await expect(feedback).not.toContainText('Table A: Correct');
+  expect((await read()).observations.at(-1).criteria.every((r:{outcome:string})=>r.outcome==='incomplete')).toBe(true);
+  await choose({a:'Aggregate',b:'Aggregate',c:'Case-based'});await send();
+  await expect(panel(page).locator('.al-task-help')).toContainText('individual-record');
+  await choose({a:'Case-based'});await send();
+  await expect(setup).toContainText('New case completed after feedback; try another case');
+  await expect(gap).not.toHaveClass(/al-achieved/);
+  const firstId=(await read()).taskAttempts.at(-1).id;
+  await page.reload();await expect(panel(page)).toBeVisible();
+  await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]')).toBeVisible({timeout:180000});
+  await runCell(page,1);await expect(another).toBeEnabled();
+  active=(await read()).taskAttempts.at(-1);expect(active.id).toBe(firstId);expect(active.submissions).toBe(2);
+  await expect(setup.locator('.al-dataset-a').getByRole('radio',{name:'Case-based',exact:true})).toBeChecked();
+  await another.click();await expect(setup).toContainText('Another reporting situation 2');
+  await choose({a:'Aggregate',b:'Case-based',c:'Aggregate'});await send();
+  await expect(gap).toHaveClass(/al-achieved/);
+  await expect(gap).toContainText('Demonstrated on a different case');await expect(gap).not.toContainText('Competent');
+  const saved=await read();expect(saved.observations.at(-1).attempt.guidanceLevel).toBe(0);
+  expect(saved.observations.at(-1).attempt.submissions).toBe(1);
+  expect(saved.observations.some((o:{guidanceLevel:number})=>o.guidanceLevel===3)).toBe(true);
+  expect(saved.observations.at(-1).criteria).toHaveLength(3);
+  await page.setViewportSize({width:1000,height:900});await setup.screenshot({path:testInfo.outputPath('classification-transfer.png')});
+  await setup.getByRole('button',{name:'Return to practice',exact:true}).click();
+  await expect(setup.getByRole('radio')).toHaveCount(10);
+  expect((await read()).taskAttempts.at(-1).guidanceLevel).toBe(3);
+  await page.goto('/lab/index.html?path=notebooks/u03-n08-my-learning-record.ipynb');
+  await expect(page.locator('.al-RecordView')).toContainText('Demonstrated on a different case');
+  await expect(page.locator('.al-RecordView')).toContainText('new-case-2');
+  await expect(page.locator('.al-RecordView')).toContainText('Classification feedback');
+});
+
+test('U03 N06: a failed storage write preserves history and does not consume a new case',async({page})=>{
+  test.setTimeout(240000);
+  const key='al-engine:learner-record:v0.1';
+  await page.goto('/lab/index.html?path=notebooks/u03-n06-case-or-aggregate.ipynb');
+  await expect(panel(page)).toBeVisible();
+  await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]')).toBeVisible({timeout:180000});
+  await runCell(page,1);
+  const setup=page.locator('.jp-Cell[data-windowed-list-index="1"]');
+  const feedback=setup.locator('.al-classification-feedback');
+  for(const [id,value] of Object.entries({a:'Case-based',b:'Aggregate',c:'Aggregate',d:'Case-based',e:'Aggregate'})) {
+    await setup.locator('.al-dataset-'+id).getByRole('radio',{name:value,exact:true}).check();
   }
-  await submit.click();
-  await expect.poll(()=>outcomes(page)).toEqual(['Incomplete','Incomplete','Incorrect','Incorrect','Correct']);
-  await expect(setup).toContainText('All five classifications are correct.');
-  await expect(panel(page).locator('.al-gap.al-achieved').filter({hasText:'Distinguish case-based and aggregate datasets'})).toHaveCount(1);
-  await page.setViewportSize({width:1000,height:1000});
-  await setup.screenshot({path:testInfo.outputPath('case-aggregate-radio-feedback.png')});
+  const submit=setup.getByRole('button',{name:'Submit',exact:true});
+  await submit.click();await expect(feedback).toContainText('All classifications are correct.');
+  const before=await page.evaluate(key=>localStorage.getItem(key),key);
+  await page.evaluate(key=>{
+    const original=Storage.prototype.setItem;
+    (globalThis as typeof globalThis & {restoreTaskStorage:()=>void}).restoreTaskStorage=()=>{Storage.prototype.setItem=original;};
+    Storage.prototype.setItem=function(name,value){if(name===key)throw new DOMException('Storage full','QuotaExceededError');return original.call(this,name,value);};
+  },key);
+  await submit.click();await expect(feedback).toContainText('Your earlier record is unchanged.');
+  expect(await page.evaluate(key=>localStorage.getItem(key),key)).toBe(before);
+  await setup.getByRole('button',{name:'Try another case',exact:true}).click();
+  await expect(feedback).toContainText('Your earlier record is unchanged.');
+  expect(await page.evaluate(key=>localStorage.getItem(key),key)).toBe(before);
+  await page.evaluate(()=>(globalThis as typeof globalThis & {restoreTaskStorage:()=>void}).restoreTaskStorage());
+  await setup.getByRole('button',{name:'Try another case',exact:true}).click();
+  await expect(setup).toContainText('Another reporting situation 1');
+  const saved=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)!),key);
+  expect(saved.taskAttempts).toHaveLength(2);expect(saved.observations).toHaveLength(1);
 });

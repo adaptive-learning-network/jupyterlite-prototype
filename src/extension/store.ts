@@ -6,7 +6,7 @@
 
 import { ISignal, Signal } from '@lumino/signaling';
 
-import { IdentityBinding, LearnerRecord, Observation } from '../engine';
+import { beginTask, CatalogActivity, CriterionResult, IdentityBinding, LearnerRecord, Observation, TaskAttempt } from '../engine';
 import { mergeReflections, ReflectionAnswer } from './reflection-history';
 
 const KEY = 'al-engine:learner-record:v0.1';
@@ -84,6 +84,47 @@ export class LearnerStore {
   recordGuidance(activity: string, level: number): void {
     if (level <= this.guidanceFor(activity)) return;
     this.update({ ...this._record, guidance: { ...this._record.guidance, [activity]: level } });
+  }
+
+  activeTask(activity: CatalogActivity): TaskAttempt | undefined {
+    return this._record.taskAttempts?.filter(a => a.activity === activity.iri && a.version === activity.assessment?.version).at(-1);
+  }
+
+  beginTask(activity: CatalogActivity, mode: TaskAttempt['mode']): TaskAttempt {
+    const attempt = beginTask(this._record, activity, mode, `urn:uuid:${globalThis.crypto.randomUUID()}`, new Date().toISOString());
+    this.commitTask({ ...this._record, taskAttempts: [...(this._record.taskAttempts ?? []), attempt] });
+    return attempt;
+  }
+
+  taskHint(activity: CatalogActivity, attemptId: string): TaskAttempt {
+    const active = this.activeTask(activity);
+    if (!active || active.id !== attemptId || active.mode !== 'practice') throw new Error('Hints are available in the current practice attempt.');
+    const next = { ...active, guidanceLevel: Math.min(3, active.guidanceLevel + 1) };
+    this.commitTask({ ...this._record, taskAttempts: this._record.taskAttempts!.map(a => a.id === active.id ? next : a) });
+    return next;
+  }
+
+  submitTask(activity: CatalogActivity, attemptId: string, outcome: string, criteria: CriterionResult[], language: string): Observation {
+    const active = this.activeTask(activity);
+    if (!active || active.id !== attemptId) throw new Error('This task changed in another session. Run the controls cell again.');
+    const next = { ...active, submissions: active.submissions + (outcome.endsWith('#Incomplete') ? 0 : 1) };
+    const observation: Observation = { iri: `urn:uuid:${globalThis.crypto.randomUUID()}`, activity: activity.iri,
+      object: `${activity.iri}/${next.version}/${next.taskId}`, action: 'https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated',
+      outcome, guidanceLevel: next.guidanceLevel, at: new Date().toISOString(), language, attempt: { ...next }, criteria };
+    this.commitTask({ ...this._record, taskAttempts: this._record.taskAttempts!.map(a => a.id === active.id ? next : a),
+      observations: [...this._record.observations, observation] });
+    return observation;
+  }
+
+  /** A pilot acknowledgement means the attempt and observation were saved together. */
+  private commitTask(record: LearnerRecord): void {
+    try {
+      globalThis.localStorage.setItem(KEY, JSON.stringify(record));
+    } catch {
+      throw new Error('Browser storage could not save this attempt. Your earlier record is unchanged. Try again when storage is available.');
+    }
+    this._record = record;
+    this._changed.emit(record);
   }
 
   /** Link, re-verify, or (with undefined) unlink an external identity. */

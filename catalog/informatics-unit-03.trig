@@ -144,8 +144,8 @@ g:activities {
 }
 
 g:governance {
-  ex:policy a al:EstimatorPolicy ; al:policyVersion "prototype-0.1" ;
-      rdfs:comment "Prototype fixture: correct evidence supports the stage ceiling level. Not validated parameters."@en ;
+  ex:policy a al:EstimatorPolicy ; al:policyVersion "prototype-0.2" ;
+      rdfs:comment "Prototype fixture: legacy tasks support stage ceilings; the versioned practice-transfer pilot reports task performance without assigning proficiency. Not validated parameters."@en ;
       al:hasStageCeiling ex:ceil-self, ex:ceil-completion, ex:ceil-check, ex:ceil-sim, ex:ceil-practice .
   ex:ceil-self a al:StageCeiling ; al:ceilingStage al:SelfReport ; al:ceilingLevel dreyfus:advanced-beginner .
   ex:ceil-completion a al:StageCeiling ; al:ceilingStage al:Completion ; al:ceilingLevel dreyfus:novice .
@@ -354,4 +354,9 @@ g:activities {
  ex:rubric al:criterion ex:crit-u14-interpret-with-ai .
  ex:crit-u14-interpret-with-ai a al:RubricCriterion ; al:criterionCapability ex:cap-u14-interpret-with-ai .
  ex:rule-u14-interpret-with-ai a al:EvidenceRule ; al:supportsCriterion ex:crit-u14-interpret-with-ai ; al:evidenceStage al:Simulation ; al:requiredAction al:OutputValidated ; al:acceptedOutcome al:Correct ; al:maximumGuidance 2 .
+}
+
+# Application-specific assessment protocol; al: vocabulary is unchanged.
+g:assessment {
+  ex:act-case-or-aggregate ex:assessmentDefinition "case-aggregate-v1.json" .
 }

@@ -1,13 +1,13 @@
 // Observes exercise cells. When the learner runs a cell carrying `al` metadata,
 // the observer runs that exercise's check in the same Jupyter kernel, in the
 // kernel's language, and records one al:Observation. Learner-entered values
-// never leave the Jupyter kernel; only the outcome code is read.
+// stay in the Jupyter kernel except bounded classification choices in the pilot.
 
 import { Kernel, KernelMessage } from '@jupyterlab/services';
 import { INotebookTracker, NotebookActions, NotebookPanel } from '@jupyterlab/notebook';
 import { ISignal, Signal } from '@lumino/signaling';
 
-import { ACTION, Catalog, Observation, OUTCOME_BY_CODE } from '../engine';
+import { ACTION, assess, Catalog, CriterionResult, Observation, OUTCOME_BY_CODE } from '../engine';
 import { LearnerStore } from './store';
 
 export const SENTINEL = 'AL_OBSERVATION ';
@@ -56,6 +56,58 @@ export class ExerciseObserver {
       const connect = () => {
         const kernel = panel.sessionContext.session?.kernel;
         if (!kernel) return;
+        kernel.registerCommTarget('al.practice', (comm, message) => {
+          const cellId = message.content.data.cell;
+          const source = panel.content.model && Array.from(panel.content.model.cells).find(cell => cell.id === cellId);
+          const meta = exerciseMetadata(source?.getMetadata('al'));
+          const activity = this.catalog.activities.find(a => a.iri === meta?.activity);
+          if (!meta || !activity?.assessment || meta.submission !== 'widget' || message.content.data.version !== activity.assessment.version) {
+            comm.send({ error: 'These controls do not match the current task version. Open the current supplied notebook before reassessment.' }); return;
+          }
+          let currentId: string | undefined;
+          let busy = false;
+          const state = () => {
+            const attempt = this.store.activeTask(activity)!;
+            currentId = attempt.id;
+            const progress = assess(this.catalog, this.store.record).taskProgress.find(p => p.activity === activity.iri)!;
+            const last = [...this.store.record.observations].reverse().find(o => o.attempt?.id === attempt.id);
+            return { attempt: { ...attempt }, progress: { ...progress }, lastCriteria: (last?.criteria ?? []).map(r => ({...r})), ready: true };
+          };
+          comm.onMsg = message => {
+            if (busy) { comm.send({ error: 'A task request is already being processed.' }); return; }
+            busy = true;
+            void (async () => {
+              const request = message.content.data;
+              const active = this.store.activeTask(activity);
+              if (request.action === 'resume') {
+                if (!active) this.store.beginTask(activity, 'practice');
+              } else if (request.action === 'begin' && (request.mode === 'practice' || request.mode === 'reassessment')) {
+                if (currentId && active?.id !== currentId) throw new Error('This task changed in another session. Run the controls cell again.');
+                this.store.beginTask(activity, request.mode);
+              } else if (request.action === 'hint') {
+                const attempt = this.store.taskHint(activity, currentId!);
+                comm.send({ ...state(), hint: meta.hints[Math.min(attempt.guidanceLevel, meta.hints.length) - 1] }); return;
+              } else if (request.action === 'submit') {
+                if (!active || active.id !== currentId) throw new Error('Run the controls cell again to reconnect this task.');
+                const detail = await runCheckResult(kernel, await this.loadCheck(`${meta.check}.py`), 'python');
+                const task = activity.assessment!.tasks.find(t => t.id === active.taskId)!;
+                const results = detail?.criteria;
+                if (detail?.taskId !== active.taskId || !Array.isArray(results) || results.length !== task.tables.length ||
+                    new Set(results.map(r => r.id)).size !== results.length ||
+                    !task.tables.every(t => results.some(r => r.id === t.id && ['correct', 'incorrect', 'incomplete'].includes(r.outcome) && (r.selection === null || r.selection === 'case' || r.selection === 'aggregate')))) {
+                  throw new Error('The submitted tables do not match the current task. Run the controls cell again.');
+                }
+                const code = results.some(r => r.outcome === 'incomplete') ? 'incomplete' : results.every(r => r.outcome === 'correct') ? 'correct' : 'incorrect';
+                if (detail.outcome !== code) throw new Error('The task check returned inconsistent criteria.');
+                const observation = this.store.submitTask(activity, currentId!, OUTCOME_BY_CODE[code], code === 'incomplete' ? results.map(r => ({id: r.id, outcome: 'incomplete' as const, selection: r.selection})) : results, 'python');
+                this._observed.emit({ observation });
+                comm.send({ ...state(), outcome: code, criteria: code === 'incomplete' ? results.map(r => ({ id: r.id, outcome: r.outcome === 'incomplete' ? 'incomplete' : 'answered' })) : results }); return;
+              } else throw new Error('Unknown task request.');
+              comm.send(state());
+            })().catch(error => comm.send({ error: String(error) })).finally(() => { busy = false; });
+          };
+          comm.send({ connected: true });
+        });
         kernel.registerCommTarget('al.submit', (comm, message) => {
           const cellId = message.content.data.cell;
           comm.onMsg = () => {
@@ -140,6 +192,11 @@ export class ExerciseObserver {
 
 /** Execute check code without adding it to history; return the reported outcome code. */
 export async function runCheck(kernel: Kernel.IKernelConnection, code: string, language: string): Promise<string | null> {
+  return (await runCheckResult(kernel, code, language))?.outcome ?? null;
+}
+
+interface CheckResult { outcome: string; taskId?: string; criteria?: CriterionResult[]; }
+export async function runCheckResult(kernel: Kernel.IKernelConnection, code: string, language: string): Promise<CheckResult | null> {
   let text = '';
   // Checks read the live answer variables, but their imports and helper
   // definitions must not replace the notebook's own functions. In particular,
@@ -153,8 +210,8 @@ export async function runCheck(kernel: Kernel.IKernelConnection, code: string, l
   const line = text.split('\n').find(l => l.startsWith(SENTINEL));
   if (!line) return null;
   try {
-    const parsed = JSON.parse(line.slice(SENTINEL.length)) as { outcome?: unknown };
-    return typeof parsed.outcome === 'string' ? parsed.outcome : null;
+    const parsed = JSON.parse(line.slice(SENTINEL.length)) as CheckResult;
+    return typeof parsed.outcome === 'string' ? parsed : null;
   } catch {
     return null;
   }

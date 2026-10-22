@@ -36,7 +36,11 @@ function obs(activity: string, outcome: string, guidanceLevel = 0, language = 'p
     outcome,
     guidanceLevel,
     at: `2026-10-02T10:${String(counter % 60).padStart(2, '0')}:00Z`,
-    language
+    language,
+    ...(activity === 'act-case-or-aggregate' ? {
+      attempt: {id: `urn:uuid:33333333-3333-4333-8333-${n}`, activity: EX + activity, taskId: 'new-case-1', version: 'case-aggregate/1', mode: 'reassessment' as const, guidanceLevel, submissions: 1, startedAt: '2026-10-22T10:00:00Z'},
+      criteria: ['a','b','c'].map(id => ({id, outcome: 'correct' as const}))
+    } : {})
   };
 }
 

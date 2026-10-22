@@ -764,5 +764,15 @@
         "What would you check before using this register to answer a question about vaccination coverage?"
       ]
     }
+  ],
+  "exercise:u03-case-aggregate": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Which table did you find difficult, what does one row represent, and what evidence in its rows supports your classification?",
+      "legacyPrompts": [
+        "Which table did you find difficult, what does one row represent, and what evidence in its rows supports your classification?"
+      ]
+    }
   ]
 }

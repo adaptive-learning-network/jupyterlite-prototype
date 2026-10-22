@@ -95,7 +95,7 @@ export class LearningPanel extends Widget {
         await panel.sessionContext.ready;
         const kernel = panel.sessionContext.session?.kernel;
         const language = kernel ? await kernelLanguage(kernel) : '';
-        this.exercise = { activity: meta.activity, title: this.label(meta.activity), hints: meta.hints, language };
+        this.exercise = { activity: meta.activity, title: this.label(meta.activity), hints: this.catalog.activities.find(a => a.iri === meta.activity)?.assessment ? [] : meta.hints, language };
         const used = this.store.guidanceFor(meta.activity);
         for (let level = 1; level <= used; level++) this.revealed.push(await this.guide.help(this.exercise, level));
       }
@@ -245,7 +245,8 @@ export class LearningPanel extends Widget {
     // Last observation feedback.
     if (this.lastEvent) {
       const o = this.lastEvent.observation;
-      const text = this.lastEvent.problem
+      const task = assessment.taskProgress.find(p => p.activity === o?.activity);
+      const text = task && o ? `${task.label}. Submission recorded.` : this.lastEvent.problem
         ? this.lastEvent.problem
         : o!.outcome.endsWith('#Correct')
           ? o!.guidanceLevel > (catalog.rules.find(r => r.activity === o!.activity)?.maximumGuidance ?? Infinity)
@@ -295,6 +296,12 @@ export class LearningPanel extends Widget {
         button.onclick = () => void this.nextHint();
         section.append(button);
       }
+      const task = assessment.taskProgress.find(p => p.activity === ex.activity);
+      if (task) {
+        section.append(el('p', {}, task.label));
+        task.suggestions.forEach(text => section.append(el('p', {className: 'al-task-help'}, text)));
+        section.append(el('p', {className: 'al-meta'}, 'Use the practice hints and Try another case controls in this notebook.'));
+      }
       node.append(section);
     }
 
@@ -308,7 +315,7 @@ export class LearningPanel extends Widget {
           'li',
           { className: `al-gap ${gap.state === GAP.achieved ? 'al-achieved' : ''}` },
           el('span', { className: 'al-cap' }, this.label(gap.capability)),
-          el('span', { className: 'al-state' }, STATE_TEXT[gap.status] ?? gap.status, estimate?.level ? ` (${this.label(estimate.level)})` : ''),
+          el('span', { className: 'al-state' }, assessment.taskProgress.find(p => p.capability === gap.capability)?.label ?? STATE_TEXT[gap.status] ?? gap.status, estimate?.level ? ` (${this.label(estimate.level)})` : ''),
           gap.gateBlocked ? el('span', { className: 'al-critical', title: 'Critical target not yet demonstrated' }, 'critical') : ''
         )
       );

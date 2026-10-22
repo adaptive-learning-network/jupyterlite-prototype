@@ -1,13 +1,20 @@
-import json as _al_json
-def _al_check():
-    g = globals()
-    if g.get('aggregate_tables') is None:
-        return 'incomplete'
-    try:
-        if not (sorted({str(x).strip().lower() for x in g['aggregate_tables']}) == ['b', 'c', 'e']):
-            return 'incorrect'
-    except (TypeError, ValueError):
-        return 'incorrect'
-    return 'correct'
-print('AL_OBSERVATION ' + _al_json.dumps({'outcome': _al_check()}))
-del _al_check
+import json as _json
+_policy = {'kind': 'practice-transfer/1', 'version': 'case-aggregate/1', 'tasks': [{'id': 'practice', 'mode': 'practice', 'title': 'Practice: Laila’s surveillance tables', 'tables': [{'id': 'a', 'title': 'Individual case register', 'rowUnit': 'case', 'columns': ['Case_ID', 'Age', 'District', 'Diagnosis'], 'rows': [['P01', 8, 'Kambia', 'Suspected measles'], ['P02', 12, 'Kambia', 'Suspected measles']]}, {'id': 'b', 'title': 'District disease summary', 'rowUnit': 'group', 'columns': ['District', 'Malaria_Cases', 'Typhoid_Cases'], 'rows': [['Kambia', 12, 3], ['Port Loko', 7, 2]]}, {'id': 'c', 'title': 'Age-group disease summary', 'rowUnit': 'group', 'columns': ['Age_Group', 'Disease', 'Count'], 'rows': [['0-4', 'Measles', 3], ['5-14', 'Measles', 5]]}, {'id': 'd', 'title': 'Case notification extract', 'rowUnit': 'case', 'columns': ['Patient_Initials', 'Date_of_Birth', 'Location', 'Diagnosis_Date'], 'rows': [['TA', '2017-03-10', 'Kambia', '2021-10-18'], ['TB', '2013-05-11', 'Kambia', '2021-10-19']]}, {'id': 'e', 'title': 'County outcome summary', 'rowUnit': 'group', 'columns': ['County', 'Total_Cases', 'Deaths', 'Recovered'], 'rows': [['Training county A', 12, 1, 8]]}]}, {'id': 'new-case-1', 'mode': 'reassessment', 'title': 'Another reporting situation 1', 'tables': [{'id': 'a', 'title': 'Respiratory case follow-up', 'rowUnit': 'case', 'columns': ['Case_ID', 'District', 'Household_Size'], 'rows': [['R01', 'North', 6], ['R02', 'South', 4]]}, {'id': 'b', 'title': 'Weekly district report', 'rowUnit': 'group', 'columns': ['District', 'Week', 'Cases'], 'rows': [['North', '2026-W12', 18], ['South', '2026-W12', 11]]}, {'id': 'c', 'title': 'Clinic case register', 'rowUnit': 'case', 'columns': ['Case_ID', 'Age_Group', 'Symptoms_Reported'], 'rows': [['R03', '5-14', 3], ['R04', '5-14', 2]]}]}, {'id': 'new-case-2', 'mode': 'reassessment', 'title': 'Another reporting situation 2', 'tables': [{'id': 'a', 'title': 'Facility age-group report', 'rowUnit': 'group', 'columns': ['Summary_ID', 'Facility', 'Age_Group', 'Cases'], 'rows': [['S01', 'Clinic A', '0-4', 7], ['S02', 'Clinic A', '5-14', 9]]}, {'id': 'b', 'title': 'Case investigation extract', 'rowUnit': 'case', 'columns': ['Case_ID', 'Tests_Performed', 'Rash_Onset'], 'rows': [['R11', 2, '2026-03-14'], ['R12', 1, '2026-03-15']]}, {'id': 'c', 'title': 'District laboratory totals', 'rowUnit': 'group', 'columns': ['District', 'Positive_Tests', 'Negative_Tests'], 'rows': [['East', 12, 6], ['West', 8, 5]]}]}, {'id': 'new-case-3', 'mode': 'reassessment', 'title': 'Another reporting situation 3', 'tables': [{'id': 'a', 'title': 'Symptom follow-up register', 'rowUnit': 'case', 'columns': ['Case_ID', 'Fever_Days', 'Symptoms_Reported'], 'rows': [['R21', 4, 3], ['R22', 2, 2]]}, {'id': 'b', 'title': 'Weekly age-group totals', 'rowUnit': 'group', 'columns': ['Week', 'Age_Group', 'Cases'], 'rows': [['2026-W15', '0-4', 10], ['2026-W15', '5-14', 7]]}, {'id': 'c', 'title': 'Facility outcome report', 'rowUnit': 'group', 'columns': ['Report_ID', 'Facility', 'Cases', 'Recovered'], 'rows': [['W01', 'Clinic B', 16, 11], ['W02', 'Clinic C', 9, 6]]}]}], 'remediations': {'case': 'Review an individual-record table: two different cases can have the same age group, and a number such as household size can describe one case. Ask what each row represents.', 'aggregate': 'Review a grouped summary: each row combines cases for a district, week, age group, or facility. A report ID identifies the summary row; it does not make that row an individual case.'}}
+_response = globals().get('classification_response')
+if isinstance(_response, dict):
+    _task_id = _response.get('taskId')
+    _task = next((task for task in _policy['tasks'] if task['id'] == _task_id), None)
+    if _task is None:
+        raise ValueError('Unknown classification task')
+    _answers = _response.get('answers', {})
+    _criteria = [{'id': table['id'], 'selection': _answers.get(table['id']) if _answers.get(table['id']) in {'case', 'aggregate'} else None, 'outcome': ('incomplete' if _answers.get(table['id']) not in {'case', 'aggregate'} else
+        'correct' if _answers[table['id']] == ('case' if table['rowUnit'] == 'case' else 'aggregate') else 'incorrect')}
+        for table in _task['tables']]
+    _outcome = 'incomplete' if any(r['outcome'] == 'incomplete' for r in _criteria) else 'correct' if all(r['outcome'] == 'correct' for r in _criteria) else 'incorrect'
+    print('AL_OBSERVATION ' + _json.dumps({'outcome': _outcome, 'taskId': _task_id, 'criteria': _criteria}))
+else:
+    # Native legacy check contract; the new browser protocol requires criteria.
+    _answer = globals().get('aggregate_tables')
+    _expected = {table['id'] for table in _policy['tasks'][0]['tables'] if table['rowUnit'] == 'group'}
+    _outcome = 'incomplete' if _answer is None else 'correct' if set(_answer) == _expected else 'incorrect'
+    print('AL_OBSERVATION ' + _json.dumps({'outcome': _outcome}))

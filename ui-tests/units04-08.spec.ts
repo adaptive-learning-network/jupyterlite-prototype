@@ -54,7 +54,11 @@ for (const scenario of scenarios) {
           iri: `urn:uuid:${crypto.randomUUID()}`, activity: a.iri, object: a.iri + '-exercise',
           action: 'https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#OutputValidated',
           outcome: 'https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Correct',
-          guidanceLevel: 0, language: 'python', at: '2026-10-15T12:00:00Z'
+          guidanceLevel: 0, language: 'python', at: '2026-10-15T12:00:00Z',
+          ...(a.iri.endsWith('#act-case-or-aggregate') ? {
+            attempt: {id:'urn:uuid:33333333-3333-4333-8333-333333333333',activity:a.iri,taskId:'new-case-1',version:'case-aggregate/1',mode:'reassessment',guidanceLevel:0,submissions:1,startedAt:'2026-10-15T11:00:00Z'},
+            criteria:['a','b','c'].map(id=>({id,outcome:'correct'}))
+          } : {})
         })) }));
     }, { prior, audience: catalog.audiences[0].iri });
     await page.setViewportSize({ width: 1050, height: 850 });

@@ -114,6 +114,8 @@ when the learner record changes. The Learning panel offers Export evidence
 for a portable N-Quads snapshot and Download reflections for recorded writing. Neither restores notebook edits. Developer snapshot tools remain in
 `scripts/learning_record_view.py` and `jlpm demo:dhis2-graph`.
 
+U03 N06 now has a [practice and different-case reassessment pilot](docs/design/classification-reassessment-pilot.md): per-table help, preserved hint history, unseen-case attempts, and task-specific progress wording without a proficiency claim. This scoped policy is for review before wider adoption.
+
 ## How it works
 
 The learner file browser contains the course notebooks and their learning materials.

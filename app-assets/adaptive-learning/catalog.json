@@ -1,6 +1,6 @@
 {
   "schema": "al-catalog-projection/0.1",
-  "sourceDigest": "7c9ce217c5a5597d5f0e21fb8ed1c2a2d0bd20bb5478977270340b2981449953",
+  "sourceDigest": "1e47a9573c349f42d8124615aeb923192f9a0c1463753c9d543c78c27f335d1e",
   "framework": {
     "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#framework",
     "title": "Public health informatics: Units 1–14 prototype",
@@ -502,7 +502,362 @@
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-case-or-aggregate"
-      ]
+      ],
+      "assessment": {
+        "kind": "practice-transfer/1",
+        "version": "case-aggregate/1",
+        "tasks": [
+          {
+            "id": "practice",
+            "mode": "practice",
+            "title": "Practice: Laila’s surveillance tables",
+            "tables": [
+              {
+                "id": "a",
+                "title": "Individual case register",
+                "rowUnit": "case",
+                "columns": [
+                  "Case_ID",
+                  "Age",
+                  "District",
+                  "Diagnosis"
+                ],
+                "rows": [
+                  [
+                    "P01",
+                    8,
+                    "Kambia",
+                    "Suspected measles"
+                  ],
+                  [
+                    "P02",
+                    12,
+                    "Kambia",
+                    "Suspected measles"
+                  ]
+                ]
+              },
+              {
+                "id": "b",
+                "title": "District disease summary",
+                "rowUnit": "group",
+                "columns": [
+                  "District",
+                  "Malaria_Cases",
+                  "Typhoid_Cases"
+                ],
+                "rows": [
+                  [
+                    "Kambia",
+                    12,
+                    3
+                  ],
+                  [
+                    "Port Loko",
+                    7,
+                    2
+                  ]
+                ]
+              },
+              {
+                "id": "c",
+                "title": "Age-group disease summary",
+                "rowUnit": "group",
+                "columns": [
+                  "Age_Group",
+                  "Disease",
+                  "Count"
+                ],
+                "rows": [
+                  [
+                    "0-4",
+                    "Measles",
+                    3
+                  ],
+                  [
+                    "5-14",
+                    "Measles",
+                    5
+                  ]
+                ]
+              },
+              {
+                "id": "d",
+                "title": "Case notification extract",
+                "rowUnit": "case",
+                "columns": [
+                  "Patient_Initials",
+                  "Date_of_Birth",
+                  "Location",
+                  "Diagnosis_Date"
+                ],
+                "rows": [
+                  [
+                    "TA",
+                    "2017-03-10",
+                    "Kambia",
+                    "2021-10-18"
+                  ],
+                  [
+                    "TB",
+                    "2013-05-11",
+                    "Kambia",
+                    "2021-10-19"
+                  ]
+                ]
+              },
+              {
+                "id": "e",
+                "title": "County outcome summary",
+                "rowUnit": "group",
+                "columns": [
+                  "County",
+                  "Total_Cases",
+                  "Deaths",
+                  "Recovered"
+                ],
+                "rows": [
+                  [
+                    "Training county A",
+                    12,
+                    1,
+                    8
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "new-case-1",
+            "mode": "reassessment",
+            "title": "Another reporting situation 1",
+            "tables": [
+              {
+                "id": "a",
+                "title": "Respiratory case follow-up",
+                "rowUnit": "case",
+                "columns": [
+                  "Case_ID",
+                  "District",
+                  "Household_Size"
+                ],
+                "rows": [
+                  [
+                    "R01",
+                    "North",
+                    6
+                  ],
+                  [
+                    "R02",
+                    "South",
+                    4
+                  ]
+                ]
+              },
+              {
+                "id": "b",
+                "title": "Weekly district report",
+                "rowUnit": "group",
+                "columns": [
+                  "District",
+                  "Week",
+                  "Cases"
+                ],
+                "rows": [
+                  [
+                    "North",
+                    "2026-W12",
+                    18
+                  ],
+                  [
+                    "South",
+                    "2026-W12",
+                    11
+                  ]
+                ]
+              },
+              {
+                "id": "c",
+                "title": "Clinic case register",
+                "rowUnit": "case",
+                "columns": [
+                  "Case_ID",
+                  "Age_Group",
+                  "Symptoms_Reported"
+                ],
+                "rows": [
+                  [
+                    "R03",
+                    "5-14",
+                    3
+                  ],
+                  [
+                    "R04",
+                    "5-14",
+                    2
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "new-case-2",
+            "mode": "reassessment",
+            "title": "Another reporting situation 2",
+            "tables": [
+              {
+                "id": "a",
+                "title": "Facility age-group report",
+                "rowUnit": "group",
+                "columns": [
+                  "Summary_ID",
+                  "Facility",
+                  "Age_Group",
+                  "Cases"
+                ],
+                "rows": [
+                  [
+                    "S01",
+                    "Clinic A",
+                    "0-4",
+                    7
+                  ],
+                  [
+                    "S02",
+                    "Clinic A",
+                    "5-14",
+                    9
+                  ]
+                ]
+              },
+              {
+                "id": "b",
+                "title": "Case investigation extract",
+                "rowUnit": "case",
+                "columns": [
+                  "Case_ID",
+                  "Tests_Performed",
+                  "Rash_Onset"
+                ],
+                "rows": [
+                  [
+                    "R11",
+                    2,
+                    "2026-03-14"
+                  ],
+                  [
+                    "R12",
+                    1,
+                    "2026-03-15"
+                  ]
+                ]
+              },
+              {
+                "id": "c",
+                "title": "District laboratory totals",
+                "rowUnit": "group",
+                "columns": [
+                  "District",
+                  "Positive_Tests",
+                  "Negative_Tests"
+                ],
+                "rows": [
+                  [
+                    "East",
+                    12,
+                    6
+                  ],
+                  [
+                    "West",
+                    8,
+                    5
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "id": "new-case-3",
+            "mode": "reassessment",
+            "title": "Another reporting situation 3",
+            "tables": [
+              {
+                "id": "a",
+                "title": "Symptom follow-up register",
+                "rowUnit": "case",
+                "columns": [
+                  "Case_ID",
+                  "Fever_Days",
+                  "Symptoms_Reported"
+                ],
+                "rows": [
+                  [
+                    "R21",
+                    4,
+                    3
+                  ],
+                  [
+                    "R22",
+                    2,
+                    2
+                  ]
+                ]
+              },
+              {
+                "id": "b",
+                "title": "Weekly age-group totals",
+                "rowUnit": "group",
+                "columns": [
+                  "Week",
+                  "Age_Group",
+                  "Cases"
+                ],
+                "rows": [
+                  [
+                    "2026-W15",
+                    "0-4",
+                    10
+                  ],
+                  [
+                    "2026-W15",
+                    "5-14",
+                    7
+                  ]
+                ]
+              },
+              {
+                "id": "c",
+                "title": "Facility outcome report",
+                "rowUnit": "group",
+                "columns": [
+                  "Report_ID",
+                  "Facility",
+                  "Cases",
+                  "Recovered"
+                ],
+                "rows": [
+                  [
+                    "W01",
+                    "Clinic B",
+                    16,
+                    11
+                  ],
+                  [
+                    "W02",
+                    "Clinic C",
+                    9,
+                    6
+                  ]
+                ]
+              }
+            ]
+          }
+        ],
+        "remediations": {
+          "case": "Review an individual-record table: two different cases can have the same age group, and a number such as household size can describe one case. Ask what each row represents.",
+          "aggregate": "Review a grouped summary: each row combines cases for a district, week, age group, or facility. A report ID identifies the summary row; it does not make that row an individual case."
+        }
+      }
     },
     {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-dhis2-query",
@@ -929,7 +1284,7 @@
   ],
   "policy": {
     "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#policy",
-    "version": "prototype-0.1",
+    "version": "prototype-0.2",
     "ceilings": {
       "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Completion": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#novice",
       "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#KnowledgeCheck": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/scales/dreyfus#advanced-beginner",

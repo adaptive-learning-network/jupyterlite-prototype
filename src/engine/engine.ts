@@ -12,6 +12,7 @@
 //     the estimate is the highest supported level;
 //   - incorrect or incomplete attempts are never negative evidence.
 
+import { qualifyingTransfer, taskProgress } from './task-policy';
 import { stableId } from './ids';
 import {
   Assessment,
@@ -25,7 +26,7 @@ import {
 } from './types';
 import { EXCLUSION, GAP, OUTCOME, REASON, RECOMMENDATION_KIND, STAGE, STATUS, UNCERTAINTY } from './vocab';
 
-export const ENGINE_VERSION = 'al-engine/0.1.0';
+export const ENGINE_VERSION = 'al-engine/0.2.0';
 export const MAX_RECOMMENDATIONS = 3;
 
 /** Uncertainty by the strongest stage behind an estimate. Prototype default. */
@@ -48,9 +49,12 @@ export function assess(catalog: Catalog, record: LearnerRecord): Assessment {
 
   // 1. Observation -> evidence assertion (with exclusions).
   const observations = [...record.observations].sort((a, b) => a.at.localeCompare(b.at) || a.iri.localeCompare(b.iri));
+  const progress = catalog.activities.filter(a => a.assessment).map(a => taskProgress(a, observations));
   const evidence: EvidenceAssertion[] = [];
   const usedGroups = new Set<string>();
   for (const obs of observations) {
+    const activity = catalog.activities.find(a => a.iri === obs.activity)!;
+    if (activity.assessment && !qualifyingTransfer(activity, obs)) continue;
     for (const rule of rulesByActivity.get(obs.activity) ?? []) {
       if (obs.action !== rule.requiredAction || !rule.acceptedOutcomes.includes(obs.outcome)) continue;
       const assertion: EvidenceAssertion = {
@@ -83,7 +87,7 @@ export function assess(catalog: Catalog, record: LearnerRecord): Assessment {
     let level: string | undefined;
     let strongestStage: string | undefined;
     for (const e of admissible) {
-      const supported = catalog.policy.ceilings[e.stage];
+      const supported = progress.some(p => p.capability === capability.iri) ? undefined : catalog.policy.ceilings[e.stage];
       if (supported && (!level || levelOrdinal.get(supported)! > levelOrdinal.get(level)!)) {
         level = supported;
         strongestStage = e.stage;
@@ -115,6 +119,11 @@ export function assess(catalog: Catalog, record: LearnerRecord): Assessment {
       const observed = evidence.some(e => estimate.derivedFrom.includes(e.iri) && e.stage !== STAGE.selfReport);
       state = achieved ? GAP.achieved : GAP.belowTarget;
       status = !achieved ? STATUS.developmentOpportunity : observed ? STATUS.demonstrated : STATUS.reportedNeedsConfirmation;
+    }
+    const task = progress.find(p => p.capability === capability.iri);
+    if (task) {
+      state = task.demonstrated ? GAP.achieved : GAP.unknown;
+      status = task.demonstrated ? STATUS.demonstrated : task.recheck ? STATUS.developmentOpportunity : STATUS.notAssessed;
     }
     const gap: GapAssessment = {
       iri: stableId(record.learner, 'gap', capability.iri, target.iri),
@@ -173,7 +182,7 @@ export function assess(catalog: Catalog, record: LearnerRecord): Assessment {
     });
   }
 
-  return { engineVersion: ENGINE_VERSION, policyVersion: catalog.policy.version, evidence, estimates, gaps, recommendations };
+  return { engineVersion: ENGINE_VERSION, policyVersion: catalog.policy.version, evidence, estimates, gaps, recommendations, taskProgress: progress };
 }
 
 function validateInputs(catalog: Catalog, record: LearnerRecord): void {

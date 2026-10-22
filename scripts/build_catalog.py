@@ -30,6 +30,7 @@ CATALOG = ROOT / "catalog/informatics-unit-03.trig"
 OUTPUT = ROOT / "app-assets/adaptive-learning/catalog.json"
 
 PREFIXES = """
+PREFIX ex: <https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#>
 PREFIX al:      <https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
@@ -72,9 +73,9 @@ def project(graph: Graph, source_digest: str) -> dict:
         ?iri al:supportsCriterion ?criterion ; al:evidenceStage ?stage ; al:requiredAction ?action ;
              al:acceptedOutcome ?outcome ; al:maximumGuidance ?maxGuidance .
         ?criterion al:criterionCapability ?capability }""")
-    policy = rows(graph, "SELECT ?iri ?version WHERE { ?iri a al:EstimatorPolicy ; al:policyVersion ?version }")[0]
+    estimator_policy = rows(graph, "SELECT ?iri ?version WHERE { ?iri a al:EstimatorPolicy ; al:policyVersion ?version }")[0]
     ceilings = rows(graph, f"""SELECT ?stage ?level WHERE {{
-        <{policy['iri']}> al:hasStageCeiling ?c . ?c al:ceilingStage ?stage ; al:ceilingLevel ?level }}""")
+        <{estimator_policy['iri']}> al:hasStageCeiling ?c . ?c al:ceilingStage ?stage ; al:ceilingLevel ?level }}""")
 
     def group(items, key, value):
         out: dict[str, list[str]] = {}
@@ -90,6 +91,27 @@ def project(graph: Graph, source_digest: str) -> dict:
 
     unique_targets = {t["iri"]: t for t in targets}
     unique_rules = {r["iri"]: r for r in rules}
+
+    assessment_policies = {}
+    for item in rows(graph, "SELECT ?activity ?file WHERE { ?activity ex:assessmentDefinition ?file }"):
+        path = (CATALOG.parent / item['file']).resolve()
+        if path.parent != CATALOG.parent.resolve():
+            raise ValueError('Assessment definition must be in catalog/')
+        policy = json.loads(path.read_text(encoding='utf-8'))
+        if policy['kind'] != 'practice-transfer/1' or not policy['version']:
+            raise ValueError('Unsupported assessment policy')
+        if not all(isinstance(policy.get('remediations', {}).get(key), str) and policy['remediations'][key].strip() for key in ('case', 'aggregate')):
+            raise ValueError('Assessment needs reviewed help for both classifications')
+        ids = [task['id'] for task in policy['tasks']]
+        if len(ids) != len(set(ids)) or not any(task['mode'] == 'practice' for task in policy['tasks']) or not any(task['mode'] == 'reassessment' for task in policy['tasks']):
+            raise ValueError('Assessment needs distinct practice and reassessment tasks')
+        for task in policy['tasks']:
+            if not task['tables'] or task['mode'] not in {'practice', 'reassessment'} or len({t['id'] for t in task['tables']}) != len(task['tables']):
+                raise ValueError('Invalid task mode or duplicate criterion')
+            for table in task['tables']:
+                if table['rowUnit'] not in {'case', 'group'} or not table['rows'] or any(len(row) != len(table['columns']) for row in table['rows']):
+                    raise ValueError('Invalid classification table')
+        assessment_policies[item['activity']] = policy
 
     return {
         "schema": "al-catalog-projection/0.1",
@@ -107,11 +129,12 @@ def project(graph: Graph, source_digest: str) -> dict:
                                "capabilities": cap_by_activity.get(a["iri"], []),
                                "notebooks": {n["language"]: n["path"] for n in sorted(notebooks, key=lambda n: n["language"]) if n["activity"] == a["iri"]},
                                "rules": rules_by_activity.get(a["iri"], []),
+                               **({"assessment": assessment_policies[a["iri"]]} if a["iri"] in assessment_policies else {}),
                                **({"url": a["url"]} if a["url"] else {})} for a in activities), key=lambda a: a["ordinal"]),
         "rules": sorted(({"iri": r["iri"], "activity": r["activity"], "criterion": r["criterion"], "capability": r["capability"],
                           "stage": r["stage"], "requiredAction": r["action"], "acceptedOutcomes": outcomes_by_rule[r["iri"]],
                           "maximumGuidance": int(r["maxGuidance"])} for r in unique_rules.values()), key=lambda r: r["iri"]),
-        "policy": {"iri": policy["iri"], "version": policy["version"],
+        "policy": {"iri": estimator_policy["iri"], "version": estimator_policy["version"],
                    "ceilings": dict(sorted((c["stage"], c["level"]) for c in ceilings))},
     }
 
@@ -136,7 +159,7 @@ def main() -> int:
         print(text, file=sys.stderr)
         return 1
 
-    digest = hashlib.sha256(CATALOG.read_bytes()).hexdigest()
+    digest = hashlib.sha256(CATALOG.read_bytes() + b''.join(p.name.encode() + b'\0' + p.read_bytes() for p in sorted(CATALOG.parent.glob('*.json')))).hexdigest()
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(json.dumps(project(data, digest), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"catalog conforms to al-core shapes; wrote {OUTPUT.relative_to(ROOT)}")

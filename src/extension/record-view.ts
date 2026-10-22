@@ -88,16 +88,18 @@ class RecordView extends Widget {
       }
       this.node.append(section);
     };
-    table('Your attempts', ['When', 'Activity', 'Result', 'Hints used'],
-      [...record.observations].reverse().map(o => [new Date(o.at).toLocaleString(), label(o.activity), outcomes[o.outcome] ?? 'Recorded', String(o.guidanceLevel)]),
+    table('Your attempts', ['When', 'Activity', 'Result', 'Hints used', 'Mode', 'Case', 'Complete submission'],
+      [...record.observations].reverse().map(o => [new Date(o.at).toLocaleString(), label(o.activity), outcomes[o.outcome] ?? 'Recorded', String(o.guidanceLevel), o.attempt?.mode ?? 'Earlier task', o.attempt?.taskId ?? '', o.attempt ? String(o.attempt.submissions) : '']),
       'No attempts recorded yet. Submit an exercise answer, then return here.');
     this.node.append(element('p', 'Progress reflects the exercises attempted and the help used. A correct guided attempt does not by itself show independent proficiency.'));
     table('Your progress', ['Capability', 'Current estimate', 'Status'], assessment.gaps.map(gap => {
       const estimate = assessment.estimates.find(e => e.capability === gap.capability);
-      return [label(gap.capability), label(estimate?.level), states[gap.status] ?? 'Not assessed'];
+      const task = assessment.taskProgress.find(p => p.capability === gap.capability);
+      return [label(gap.capability), task?.label ?? label(estimate?.level), task ? 'Performance on the displayed tasks; no proficiency level assigned' : states[gap.status] ?? 'Not assessed'];
     }), 'No progress estimates yet.');
     table('Suggested next activities', ['Priority', 'Activity'],
       assessment.recommendations.map(r => [String(r.rank), label(r.activity)]), 'No activities suggested at present.');
+    table('Classification feedback', ['Case', 'Table', 'Your classification', 'Result'], [...record.observations].reverse().flatMap(o => (o.criteria ?? []).map(r => [o.attempt?.taskId ?? '', r.id.toUpperCase(), r.selection === 'case' ? 'Case-based' : r.selection === 'aggregate' ? 'Aggregate' : 'Not selected', r.outcome])), 'No table classifications recorded yet.');
     table('Your recorded reflections', ['Question', 'Your response', 'Recorded'],
       Object.values(record.reflections ?? {}).flat().flatMap(r => [[r.prompt, r.answer, new Date(r.savedAt).toLocaleString()], ...(r.history ?? []).map(h => [h.prompt + ' (earlier response)', h.answer, new Date(h.savedAt).toLocaleString()])]),
       'No reflections recorded yet. Use Record beside a reflection question to keep your response here.');
