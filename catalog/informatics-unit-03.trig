@@ -73,23 +73,23 @@ g:activities {
       al:usesAsset ex:nb-u02-system-map-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u02-system-map .
   ex:act-data-or-information a al:LearningActivity ; dcterms:title "Data or information?"@en ; al:ordinal 2 ;
       al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-data-vs-information ;
-      al:usesAsset ex:nb-data-or-information-python, ex:nb-data-or-information-r ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-data-or-information .
+      al:usesAsset ex:nb-data-or-information-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-data-or-information .
   ex:act-explore-dataset a al:LearningActivity ; dcterms:title "Explore the immunisation register"@en ; al:ordinal 3 ;
       al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-explore-dataset ;
-      al:usesAsset ex:nb-explore-dataset-python, ex:nb-explore-dataset-r ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-explore-dataset .
+      al:usesAsset ex:nb-explore-dataset-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-explore-dataset .
   ex:act-filter-records a al:LearningActivity ; dcterms:title "Filter the records you need"@en ; al:ordinal 4 ;
       al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-filter-records ;
-      al:usesAsset ex:nb-filter-records-python, ex:nb-filter-records-r ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-filter-records .
+      al:usesAsset ex:nb-filter-records-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-filter-records .
   ex:act-coverage a al:LearningActivity ; dcterms:title "Turn data into information: vaccination coverage"@en ; al:ordinal 5 ;
       al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-combine-variables ;
-      al:usesAsset ex:nb-coverage-python, ex:nb-coverage-r ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-coverage .
+      al:usesAsset ex:nb-coverage-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-coverage .
   ex:act-machine-readable a al:LearningActivity ; dcterms:title "Machine-readable or human-readable?"@en ; al:ordinal 6 ;
       al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-machine-readable ;
-      al:usesAsset ex:nb-machine-readable-python, ex:nb-machine-readable-r ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-machine-readable .
+      al:usesAsset ex:nb-machine-readable-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-machine-readable .
 
   ex:act-case-or-aggregate a al:LearningActivity ; dcterms:title "Case-based or aggregate?"@en ; al:ordinal 7 ;
       al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-case-vs-aggregate ;
-      al:usesAsset ex:nb-case-or-aggregate-python, ex:nb-case-or-aggregate-r ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-case-or-aggregate .
+      al:usesAsset ex:nb-case-or-aggregate-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-case-or-aggregate .
 
   # Python-only pilot: query a synthetic case dataset through a browser-local
   # adapter. Reuses the dataset-exploration criterion; no server or PHI.
@@ -103,18 +103,12 @@ g:activities {
   ex:nb-u01-data-to-decision-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u01-n01-data-to-decision.ipynb" .
   ex:nb-u02-system-map-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u02-n01-system-map.ipynb" .
   ex:nb-case-or-aggregate-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u03-n06-case-or-aggregate.ipynb" .
-  ex:nb-case-or-aggregate-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "notebooks/r/u03-n06-case-or-aggregate.ipynb" .
   ex:nb-dhis2-query-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u03-n07-dhis2-query.ipynb" .
   ex:nb-data-or-information-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u03-n01-data-or-information.ipynb" .
-  ex:nb-data-or-information-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "notebooks/r/u03-n01-data-or-information.ipynb" .
   ex:nb-explore-dataset-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u03-n02-explore-dataset.ipynb" .
-  ex:nb-explore-dataset-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "notebooks/r/u03-n02-explore-dataset.ipynb" .
   ex:nb-filter-records-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u03-n03-filter-records.ipynb" .
-  ex:nb-filter-records-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "notebooks/r/u03-n03-filter-records.ipynb" .
   ex:nb-coverage-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u03-n04-coverage.ipynb" .
-  ex:nb-coverage-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "notebooks/r/u03-n04-coverage.ipynb" .
   ex:nb-machine-readable-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u03-n05-machine-readable.ipynb" .
-  ex:nb-machine-readable-r a al:LearningAsset ; schema:programmingLanguage "r" ; schema:contentUrl "notebooks/r/u03-n05-machine-readable.ipynb" .
 
   ex:rubric a al:Rubric ; dcterms:title "Exercise result matches the expected value"@en ;
       al:criterion ex:crit-u01-data-to-decision, ex:crit-u02-system-map, ex:crit-data-or-information, ex:crit-explore-dataset, ex:crit-filter-records, ex:crit-coverage, ex:crit-machine-readable, ex:crit-case-or-aggregate .

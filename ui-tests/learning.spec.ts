@@ -1,6 +1,6 @@
 import { expect, Page, test } from '@playwright/test';
 
-// Drive real Unit 3 exercises in both Jupyter kernels and check that the
+// Drive real Unit 3 exercises in the Python Jupyter kernel and check that the
 // adaptive-learning engine records observations and adapts recommendations.
 
 async function openNotebook(page: Page, path: string): Promise<void> {
@@ -66,19 +66,6 @@ test('Python: exploring the register becomes evidence and unlocks filtering', as
   await expect(panel(page).locator('.al-rec-title').filter({ hasText: 'Data or information?' })).toHaveCount(1);
   await expect(panel(page).locator('.al-rec-title').filter({ hasText: 'Unit 2: Trace Laila' })).toHaveCount(1);
   await expect(panel(page).locator('.al-gap.al-achieved')).toContainText('Explore a dataset with software');
-});
-
-test('R: coverage after a hint counts; the same engine serves the R Jupyter kernel', async ({ page }) => {
-  await openNotebook(page, 'notebooks/r/u03-n04-coverage.ipynb');
-  await panel(page).getByRole('button', { name: 'Show a hint' }).click();
-  await expect(panel(page).locator('.al-hint')).toContainText('Hint 1');
-
-  await runCell(page, 1);
-  await runCell(page, 2,
-    'coverage_x <- sum(register$vaccine_type == "MMR" & register$dose == 1 & register$location == "District X" & register$age < 5) / ' +
-    'population$population_under5[population$location == "District X"]');
-  await expect(panel(page).locator('.al-feedback')).toContainText('Correct. Recorded as evidence.');
-  await expect(panel(page).locator('.al-gap.al-achieved')).toContainText('Calculate a vaccination proportion');
 });
 
 test('the Python course has no external assessment or unavailable R selector', async ({ page }) => {

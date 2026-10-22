@@ -5,7 +5,7 @@
 #   SKIP_PLAYWRIGHT=1 scripts/setup.sh
 #
 # Installs into the repository only: .venv/ (Python tooling), node_modules/,
-# .tools/bin/micromamba (builds the WebAssembly R environment). Nothing global.
+# and Playwright browsers. Nothing global.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -20,20 +20,6 @@ echo "==> Python tooling (.venv)"
 
 echo "==> Node dependencies"
 .venv/bin/jlpm install --immutable 2>/dev/null || .venv/bin/jlpm install
-
-echo "==> micromamba (.tools/bin)"
-if [ ! -x .tools/bin/micromamba ]; then
-  case "$(uname -s)-$(uname -m)" in
-    Darwin-arm64) platform=osx-arm64 ;;
-    Darwin-x86_64) platform=osx-64 ;;
-    Linux-x86_64) platform=linux-64 ;;
-    Linux-aarch64|Linux-arm64) platform=linux-aarch64 ;;
-    *) echo "Unsupported platform $(uname -s)-$(uname -m)"; exit 1 ;;
-  esac
-  mkdir -p .tools
-  curl -fsSL "https://micro.mamba.pm/api/micromamba/${platform}/latest" | tar -xj -C .tools bin/micromamba
-fi
-.tools/bin/micromamba --version
 
 echo "==> Extension (editable) and labextension link"
 .venv/bin/jlpm build

@@ -5,7 +5,7 @@ Guidance for coding agents and contributors working in this repository.
 ## What this repository is
 
 A JupyterLite site plus a JupyterLab 4 extension. Learners do exercises in
-Python or R notebooks, and an **ontology-driven adaptive-learning engine**
+Python notebooks, and an **ontology-driven adaptive-learning engine**
 records observations, builds evidence, estimates capabilities, and recommends
 what to do next. Current scored content: Public Health Informatics for FETP, Units 1–14
 (Version 3 course materials, used with permission). The repository is
@@ -37,14 +37,14 @@ docs/design/                 capability packs, learner identity
 
 ## Published course layout
 
-Authoring inputs stay in `content/`; run `scripts/assemble_course.py` after exercise/form generation and references checks. Only `.course-content/` is published by JupyterLite. The learner path is `notebooks/` with one integrated Python sequence; `notebooks/r/` holds the existing deferred R alternatives. Never publish `content/` directly or restore a separate reading route. `configure_site.py` hashes the assembled notebooks for review updates. Keep all source material traceable in `docs/audit/unified-course-coverage.json`.
+Authoring inputs stay in `content/`; run `scripts/assemble_course.py` after exercise/form generation and references checks. Only `.course-content/` is published by JupyterLite. The learner path is `notebooks/` with one integrated Python sequence; R notebooks and the R kernel are not shipped; their rebuild is deferred. Never publish `content/` directly or restore a separate reading route. `configure_site.py` hashes the assembled notebooks for review updates. Keep all source material traceable in `docs/audit/unified-course-coverage.json`.
 
 ## Commands
 
 ```bash
-scripts/setup.sh            # one-time, idempotent: .venv, node_modules, micromamba, Playwright
+scripts/setup.sh            # one-time, idempotent: .venv, node_modules, Playwright
 jlpm build:site             # catalog → exercises → engine tests → export validation → extension → _output/
-jlpm test:all               # export SHACL validation, Python/R check parity, Playwright end to end
+jlpm test:all               # export SHACL validation, Python assessment checks, Playwright end to end
 python -m http.server 8765 --directory _output   # preview
 ```
 
@@ -66,10 +66,10 @@ The `al:` ontology is expected at `../adaptive-learning-ontology`; override with
    Do not make learning content depend on external links. Include an external
    reference URL only after verifying that its destination works; add it to the
    reviewed allowlist in `scripts/add_course_references.py`.
-4. **Python and R stay in parity** for the existing paired Unit 3 exercises.
-   Develop new computational narratives in Python first; defer new R variants
-   until the Python path is stable. Unit 1 Notebook 01 and the DHIS2 pilot are
-   Python only. `jlpm test:checks` must pass (it needs `Rscript`).
+4. **Python only for now.** Do not generate or publish R notebooks, R checks,
+   or an R kernel. Rebuild R from scratch against the stabilized Python course
+   before establishing narrative, interaction, assessment, and outcome parity.
+   `jlpm test:checks` verifies Python without requiring R.
 5. **One case journey per topic.** Put the needed course explanation, local
    visual, data task, interpretation, and adaptive check in the scored notebook.
    Existing UCSF readings are an optional source library, not a second required

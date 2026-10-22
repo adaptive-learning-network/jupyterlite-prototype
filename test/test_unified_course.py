@@ -9,7 +9,8 @@ class UnifiedCourseTests(unittest.TestCase):
  def test_single_sequence_and_complete_source_map(self):
   self.assertEqual(sorted(p.name for p in course.OUTPUT.iterdir()),['notebooks'])
   self.assertEqual(len(list((course.OUTPUT/'notebooks').glob('*.ipynb'))),22)
-  self.assertEqual(len(list((course.OUTPUT/'notebooks/r').glob('*.ipynb'))),6)
+  self.assertFalse((course.OUTPUT/'notebooks/r').exists())
+  self.assertEqual(len(list(course.OUTPUT.rglob('*.ipynb'))),22)
   mapping=json.loads((course.ROOT/'docs/audit/unified-course-coverage.json').read_text())
   self.assertEqual(len(mapping),20)
   self.assertEqual(len({r['source'] for r in mapping}),20)

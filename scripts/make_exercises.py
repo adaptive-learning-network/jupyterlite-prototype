@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Generate the Python and R exercise notebooks and their checks from one spec.
+"""Generate Python exercise notebooks and their checks from the course spec.
 
 Content: Public Health Informatics for FETP, Unit 3 "Using Informatics to Get
 Information Faster" (Version 3 course materials, used with permission). Exercise
 text, examples, and help follow the unit's slides and instructor guide.
 
-Each activity in the al: catalog gets one notebook per Jupyter kernel language.
+Each scored activity in the al: catalog gets a Python notebook.
 The exercise cell carries `al` metadata (activity IRI, observed-object IRI,
 check path, facilitation-ladder hints). After the learner runs it, the
 extension executes checks/<name>.<ext> in the same Jupyter kernel; the check
@@ -32,9 +32,8 @@ EX = "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#
 
 KERNELSPEC = {
     "python": {"name": "python", "display_name": "Python (Pyodide)", "language": "python"},
-    "r": {"name": "xr", "display_name": "R (xeus-r)", "language": "R"},
 }
-LANGUAGE_INFO = {"python": {"name": "python"}, "r": {"name": "R"}}
+LANGUAGE_INFO = {"python": {"name": "python"}}
 
 UNIT = "Unit 3: Using Informatics to Get Information Faster"
 OBJECTIVES = [
@@ -644,7 +643,7 @@ display(pd.DataFrame([{'Population': 'District X children under 5',
 
 
 def main() -> None:
-    for folder in ("python", "r"):
+    for folder in ("python",):
         out = CONTENT / "exercises" / folder
         out.mkdir(parents=True, exist_ok=True)
         for stale in out.glob("*.ipynb"):
@@ -653,16 +652,14 @@ def main() -> None:
     checks.mkdir(parents=True, exist_ok=True)
     for stale in checks.glob("*"):
         stale.unlink()
-    for language in ("python", "r"):
+    for language in ("python",):
         for ex in EXERCISES:
             path = CONTENT / "exercises" / language / f"{ex['file']}.ipynb"
             path.write_text(json.dumps(notebook(ex, language), indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     for ex in EXERCISES:
         (checks / f"{ex['check']}.py").write_text(python_check(ex["variables"]), encoding="utf-8")
-        (checks / f"{ex['check']}.R").write_text(r_check(ex["variables"]), encoding="utf-8")
-    print(f"wrote {len(EXERCISES) * 2} notebooks and {len(EXERCISES) * 2} checks; register has {len(REGISTER)} records")
-    # Separate Python-only pilot requested for the DHIS2 adapter. The existing
-    # paired Python/R exercise spec stays unchanged until the R pilot is built.
+    print(f"wrote {len(EXERCISES)} Python notebooks and {len(EXERCISES)} checks; register has {len(REGISTER)} records")
+    # Generate the remaining Python narratives. R will be rebuilt separately.
     from make_dhis2_pilot import main as make_dhis2_pilot
     make_dhis2_pilot()
     from make_unit01_pilot import main as make_unit01_pilot

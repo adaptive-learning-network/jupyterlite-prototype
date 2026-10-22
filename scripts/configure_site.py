@@ -31,7 +31,6 @@ import shutil
 import sys
 from pathlib import Path
 
-from localize_xeus_mapping import localize_xeus_mapping, localized_xeus_load
 
 ROOT = Path(__file__).resolve().parent.parent
 ALLOWED = {"issuer", "clientId", "scope", "redirectUri", "label"}
@@ -41,8 +40,7 @@ def publish_adaptive_assets(output: Path) -> str:
     if any((output / "files" / folder).exists() for folder in ("al", "checks")):
         raise ValueError("Rebuild the site without adaptive resources in the learner contents drive")
     source = ROOT / "app-assets/adaptive-learning"
-    files = [source / "catalog.json", *sorted((source / "checks").glob("*.py")),
-             *sorted((source / "checks").glob("*.R"))]
+    files = [source / "catalog.json", *sorted((source / "checks").glob("*.py"))]
     if not (source / "catalog.json").is_file() or not list((source / "checks").glob("*.py")):
         raise ValueError("Generate the adaptive-learning catalog and checks before building the site")
     for notebook in sorted((ROOT / ".course-content").rglob("*.ipynb")):
@@ -97,7 +95,6 @@ def main() -> int:
                         help="local reviewer mode: replace outdated supplied notebook copies on open without retaining review responses")
     args = parser.parse_args()
 
-    localize_xeus_mapping(args.output)
 
     for page in sorted((ROOT / "site").glob("*.html")):
         shutil.copy2(page, args.output / page.name)
@@ -115,14 +112,9 @@ def main() -> int:
         for extension in data.get("federated_extensions", []):
             if isinstance(extension.get("load"), str) and "\\" in extension["load"]:
                 extension["load"] = "/".join(part for part in extension["load"].replace("\\", "/").split("/") if part)
-            if extension.get("name") == "@jupyterlite/xeus-extension":
-                extension["load"] = localized_xeus_load(extension["load"])
-        # Python-only review builds omit xeus environments. Do not initialize
-        # their unused frontend (which fetches an optional remote package map).
-        # Builds containing xeus kernels retain the existing R runtime.
-        if args.course_review and not (args.output / "xeus/kernels.json").exists():
-            data["federated_extensions"] = [extension for extension in data.get("federated_extensions", [])
-                                            if extension.get("name") != "@jupyterlite/xeus-extension"]
+        # This release ships Python only, including local environments with old SDKs installed.
+        data["federated_extensions"] = [extension for extension in data.get("federated_extensions", [])
+                                        if extension.get("name") != "@jupyterlite/xeus-extension"]
         # These short teaching notebooks contain collapsible media and live widgets.
         # Keep every cell attached: full windowing can leave a blank viewport after
         # scrolling past hidden inputs or closed slide sections.

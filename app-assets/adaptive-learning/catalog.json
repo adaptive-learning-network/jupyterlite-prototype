@@ -1,6 +1,6 @@
 {
   "schema": "al-catalog-projection/0.1",
-  "sourceDigest": "e26e12eeac4b95c169a21bda3509b89163b9b671606ac8361cc95558b777073a",
+  "sourceDigest": "7c9ce217c5a5597d5f0e21fb8ed1c2a2d0bd20bb5478977270340b2981449953",
   "framework": {
     "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#framework",
     "title": "Public health informatics: Units 1–14 prototype",
@@ -423,8 +423,7 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-data-vs-information"
       ],
       "notebooks": {
-        "python": "notebooks/u03-n01-data-or-information.ipynb",
-        "r": "notebooks/r/u03-n01-data-or-information.ipynb"
+        "python": "notebooks/u03-n01-data-or-information.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-data-or-information"
@@ -439,8 +438,7 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-explore-dataset"
       ],
       "notebooks": {
-        "python": "notebooks/u03-n02-explore-dataset.ipynb",
-        "r": "notebooks/r/u03-n02-explore-dataset.ipynb"
+        "python": "notebooks/u03-n02-explore-dataset.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-explore-dataset"
@@ -455,8 +453,7 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-filter-records"
       ],
       "notebooks": {
-        "python": "notebooks/u03-n03-filter-records.ipynb",
-        "r": "notebooks/r/u03-n03-filter-records.ipynb"
+        "python": "notebooks/u03-n03-filter-records.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-filter-records"
@@ -471,8 +468,7 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-combine-variables"
       ],
       "notebooks": {
-        "python": "notebooks/u03-n04-coverage.ipynb",
-        "r": "notebooks/r/u03-n04-coverage.ipynb"
+        "python": "notebooks/u03-n04-coverage.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-coverage"
@@ -487,8 +483,7 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-machine-readable"
       ],
       "notebooks": {
-        "python": "notebooks/u03-n05-machine-readable.ipynb",
-        "r": "notebooks/r/u03-n05-machine-readable.ipynb"
+        "python": "notebooks/u03-n05-machine-readable.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-machine-readable"
@@ -503,8 +498,7 @@
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-case-vs-aggregate"
       ],
       "notebooks": {
-        "python": "notebooks/u03-n06-case-or-aggregate.ipynb",
-        "r": "notebooks/r/u03-n06-case-or-aggregate.ipynb"
+        "python": "notebooks/u03-n06-case-or-aggregate.ipynb"
       },
       "rules": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#rule-case-or-aggregate"

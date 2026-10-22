@@ -1,2 +1,0 @@
-# Keep checksum-pinned runtime metadata identical across Windows and Linux.
-app-assets/runtime/conda-pypi-mapping.json text eol=lf

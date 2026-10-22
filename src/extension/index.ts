@@ -47,7 +47,7 @@ function normalizeBrowserContentsPaths(app: JupyterFrontEnd): void {
 // never replace a learner's notebook or clear browser storage.
 async function ensureCourseDirectories(app: JupyterFrontEnd): Promise<void> {
   const contents = app.serviceManager.contents;
-  for (const path of ['notebooks', 'notebooks/r']) {
+  for (const path of ['notebooks']) {
     const existing = await contents.get(path, { content: false }).catch(() => null);
     if (existing?.type === 'directory') continue;
     if (existing) throw new Error(`${path} exists but is not a directory`);

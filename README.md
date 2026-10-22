@@ -2,14 +2,14 @@
 
 ## Open the course notebooks
 
-The learner site has one course sequence under **`notebooks/`**: 22 Python notebooks, with 6 existing R alternatives under `notebooks/r/`. Each Python notebook combines the explanation, relevant local course visuals/slides, practice questions, computation, adaptive checks, and reflection fields. There is no separate reading-notebook route.
+The learner site has one course sequence under **`notebooks/`**: 22 Python notebooks. R notebooks and the R kernel are not included. Each Python notebook combines the explanation, relevant local course visuals/slides, practice questions, computation, adaptive checks, and reflection fields. There is no separate reading-notebook route.
 
-Start with Notebook 00 and follow the course table of contents. The Learning panel shows up to three adaptive suggestions, not the complete sequence. New R development is deferred while Python is stabilized.
+Start with Notebook 00 and follow the course table of contents. The Learning panel shows up to three adaptive suggestions, not the complete sequence. R will be rebuilt from scratch after Python stabilizes; see the [R rebuild TODO](docs/design/unified-course.md#todo-rebuild-r-after-python-stabilizes).
 
 - **[CDC GitLab Pages: launch JupyterLite](https://jupyterlite-prototype-4a4d87.gitpages.cdc.gov/)** (CDC sign-in required)
 - **[GitHub Pages: launch JupyterLite](https://adaptive-learning-network.github.io/jupyterlite-prototype/)** (public)
 
-A JupyterLite site in which learners work through exercises in **Python or R**
+A JupyterLite site in which learners work through exercises in **Python**
 while an **ontology-driven adaptive-learning engine** observes results, builds
 evidence, estimates capabilities, and recommends what to do next.
 
@@ -19,8 +19,7 @@ The course combines local readings, slide previews, practice files, and browser-
 on GitHub Pages, then try the
 [Unit 1 Notebook 01 Python pilot](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=notebooks/u01-n01-data-to-decision.ipynb),
 [Unit 2 Notebook 01 reporting pathways](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=notebooks/u02-n01-system-map.ipynb),
-[Unit 3 Python exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=notebooks/u03-n01-data-or-information.ipynb),
-[Unit 3 R exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=notebooks/r/u03-n01-data-or-information.ipynb).
+[Unit 3 Python exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=notebooks/u03-n01-data-or-information.ipynb).
 The Python narratives continue with:
 
 | Notebook | Decision and artifact |
@@ -135,7 +134,7 @@ JupyterLite page
     engine     observations → evidence → estimates → gaps → recommendations (pure, deterministic)
     panel      next activities with reasons, progress, hint ladder, export/reset
     store      opaque learner IRI + observations in browser storage; Export → al: N-Quads
-  Jupyter kernels   Python (Pyodide), R (xeus-r): where learners do exercises; not the engine
+  Jupyter kernels   Python (Pyodide): where learners do exercises; not the engine
 ```
 
 Terminology: a **Jupyter kernel** runs notebook code. The **adaptive-learning
@@ -164,7 +163,7 @@ observations. It never runs in a Jupyter kernel.
 
 ## Setup
 
-Requirements: Node 20+, Python 3.10+, `curl`, and `Rscript` for the parity test.
+Requirements: Node 20+, Python 3.10+, and `curl`.
 The ontology repository is expected next to this one (`../adaptive-learning-ontology`).
 Set `AL_ONTOLOGY_DIR` to use another location.
 
@@ -173,8 +172,7 @@ scripts/setup.sh        # idempotent; installs only inside this repository
 ```
 
 The script creates `.venv/` (pinned build tooling from `lite/requirements.txt`),
-installs Node dependencies, downloads `micromamba` for your platform into
-`.tools/` (it builds the WebAssembly R environment), links the extension, and
+installs Node dependencies, links the extension, and
 installs the Playwright browser. Use `SKIP_PLAYWRIGHT=1` to skip the browser.
 
 ## Build the site
@@ -187,8 +185,7 @@ python -m http.server 8765 --directory _output
 
 The build downloads a checksum-verified Pyodide 314.0.6 core and the pinned
 packages needed by the current Python notebooks, then serves them from the site.
-Learners do not need the Pyodide CDN for these exercises. The R runtime and its
-packages are also included in the site. If a new Python notebook imports another
+Learners do not need the Pyodide CDN for these exercises. The course ships only the Python runtime. If a new Python notebook imports another
 package, add it to `REQUIRED_PACKAGES` in `scripts/prepare_pyodide.py`.
 The U03 N01 widget setup uses `jupyterlab_widgets` and `anywidget` in the
 JupyterLite frontend; `scripts/prepare_widget_wheels.py` adds checksum-pinned
@@ -198,8 +195,7 @@ PyPI request. Teaching images in the orientation and pilot notebooks are
 embedded as notebook attachments so browser-saved copies retain them.
 
 On this Windows workspace, the local Node and Chromium installs live under
-`.tools/`. The full R build requires the separate micromamba setup. For the
-Python-only browser scenarios, use these commands in PowerShell from the repo root:
+`.tools/`. For the Python browser scenarios, use these commands in PowerShell from the repo root:
 
 ```powershell
 $env:Path="$(Resolve-Path .tools/node-v22.23.3-win-x64);$(Resolve-Path .venv/Scripts);$env:Path"
@@ -221,7 +217,7 @@ node scripts/run_dhis2_browser.cjs
 | --- | --- |
 | `jlpm test` | Engine unit tests (Node): prerequisites, guidance ceiling, dependence, language neutrality, order independence, fail-closed input |
 | `jlpm test:export` | The exported learner graph conforms to the `al:` SHACL shapes |
-| `jlpm test:checks` | Python and R checks agree on correct / incorrect / unanswered inputs (needs `Rscript`) |
+| `jlpm test:checks` | Python checks return expected correct / incorrect / unanswered outcomes |
 | `jlpm test:ui` | Playwright end to end in Chromium against `_output/`: both Jupyter kernels, plus sign-in against a mock OpenID Connect provider |
 | `jlpm test:dhis2` | Scripted DHIS2 notebook retries, learner-record assertions, hint ceiling, and changing recommendations; no manual cell editing |
 
@@ -234,11 +230,11 @@ node scripts/run_dhis2_browser.cjs
 3. `scripts/setup.sh`, then `jlpm build:site`, which validates the catalog,
    generates exercises, runs engine tests and export validation, builds the
    extension, and builds the site;
-4. the Python/R parity test and the Playwright browser tests;
+4. the Python assessment checks and the Playwright browser tests;
 5. on `main`, publish `_output/` to GitHub Pages when the variable
    `PAGES_ENABLED` is `true`.
 
-`.gitlab-ci.yml` builds the same site, runs the Python/R parity and browser
+`.gitlab-ci.yml` builds the same site, runs the Python assessment checks and browser
 tests in separate jobs, and deploys GitLab Pages only after those jobs pass.
 
 Repository settings:
@@ -259,7 +255,6 @@ src/engine/                      adaptive-learning engine (no JupyterLab depende
 src/extension/                   JupyterLab/JupyterLite plugin: observer, panel, store, guide
 scripts/                         catalog build, exercise generator, validators, site build
 test/                            engine unit tests        ui-tests/  Playwright tests
-environment.yml                  emscripten-forge env for the xeus-r Jupyter kernel
 lite/requirements.txt            pinned build tooling
 ```
 

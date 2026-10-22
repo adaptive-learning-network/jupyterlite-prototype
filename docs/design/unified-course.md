@@ -35,7 +35,7 @@ Source section objectives are removed where the destination already states its o
 
 Notebook 00 links all 22 Python notebooks. Each notebook has an explicit onward link and Course start; the record view leads on to Unit 4. Every scored Python task has an explicit Submit action; running setup/computation does not create attempts. Computation remains visible, while submission infrastructure is collapsed. The sidebar offers Python for the current pilot and no longer launches the external Unit 3 form. Export evidence and Download reflections have distinct scopes; neither automatically restores browser storage or notebook edits.
 
-The former reading index becomes the orientation/table of contents. All former reading links resolve to the destination course notebook. Required images, datasets, dictionaries, and PDFs are bundled under `notebooks/assets`; there is no learner dependency on the source notebook tree. Existing R counterparts remain alternatives under `notebooks/r/`, with new R development deferred.
+The former reading index becomes the orientation/table of contents. All former reading links resolve to the destination course notebook. Required images, datasets, dictionaries, and PDFs are bundled under `notebooks/assets`; there is no learner dependency on the source notebook tree. The published course is Python only. Legacy R notebooks and the R kernel have been removed.
 
 ## Build and checks
 
@@ -78,3 +78,9 @@ U03 N01 now has a Submit button below its sorting board. It captures the current
 Local review mode now compares supplied cell sources and attachments on each notebook open even when a saved version marker is current. This addresses stale restored/saved copies whose marker alone incorrectly suggested they were up to date. Production learner mode remains opt-out and preserves saved notebooks and learner records. An already running preview application must be reloaded to load the updated extension.
 
 Validation: Chromium passed U03 incomplete, incorrect, and correct submissions using the button, including inline feedback, recorded outcomes, capability change, and hidden setup code. The review-update scenario passed for stale source with a current marker and preserved learner-mode work and the learner record. The revised U03 comic was rendered and verified against the source PNG. The active VS Code preview matches the assembled notebook.
+
+## TODO: rebuild R after Python stabilizes
+
+- [ ] Rebuild R notebooks from the beginning using the stabilized Python course as the baseline; do not adapt the retired R notebooks.
+- [ ] Establish parity for learning objectives, narrative, supplied data, interactions, Submit feedback, Record reflections, assessments, and learner-record outcomes.
+- [ ] Add and validate an R browser kernel and R CI checks only when the rebuilt notebooks are ready for review.

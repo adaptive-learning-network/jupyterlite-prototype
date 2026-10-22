@@ -86,8 +86,7 @@ def transform(source,language='python',reading=False):
         if stem=='u00-n02-version3-form-library':stem='u01-n01-data-to-decision'
         elif stem in TARGETS:stem=TARGETS[stem]
         if stem.startswith('u'):
-            prefix='' if language=='python' or (SOURCE/'exercises/r'/(stem+'.ipynb')).exists() else '../'
-            return '['+label+']('+prefix+stem+'.ipynb)'
+            return '['+label+']('+stem+'.ipynb)'
         return match.group(0)
     return re.sub(r'\[([^\]]+)\]\(([^)]+\.ipynb)\)',notebook_link,source)
 
@@ -141,6 +140,8 @@ def main():
     if output.parent!=ROOT.resolve() or output.name!='.course-content':raise ValueError('Unexpected assembly path')
     # This generated directory is dedicated to course assembly.
     for old in output.rglob('*.ipynb') if output.exists() else []:old.unlink()
+    retired=output/'notebooks/r'
+    if retired.exists():shutil.rmtree(retired)
     course=output/'notebooks';course.mkdir(parents=True,exist_ok=True)
     shutil.copytree(SOURCE/'exercises/assets',course/'assets',dirs_exist_ok=True)
     shutil.copytree(READINGS/'assets',course/'assets',dirs_exist_ok=True)
@@ -255,14 +256,7 @@ Use these diagrams to connect the reported counts, their interpretation, and the
         nav=markdown(f'## Continue learning\n\n[Next: {next_name[:7].upper()}]({next_name}.ipynb) · [Course start](u00-n00-start-here.ipynb) · [Review your learning record](u03-n08-my-learning-record.ipynb)','continue')
         doc['cells'].insert(len(doc['cells'])-1,nav)
         (course/(name+'.ipynb')).write_text(json.dumps(doc,indent=1,ensure_ascii=False)+'\n',encoding='utf-8')
-    for p in (SOURCE/'exercises/r').glob('*.ipynb'):
-        doc=read(p)
-        for c in doc['cells']:
-            c['source']=transform(text(c),'r').splitlines(keepends=True)
-        # The DHIS2 continuation is Python only.
-        (course/'r').mkdir(exist_ok=True)
-        (course/'r'/p.name).write_text(json.dumps(doc,indent=1,ensure_ascii=False)+'\n',encoding='utf-8')
     validate(course)
     (ROOT/'docs/audit/unified-course-coverage.json').write_text(json.dumps(coverage,indent=2)+'\n',encoding='utf-8')
-    print(f'Assembled one course sequence: {len(docs)} Python notebooks; 6 existing R alternatives; {len(coverage)} source mappings. No reading notebooks published.')
+    print(f'Assembled one course sequence: {len(docs)} Python notebooks; {len(coverage)} source mappings. No reading notebooks published.')
 if __name__=='__main__':main()

@@ -281,3 +281,7 @@ This review concerns current local source and supplied preview artifacts. It doe
 Static file validation does not guarantee rendering, availability on a restricted network, persistence under browser eviction, or accessible interaction. Scripted workflows often seed prerequisites and enter known answers; they establish bounded software behavior rather than independent learner comprehension. The earlier external-form opening test used a stub; the unresolved form entry has since been removed from the learner route. Optional external reference URLs were enumerated, not fetched again for this audit.
 
 WebLLM/browser-local AI remains a documented TODO in the [unified-course design](../design/unified-course.md). It is not implemented, required by the present activities, or a prerequisite for this field test.
+
+## Release scope update: Python only (2026-10-22)
+
+The six legacy R notebooks, their assessment checks and catalog assets, the R browser kernel, and R tooling/CI steps have been removed at course-owner request. The assembled learner course contains 22 Python notebooks. R must be rebuilt from scratch against the stabilized Python narratives before parity is assessed; see the [R rebuild TODO](../design/unified-course.md#todo-rebuild-r-after-python-stabilizes).
