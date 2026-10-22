@@ -27,6 +27,7 @@ export default {
 
     const items = Object.entries(model.get('items'));
     const move = (key, bin) => {
+      if (model.get('disabled')) return;
       const assignments = { ...model.get('assignments') };
       if (bin === 'unsorted') delete assignments[key];
       else assignments[key] = bin;
@@ -68,7 +69,7 @@ export default {
           const card = document.createElement('div');
           card.className = 'card';
           card.dataset.item = key;
-          card.draggable = true;
+          card.draggable = !model.get('disabled');
           card.addEventListener('dragstart', event => {
             event.dataTransfer.setData('text/plain', key);
             event.dataTransfer.effectAllowed = 'move';
@@ -79,6 +80,7 @@ export default {
           const label = document.createElement('label');
           label.textContent = `Move item ${key.toUpperCase()} to`;
           const select = document.createElement('select');
+          select.disabled = !!model.get('disabled');
           select.setAttribute('aria-label', `Move item ${key.toUpperCase()} to`);
           for (const [value, name] of [['unsorted', 'To sort'], ['data', 'Data'], ['information', 'Information']]) {
             const option = document.createElement('option');
@@ -101,16 +103,34 @@ export default {
       board.appendChild(count);
     };
     model.on('change:assignments', draw);
-    signal?.addEventListener('abort', () => model.off('change:assignments', draw));
+    model.on('change:disabled', draw);
+    signal?.addEventListener('abort', () => {
+      model.off('change:assignments', draw);
+      model.off('change:disabled', draw);
+    });
     draw();
     // Running a collapsed JupyterLab cell can expand its source. Keep the
     // infrastructure input hidden once the learner-facing output is ready.
-    const codeCell = el.closest('.jp-CodeCell');
-    const input = codeCell?.querySelector('.jp-InputArea');
-    if (input) {
-      setTimeout(() => {
-        if (codeCell.isConnected) input.style.setProperty('display', 'none', 'important');
-      }, 0);
-    }
+    let frame;
+    const hideInfrastructure = () => {
+      if (signal?.aborted) return;
+      const codeCell = el.closest('.jp-CodeCell');
+      if (!codeCell) {
+        frame = requestAnimationFrame(hideInfrastructure);
+        return;
+      }
+      const hideSetup = () => {
+        const input = codeCell.querySelector('.jp-InputArea');
+        if (input && (input.style.display !== 'none' || input.style.getPropertyPriority('display') !== 'important')) {
+          input.style.setProperty('display', 'none', 'important');
+        }
+      };
+      const observer = new MutationObserver(hideSetup);
+      observer.observe(codeCell, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+      signal?.addEventListener('abort', () => observer.disconnect());
+      hideSetup();
+    };
+    frame = requestAnimationFrame(hideInfrastructure);
+    signal?.addEventListener('abort', () => cancelAnimationFrame(frame));
   }
 };

@@ -17,7 +17,6 @@ function sources(document: unknown): string {
 export async function enableCourseReviewUpdates(tracker: INotebookTracker, manager: IDocumentManager): Promise<void> {
   if (PageConfig.getOption('alCourseReviewMode') !== 'true') return;
   const versions = await loadNotebookVersions();
-  const seen = new Map<string, string>();
   const pending = new Set<string>();
 
   async function update(panel: NotebookPanel): Promise<void> {
@@ -26,9 +25,9 @@ export async function enableCourseReviewUpdates(tracker: INotebookTracker, manag
     const version = versions[path];
     if (!version || pending.has(path)) return;
     const key = `al-engine:course-copy:${path}`;
-    let previous = seen.get(path);
-    try { previous = localStorage.getItem(key) ?? previous; } catch { /* Session-only tracking. */ }
-    if (previous === version) return;
+    // A saved/restored tab can contain old attachments even after its version
+    // marker was updated. In disposable review mode compare the actual source
+    // on every open; a marker alone does not prove that the copy is current.
     pending.add(path);
     try {
       const url = URLExt.join(PageConfig.getBaseUrl(), 'files', ...path.split('/').map(encodeURIComponent));
@@ -44,7 +43,6 @@ export async function enableCourseReviewUpdates(tracker: INotebookTracker, manag
         await panel.context.revert();
         Notification.success(`Loaded the current course version of ${stem}.`, { autoClose: 4000 });
       }
-      seen.set(path, version);
       try { localStorage.setItem(key, version); } catch { /* Session-only tracking. */ }
     } catch (error) {
       Notification.error(`Course notebook update failed: ${String(error)}`, { autoClose: false });

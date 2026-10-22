@@ -18,7 +18,7 @@ The course combines local readings, slide previews, practice files, and browser-
 **Start with** [Notebook 00](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=notebooks/u00-n00-start-here.ipynb)
 on GitHub Pages, then try the
 [Unit 1 Notebook 01 Python pilot](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=notebooks/u01-n01-data-to-decision.ipynb),
-[Unit 2 Notebook 01 system map](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=notebooks/u02-n01-system-map.ipynb),
+[Unit 2 Notebook 01 reporting pathways](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=notebooks/u02-n01-system-map.ipynb),
 [Unit 3 Python exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=notebooks/u03-n01-data-or-information.ipynb),
 [Unit 3 R exercise](https://adaptive-learning-network.github.io/jupyterlite-prototype/lab/index.html?path=notebooks/r/u03-n01-data-or-information.ipynb).
 The Python narratives continue with:
@@ -48,15 +48,19 @@ communication narrative still needs a course home. New R variants are deferred.
 The site is rebuilt and published by CI on every push to `main` on GitHub and
 GitLab.
 
-Notebook 00 provides the cast and course contents. Units 1, 2, 4, 5, and 7 include the local practice quizzes with **provisional feedback**, pending course-owner review. Written case questions and reflections have response fields and **Record** buttons; responses stay with the browser-local learner record. Run those cells again to restore recorded text. The RDF evidence export currently excludes reflection text.
+Notebook 00 provides the cast and complete clickable course contents. Units 1, 2, 4, 5, and 7 include local practice quizzes with **provisional feedback**, pending course-owner review. Canonical task reflections have response fields and **Record** buttons; responses stay with the browser-local learner record. Run those cells again to restore recorded text. **Download reflections** keeps a readable local text copy. **Export evidence** downloads scored attempts and progress as RDF and excludes reflection text and notebook edits. Download edited notebooks separately. These downloads do not provide automatic restoration.
+
+All scored Python tasks use an explicit **Submit** action with inline feedback. Running setup or computation alone does not record an attempt. Computation intended for learning remains visible; choice/assessment infrastructure stays collapsed. The Learning panel offers the Python route; existing R files remain deferred alternatives.
 
 The authoring inputs remain in `content/exercises` and `content/readings/ucsf`. `scripts/assemble_course.py` integrates them into the generated `.course-content/notebooks` tree used by JupyterLite. The original source notebooks are repository evidence, not an additional learner assignment set. See [the integration design](docs/design/unified-course.md) and [source coverage map](docs/audit/unified-course-coverage.json).
+
+The [pre-field test audit](docs/audit/pre-field-test-audit.md) reviews all 22 Python learner notebooks, consistency gaps, proposed interaction improvements, and validation limits before learner testing.
 
 The Notebook 01 pilot uses `u03-n01-data-or-information.ipynb` in both language
 folders: `uNN-nNN-topic.ipynb` means unit number, notebook number, and topic.
 The Python U03 N01 notebook now uses a drag-and-drop board with **Data** and
 **Information** bins for its six classifications. Run its collapsed setup cell,
-sort the cards, then run **Check my choices**. Each card also has a **Move to**
+sort the cards, then select **Submit**. Each card also has a **Move to**
 menu for keyboard use. The R notebook still uses a typed vector. See the
 [widget interaction plan](docs/design/notebook-widget-interactions.md)
 for proposed controls across the course, including workflow ordering.
@@ -73,8 +77,7 @@ after building. In this review mode, opening a supplied notebook replaces an out
 with the current course version. Reviewer responses are disposable; normal published builds keep
 this mode disabled. See [browser storage](docs/design/browser-storage.md) for the production
 requirement to preserve learner answers and reflection notes.
-The remaining existing exercise filenames will be converted after this pilot.
-The reading index opens 18 unscored pages with Laila's case, prompts, diagrams, and local slide previews. Unit 1 and Unit 2 slide notebooks contain 142 page previews and two PDFs served by this JupyterLite site. Local, synthetic practice CSV files and a data dictionary support the dataset and quality-check readings. The practice files are small teaching examples, not the original surveillance spreadsheets. Source mapping and unavailable-media details live in [slide preview notes](docs/slide-preview.md) and the [course link audit](../fetp-phi-course/docs/audit/form-links-audit.md). Scored Python pilots cover Units 1 and 2; the rest of Unit 2 remains planned in the [course notebook inventory](../fetp-phi-course/docs/notebook-inventory.md).
+Every Python notebook uses the `uNN-nNN-topic` convention and has an explicit onward link. Local Unit 1 and Unit 2 slide previews and PDFs are integrated into their course notebooks. Source mapping and unavailable-media details live in [slide preview notes](docs/slide-preview.md) and the [course link audit](../fetp-phi-course/docs/audit/form-links-audit.md). The former external Unit 3 form is retained in that audit for export review and is not offered to learners.
 
 Every shipped notebook ends with References. The learning text and illustrations
 are included locally; external source pages are documented separately and are
@@ -82,7 +85,7 @@ not required to complete a notebook. `scripts/add_course_references.py --check`
 verifies the references and local notebook images.
 The scored Python notebooks are the main case path: each includes the course
 context, local visual, data task, interpretation, and adaptive check it needs.
-The UCSF readings are an optional source library, not a second required route
+The UCSF authoring readings remain repository source evidence, rather than a second learner route
 through the same story. New R variants are deferred until the Python path is
 stable.
 
@@ -104,13 +107,13 @@ generated notebook at `content/exercises/python/u03-n07-dhis2-query.ipynb`. It u
 synthetic case events and a browser-local, read-only API-shaped adapter. This
 pilot is available in the Python exercises as notebook 07.
 
-The unscored final notebook, `content/exercises/python/u03-n08-my-learning-record.ipynb`,
-reads a `learner-record.nq` export from the Learning panel. It shows attempts,
-evidence, capability estimates, gaps, and recommendations. Upload successive
-exports beside the notebook to see how the learner graph changes after retries.
-For a ready-made synthetic retry sequence, run `jlpm demo:dhis2-graph` and upload
-the four `.tools/dhis2-graph-demo/learner-record-*.nq` files to that notebook's
-folder. These demonstration files are kept out of version control.
+The unscored notebook `u03-n08-my-learning-record.ipynb` displays the current
+browser-local learner record automatically: attempts, capability estimates,
+suggested activities, and saved reflections. It has no reporting code to run
+and requires no export or upload. The live display is read-only and updates
+when the learner record changes. The Learning panel offers Export evidence
+for a portable N-Quads snapshot and Download reflections for recorded writing. Neither restores notebook edits. Developer snapshot tools remain in
+`scripts/learning_record_view.py` and `jlpm demo:dhis2-graph`.
 
 ## How it works
 
@@ -264,6 +267,10 @@ lite/requirements.txt            pinned build tooling
 
 - [Capability packs](docs/design/capability-packs.md): versioned, downloadable packs of adaptive-learning content, a pack catalog per programme, and the runtime changes needed to install them.
 - [Learner identity](docs/design/learner-identity.md): optional OpenID Connect sign-in that links an issuer and an opaque subject to the anonymous learner record. To enable it, configure `lite/oidc.json`.
+
+## TODO
+
+- [ ] [Evaluate WebLLM with JupyterLite AI](docs/design/unified-course.md#todo-evaluate-webllm-with-jupyterlite-ai) for an optional AI guide that runs in the learner's browser.
 
 ## Known limits (prototype)
 

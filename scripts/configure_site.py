@@ -106,6 +106,22 @@ def main() -> int:
             continue
         config = json.loads(config_path.read_text())
         data = config.setdefault("jupyter-config-data", {})
+        # JupyterLab's Windows build metadata uses filesystem separators.
+        # Extension loaders consume URLs, including for the current local build.
+        for extension in data.get("federated_extensions", []):
+            if isinstance(extension.get("load"), str) and "\\" in extension["load"]:
+                extension["load"] = "/".join(part for part in extension["load"].replace("\\", "/").split("/") if part)
+        # Python-only review builds omit xeus environments. Do not initialize
+        # their unused frontend (which fetches an optional remote package map).
+        # Builds containing xeus kernels retain the existing R runtime.
+        if args.course_review and not (args.output / "xeus/kernels.json").exists():
+            data["federated_extensions"] = [extension for extension in data.get("federated_extensions", [])
+                                            if extension.get("name") != "@jupyterlite/xeus-extension"]
+        # These short teaching notebooks contain collapsible media and live widgets.
+        # Keep every cell attached: full windowing can leave a blank viewport after
+        # scrolling past hidden inputs or closed slide sections.
+        data.setdefault("settingsOverrides", {}).setdefault(
+            "@jupyterlab/notebook-extension:tracker", {})["windowingMode"] = "none"
         data["alAssetsBaseUrl"] = assets_base
         data["alCourseReviewMode"] = args.course_review
         if oidc is not None:

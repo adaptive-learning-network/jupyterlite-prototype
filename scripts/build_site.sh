@@ -16,13 +16,15 @@ python scripts/add_course_references.py   # local references at the end of each 
 python scripts/add_course_references.py --check  # reject missing media, external links, and editorial notes
 python scripts/assemble_course.py          # one integrated learner sequence
 python -m unittest discover -s test -p 'test_unified_course.py'
+python -m unittest discover -s test -p 'test_p2_interactions.py'  # supplied calculations and common controls
 python -m unittest discover -s test -p 'test_units09_14.py'
 python -m unittest discover -s test -p 'test_units04_08.py'  # new Python narratives
 jlpm test                                 # engine unit tests (writes test-results/learner-export.nq)
 python scripts/validate_export.py test-results/learner-export.nq
 jlpm build                                # compile extension and labextension
+python scripts/sync_labextension.py        # ensure discovery uses this build, not an older shared-data copy
 python scripts/prepare_pyodide.py         # locally host the runtime and current notebook packages
-python scripts/prepare_widget_wheels.py   # pin and host the U03 N01 sorting-widget wheels locally
+python scripts/prepare_widget_wheels.py   # pin and host widget and missingness-plot wheels locally
 rm -rf _output .jupyterlite.doit.db
 jupyter lite build --pyodide "$PWD/.tools/pyodide"  # site in _output/ (Pyodide + xeus-r Jupyter kernels)
 python scripts/fix_pyodide_windows_paths.py  # normalize notebook directories for Pyodide on Windows

@@ -2,6 +2,16 @@
 
 *2026-10-08 - Design and one browser-tested pilot*
 
+## Current Python submission contract — 2026-10-22
+
+All scored Python tasks now use an explicit **Submit** action with inline feedback.
+Run All initializes controls without submitting. Units 1 and 3 Notebooks 2–4 retain
+visible learner computation, with a separate collapsed Submit cell. Units 4–14
+collect their current controls and show the resulting artifact on submission.
+**Record** remains the separate unscored reflection action. Existing R alternatives
+are deferred. The older planning tables below retain design history; current
+acceptance and validation status are in the [pre-field test audit](../audit/pre-field-test-audit.md).
+
 ## Contents
 
 - [Interaction and evidence contract](#interaction-and-evidence-contract)
@@ -35,10 +45,10 @@ Core `ipywidgets` includes [radio buttons, dropdowns, checkboxes, multiple selec
 | U03 N02 explore dataset, Python/R | Keep code for counts, minima, maxima, and unique locations; optional `Dropdown` to choose a preview variable | Dataset exploration from the actual register, not recognition of a prefilled answer. |
 | U03 N03 filter records, Python/R | `Dropdown` for district and period plus code that applies the selected filter; show matched row IDs | A correct filtered set, including boundary conditions; merely choosing a filter is weaker evidence. |
 | U03 N04 coverage, Python/R | `Dropdown` for numerator/denominator definitions; retain numeric calculation and interpretation | Correct measure and calculation; distinguish numerator or denominator errors from arithmetic errors. |
-| U03 N05 machine readable, Python/R | `RadioButtons` or `ToggleButtons` for each source format, followed by one reason selection | Recognition of structure; a choice does not show ability to repair a file. |
-| U03 N06 case or aggregate, Python/R | Per-table `RadioButtons` with "case based," "aggregate," and "unsure" | Correct grain classification without forcing learners to type a vector. |
-| U03 N07 DHIS2-shaped query, Python | `Dropdown` for organization unit and data element as optional scaffolding; retain the API call and summary code | Reading the synthetic adapter and summarizing returned events; selecting metadata alone is not a successful query. |
-| U03 N08 my learning record, Python | `Accordion` for attempts, evidence, estimates, and recommendations; optional unscored self-rating `SelectionSlider` | Read-only self-review. The self-rating is not automatically a scored observation. |
+| U03 N05 machine readable, Python | Implemented: three `RadioButtons`, no initial selection, Submit, and inline explanatory feedback | Existing single-value-rule assessment; incomplete and incorrect retries are recorded. R remains a typed answer, deferred. |
+| U03 N06 case or aggregate, Python | Implemented: Case-based / Aggregate radios for each of five tables, one Submit, and per-table feedback | Existing aggregate-table assessment; unanswered classifications remain incomplete. R remains deferred. |
+| U03 N07 guided district summary, Python | Implemented: five explained runnable steps with readable tables, final Submit, and Record reflections | Completion of the supplied retrieval/summary workflow; does not establish independent API programming. |
+| U03 N08 my learning record, Python | Live browser-rendered tables with Refresh; no executable reporting code | Read-only attempts, progress, recommendations, and saved reflections from the current local record; opening or refreshing adds no observation. |
 
 ## Planned local notebooks
 
@@ -100,3 +110,15 @@ Drag ordering needs a **keyboard alternative**. A `Select` widget with **Move up
 - For each new scored widget, test untouched, partially answered, wrong, corrected, repeated-correct, and hint-heavy submissions; check the learner record and next recommendation. Confirm that reopening a saved notebook does not silently submit or reset an attempt.
 - For workflow ordering, validate completeness and either an exact sequence or explicitly allowed alternatives. Score an explanation separately only with a defined rubric and human review.
 - Reuse the slide graphic and course wording from the inventory. A widget is an input method; source parity and educational effectiveness still need separate review.
+
+## U03 N05 implementation - 2026-10-19
+
+The Python single-value question now uses three radio options and Submit, with no placeholder option and no preselected answer. The submitted value uses the existing assessment and activity ID through `al.submit`; feedback appears beside the question and explains why a selected rule is correct or incorrect. Scoped controls preserve the submitted value while checking. Radio labels wrap within their rows, and the infrastructure cell remains collapsed after execution. The existing R answer/check is unchanged.
+
+Validation: Chromium passed no-selection, incorrect, repeated incorrect, and correct submissions, checking inline explanations and all four stored outcomes. Correct submission demonstrated the existing machine-readable capability. No radio option is initially selected. The setup code remained collapsed, and a screenshot at a 1000-pixel viewport was visually inspected for wrapping and overlapping controls. The U03 N01 sorting/Submit regression also passed. The local review preview was rebuilt and verified against the assembled U03 N05 notebook.
+
+## U03 N06 implementation - 2026-10-19
+
+Each of the five course table descriptions has Case-based / Aggregate radio choices with no initial selection. One Submit button captures all five classifications; any missing answer remains incomplete. Completed responses use the existing aggregate_tables check and activity ID. Inline feedback marks each table correct or incorrect and explains individual records versus grouped counts. Choices are scoped, disabled during submission, and can be changed for retries. Setup code stays collapsed. R is unchanged.
+
+Validation: Chromium passed untouched, partially answered, incorrect, repeated incorrect, and corrected submissions, preserving all five observations and demonstrating the existing capability after success. The local preview matches the assembled notebook. A narrow-viewport screenshot was visually inspected for wrapping and overlap.

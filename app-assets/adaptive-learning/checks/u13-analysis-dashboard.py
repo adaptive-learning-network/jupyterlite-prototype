@@ -19,10 +19,16 @@ def supported_claims(data):
     }
     return sorted(key for key,value in supports.items() if value)
 
+def age_group(age):
+    """Fixed categories for this report; the fifth birthday starts 5plus."""
+    if age is None:
+        return 'unknown'
+    return 'under5' if age < 5 else '5plus'
+
 def expected_answers(unit,data):
     if unit==9: return {'id_type':'text','pending':data['code_map']['PEND'],'unknown':'flag'}
     if unit==10: return {'key':'case_id','relationship':'one_many','flow':'collect_store_view_summary'}
-    if unit==11: return {'boundary':data['age_cutoff'],'rows':len(data['cases']),'missing':'retain_unknown'}
+    if unit==11: return {'case_group':age_group(data['cases'][0]['age']),'under5':sum(age_group(r['age'])=='under5' for r in data['cases']),'rows':len(data['cases']),'missing':'retain_unknown'}
     if unit==12:
         counts=Counter(r['case_id'] for r in data['lab'])
         return {'join':'left','conflicts':sum(v>1 for v in counts.values()),'unknown':'quarantine'}

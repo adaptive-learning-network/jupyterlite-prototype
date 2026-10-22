@@ -7,6 +7,7 @@
 import { ISignal, Signal } from '@lumino/signaling';
 
 import { IdentityBinding, LearnerRecord, Observation } from '../engine';
+import { mergeReflections, ReflectionAnswer } from './reflection-history';
 
 const KEY = 'al-engine:learner-record:v0.1';
 const LANGUAGE_KEY = 'al-engine:preferred-language';
@@ -97,10 +98,10 @@ export class LearnerStore {
     this.update(newRecord(this.defaultAudience));
   }
 
-  recordReflections(section: string, entries: { prompt: string; answer: string }[]): void {
+  recordReflections(section: string, entries: ReflectionAnswer[]): void {
     const savedAt = new Date().toISOString();
     const next = { ...this._record, reflections: { ...this._record.reflections,
-      [section]: entries.map(entry => ({ ...entry, savedAt })) } };
+      [section]: mergeReflections(this._record.reflections?.[section] ?? [], entries, savedAt) } };
     // Acknowledge only after storage succeeds; never silently claim a durable save.
     globalThis.localStorage.setItem(KEY, JSON.stringify(next));
     this._record = next;

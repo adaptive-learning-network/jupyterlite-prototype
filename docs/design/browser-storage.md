@@ -1,6 +1,6 @@
 # Browser storage and application assets
 
-Updated 2026-10-15.
+Updated 2026-10-22.
 
 | Resource | Location | Update behavior |
 | --- | --- | --- |
@@ -58,6 +58,12 @@ failure keeps the previous recorded version and reports that the new text was no
 recorded. Unsaved edits remain drafts. Reflections are unscored and do not create
 observations, capability evidence, or recommendations. Reset learner record also
 clears recorded reflections. Browser storage is specific to the site and browser;
-clearing it removes the record. The existing RDF evidence export does not yet
-include reflection text. Cross-device reflection export/import remains future work.
+clearing it removes the record. **Export evidence** creates the RDF snapshot of
+scored attempts and progress; it excludes reflection text. **Download reflections**
+creates `recorded-reflections.txt` with all explicitly recorded section entries,
+their question text, answers, and save times, including older sections retained
+in storage. It does not mutate the record or include unsaved drafts. Edited
+notebooks require a separate File-menu download. These files do not provide
+automatic restoration; cross-device import remains future work. Reworded questions
+still need stable IDs/version preservation, as recorded in audit finding C11.
 Automatic replacement of learner notebooks remains disabled in published builds.

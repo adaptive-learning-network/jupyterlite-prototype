@@ -33,38 +33,61 @@ async function moveStage(select: ReturnType<Page['locator']>, button: ReturnType
     .map(text => text.replace(/\u00a0/g, ' ')), { timeout: 15_000 }).toEqual(expected);
 }
 
-test('Unit 2 system map records a wrong route and a corrected route', async ({ page }) => {
+test('Unit 2 Submit checks current reporting pathways and records retries', async ({ page }, testInfo) => {
   await page.goto('/lab/index.html?path=notebooks/u02-n01-system-map.ipynb');
   await expect(panel(page)).toBeVisible();
   await expect.poll(() => page.locator('.jp-Notebook img').count()).toBeGreaterThanOrEqual(2);
   await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]'))
     .toBeVisible({ timeout: 180_000 });
   await runCell(page, 1);
-  const setup = page.locator('.jp-Notebook .jp-Cell').nth(1);
+  const setup = page.locator('.jp-Notebook .jp-Cell[data-windowed-list-index="1"]');
   await expect(setup.locator('select')).toHaveCount(2, { timeout: 180_000 });
+  await expect.poll(() => outcomes(page)).toEqual([]);
 
-  await runCell(page, 2);
+  await setup.getByRole('button', { name: 'Submit', exact: true }).click();
   await expect.poll(() => outcomes(page)).toEqual(['Incomplete']);
+  await expect(setup).toContainText('Not complete yet.');
   const selectors = setup.locator('select');
   const buttons = setup.getByRole('button');
   await moveStage(selectors.nth(0), buttons.nth(0), 'Electronic patient records', [
     'Electronic patient records', 'District health information system', 'Ministry of Health', 'Electronic case alerts and reports']);
   await moveStage(selectors.nth(1), buttons.nth(2), 'Electronic laboratory records', [
     'Electronic laboratory reports', 'Electronic laboratory records', 'Ministry of Health', 'District health information system']);
-  await runCell(page, 2);
+  await setup.getByRole('button', { name: 'Submit', exact: true }).click();
   await expect.poll(() => outcomes(page)).toEqual(['Incomplete', 'Incorrect']);
-  await expect(panel(page).locator('.al-rec').filter({ hasText: 'Unit 2: Map Laila' })).toHaveCount(1);
+  await expect(setup).toContainText('Case pathway: Incorrect.');
+  await expect(setup).toContainText('Laboratory pathway: Incorrect.');
+  await expect(panel(page).locator('.al-rec').filter({ hasText: 'Unit 2: Trace Laila' })).toHaveCount(1);
 
-  await moveStage(selectors.nth(0), buttons.nth(0), 'Electronic case alerts and reports', [
-    'Electronic patient records', 'District health information system', 'Electronic case alerts and reports', 'Ministry of Health']);
-  await moveStage(selectors.nth(0), buttons.nth(0), 'Electronic case alerts and reports', [
-    'Electronic patient records', 'Electronic case alerts and reports', 'District health information system', 'Ministry of Health']);
-  await moveStage(selectors.nth(1), buttons.nth(3), 'Ministry of Health', [
-    'Electronic laboratory reports', 'Electronic laboratory records', 'District health information system', 'Ministry of Health']);
-  await moveStage(selectors.nth(1), buttons.nth(2), 'Electronic laboratory records', [
-    'Electronic laboratory records', 'Electronic laboratory reports', 'District health information system', 'Ministry of Health']);
-  await runCell(page, 2);
-  await expect.poll(() => outcomes(page)).toEqual(['Incomplete', 'Incorrect', 'Correct']);
+  await setup.getByRole('button', { name: 'Submit', exact: true }).click();
+  await expect.poll(() => outcomes(page)).toEqual(['Incomplete', 'Incorrect', 'Incorrect']);
+
+  // Match the user's diagram layout literally: central level above district, above facility records.
+  for (const [index, desired] of [
+    [0, ['Ministry of Health', 'District health information system', 'Electronic case alerts and reports', 'Electronic patient records']],
+    [1, ['Ministry of Health', 'District health information system', 'Electronic laboratory reports', 'Electronic laboratory records']],
+  ] as [number, string[]][]) {
+    const select = selectors.nth(index);
+    let current = (await select.locator('option').allTextContents()).map(text => text.replace(/\u00a0/g, ' '));
+    for (let target = 0; target < desired.length; target++) {
+      let position = current.indexOf(desired[target]);
+      while (position > target) {
+        [current[position - 1], current[position]] = [current[position], current[position - 1]];
+        await moveStage(select, buttons.nth(index * 2), desired[target], [...current]);
+        position--;
+      }
+    }
+    await expect(select.locator('option')).toHaveText(desired);
+  }
+  await expect(setup).toContainText('Reporting flows upward from source records at the bottom.');
+  await setup.getByRole('button', { name: 'Submit', exact: true }).click();
+  await expect.poll(() => outcomes(page)).toEqual(['Incomplete', 'Incorrect', 'Incorrect', 'Correct']);
+  await expect(setup).toContainText('Case pathway: Correct.');
+  await expect(setup).toContainText('Laboratory pathway: Correct.');
+  await expect(setup).toContainText('Case pathway: Electronic patient records');
+  await expect(setup).toContainText('Laboratory pathway: Electronic laboratory records');
+  await setup.scrollIntoViewIfNeeded();
+  await page.screenshot({ path: testInfo.outputPath('reporting-pathways-feedback.png') });
   await expect(panel(page).locator('.al-gap.al-achieved')).toContainText('Trace a report through health information systems');
   await expect(panel(page).locator('.al-rec').filter({ hasText: 'Data or information?' })).toHaveCount(1);
 });
@@ -132,6 +155,7 @@ test('Unit 2 includes local slide previews and PDF pages',async({page})=>{
 test('the integrated dataset lesson starts the Python kernel in the course folder',async({page})=>{
   await page.goto('/lab/index.html?path=notebooks/u03-n02-explore-dataset.ipynb');
   await expect(panel(page)).toBeVisible();
-  await expect(page.locator('.jp-Notebook')).toContainText('Using Software to Explore Datasets');
+  await expect(page.locator('.jp-Notebook')).toContainText('Explore the immunization register');
+  await expect(page.locator('.jp-Notebook')).not.toContainText('8,500');
   await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]')).toBeVisible({timeout:180000});
 });

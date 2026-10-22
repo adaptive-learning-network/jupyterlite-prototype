@@ -54,7 +54,8 @@
       "id_type": "text",
       "pending": "pending",
       "unknown": "flag"
-    }
+    },
+    "reflectionCount": 2
   },
   {
     "unit": 10,
@@ -111,7 +112,8 @@
       "key": "case_id",
       "relationship": "one_many",
       "flow": "collect_store_view_summary"
-    }
+    },
+    "reflectionCount": 2
   },
   {
     "unit": 11,
@@ -119,20 +121,39 @@
     "path": "notebooks/u11-n01-recode-reconcile.ipynb",
     "controls": [
       {
-        "key": "boundary",
-        "label": "Under-five boundary (exclusive)",
+        "key": "case_group",
+        "label": "Age group for case C01",
+        "kind": "choice",
+        "options": [
+          [
+            "Under 5 years",
+            "under5"
+          ],
+          [
+            "5 years or older",
+            "5plus"
+          ],
+          [
+            "Unknown age",
+            "unknown"
+          ]
+        ]
+      },
+      {
+        "key": "under5",
+        "label": "Number of cases younger than 5",
         "kind": "integer",
         "options": null
       },
       {
         "key": "rows",
-        "label": "Expected output rows",
+        "label": "Rows after adding age groups",
         "kind": "integer",
         "options": null
       },
       {
         "key": "missing",
-        "label": "Policy for missing ages",
+        "label": "If a case has no recorded age",
         "kind": "choice",
         "options": [
           [
@@ -147,10 +168,12 @@
       }
     ],
     "correct": {
-      "boundary": 5,
+      "case_group": "5plus",
+      "under5": 1,
       "rows": 4,
       "missing": "retain_unknown"
-    }
+    },
+    "reflectionCount": 2
   },
   {
     "unit": 12,
@@ -198,7 +221,8 @@
       "join": "left",
       "conflicts": 1,
       "unknown": "quarantine"
-    }
+    },
+    "reflectionCount": 3
   },
   {
     "unit": 13,
@@ -262,7 +286,8 @@
       "denominator": "reported_cases",
       "chart": "onset",
       "rate": "unavailable"
-    }
+    },
+    "reflectionCount": 4
   },
   {
     "unit": 14,
@@ -330,6 +355,7 @@
       ],
       "risk": "needs_population",
       "release": "human_review"
-    }
+    },
+    "reflectionCount": 2
   }
 ]

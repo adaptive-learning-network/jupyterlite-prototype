@@ -1,6 +1,7 @@
 import { ILabShell, JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application';
 import { IDocumentManager } from '@jupyterlab/docmanager';
 import { INotebookTracker } from '@jupyterlab/notebook';
+import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { LabIcon } from '@jupyterlab/ui-components';
 
 import { Catalog } from '../engine';
@@ -12,6 +13,7 @@ import { readOidcConfig } from './oidc';
 import { LearningPanel } from './panel';
 import { LearnerStore } from './store';
 import { enableReflections } from './reflections';
+import { enableLearningRecord } from './record-view';
 
 // JupyterLite's browser contents store uses POSIX paths. An older Windows
 // build put backslashes in notebook models; those paths remain in open tabs
@@ -66,9 +68,14 @@ const plugin: JupyterFrontEndPlugin<void> = {
   id: 'jupyterlite-al-engine:plugin',
   description: 'Ontology-driven adaptive-learning engine for notebook exercises.',
   autoStart: true,
-  requires: [ILabShell, INotebookTracker, IDocumentManager],
-  activate: async (app: JupyterFrontEnd, shell: ILabShell, tracker: INotebookTracker, docManager: IDocumentManager) => {
+  requires: [ILabShell, INotebookTracker, IDocumentManager, IRenderMimeRegistry],
+  activate: async (app: JupyterFrontEnd, shell: ILabShell, tracker: INotebookTracker, docManager: IDocumentManager, rendermime: IRenderMimeRegistry) => {
     normalizeBrowserContentsPaths(app);
+    // Register before any awaited setup: restored notebooks clone this registry.
+    const recordContext = loadCatalog().then(catalog => ({ catalog, store: new LearnerStore(catalog.audiences[0].iri) }));
+    enableLearningRecord(rendermime, recordContext);
+    // A renderer reports loading failures; also handle rejection when no view is open.
+    void recordContext.catch(() => undefined);
     try {
       await ensureCourseDirectories(app);
     } catch (error) {
@@ -76,12 +83,12 @@ const plugin: JupyterFrontEndPlugin<void> = {
     }
     let catalog: Catalog;
     try {
-      catalog = await loadCatalog();
+      catalog = (await recordContext).catalog;
     } catch (error) {
       console.warn('al-engine: no catalog, learning panel disabled.', error);
       return;
     }
-    const store = new LearnerStore(catalog.audiences[0].iri);
+    const { store } = await recordContext;
     enableReflections(tracker, store);
     const observer = new ExerciseObserver(catalog, store, tracker, loadCheck);
     const panel = new LearningPanel(catalog, store, tracker, docManager, new StaticHintGuide(), observer, readOidcConfig());

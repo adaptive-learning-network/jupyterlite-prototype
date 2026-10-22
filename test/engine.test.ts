@@ -55,9 +55,10 @@ test('a new learner is offered only capabilities without prerequisites', () => {
   assert.equal(gapOf(a, 'cap-combine-variables').gateBlocked, true, 'critical target not achieved blocks the gate');
 });
 
-test('recommendations prefer notebook exercises over the external quiz', () => {
+test('recommendations use local Python notebooks and the catalog has no external assessments', () => {
   const a = assess(catalog, record([]));
-  assert.ok(a.recommendations.every(r => !r.activity.endsWith('act-unit-03-quiz')));
+  assert.ok(catalog.activities.every(activity => !activity.url));
+  assert.ok(a.recommendations.every(r => catalog.activities.find(activity => activity.iri === r.activity)?.notebooks.python?.startsWith('notebooks/')));
 });
 
 test('a correct exercise is simulation evidence and unlocks dependent capabilities', () => {

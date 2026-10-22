@@ -28,7 +28,7 @@ INTRO = """**Course outline:** Unit 01 · Notebook 01 · Python
 
 # From data to a public health decision
 
-![Three-panel teaching comic: Laila reads anonymous counts, compares bars, and discusses a signal with a colleague.](../assets/laila-unit01-notebook01-comic.png)
+![Three-panel teaching comic: Laila reads anonymous counts, compares bars, and discusses a signal with a colleague at separate work positions.](../assets/laila-unit01-notebook01-comic.png)
 
 *Laila has more reports than time. She needs to find the clearest signal, then check it before drawing a conclusion.*
 
@@ -36,7 +36,7 @@ INTRO = """**Course outline:** Unit 01 · Notebook 01 · Python
 
 *You will turn raw reported counts (data) into a district comparison (information), interpret the change (knowledge), and select a cautious action (wisdom).*
 
-**Learning objective:** **Justify** one public health action from a synthetic surveillance summary.
+**Learning objective:** **Select** a public health action using a supplied surveillance summary.
 
 Laila's problem is **data overload**: locating, cleaning, and transforming reports into usable information takes time. Information is data organized with context; knowledge is an interpreted pattern; wisdom is a decision and action informed by that knowledge. You will follow that sequence with her reported counts.
 
@@ -50,7 +50,7 @@ Laila receives a small table of **synthetic weekly reported case counts**. The r
    - `"verify_reports_and_investigate"`: verify the reports and investigate the signal.
    - `"declare_confirmed_outbreak"`: declare a confirmed outbreak from these counts alone.
 
-Then run the exercise cell. The **Learning** panel records each check, offers hints, and recommends the next activity. Afterward, write one sentence in the reflection cell explaining what the counts do and do not establish. The reflection is for you; it is not automatically graded.
+Then run the exercise cell and select **Submit** in the following cell for feedback. Running the computation does not record an attempt. The **Learning** panel records your submissions, offers hints, and recommends the next activity. Afterward, record a reflection explaining what the counts do and do not establish. The reflection is unscored.
 """
 
 ENDING = """## Continue the case
@@ -78,6 +78,7 @@ def expected() -> tuple[str, int]:
 
 
 def main() -> None:
+    from submission_widgets import submission_code
     setup = "reports = " + repr(REPORTS) + "\nfor row in reports:\n    print(row)\n"
     exercise = """# Use reports to calculate the weekly change for each district.
 # Replace the None values. You may add helper variables above them.
@@ -86,10 +87,13 @@ increase = None
 recommended_step = None
 """
     meta = {"al": {"activity": EX + "act-u01-data-to-decision", "object": EX + "act-u01-data-to-decision-exercise", "check": "checks/u01-data-to-decision", "hints": ["For each district, pair its previous and current rows before comparing counts.", "Subtract previous from current for every district; choose the largest increase, not merely the largest current count.", "A reported increase is a signal. Verify the reports and investigate before declaring a confirmed outbreak."]}, "tags": ["al-exercise"]}
+    meta['al']['submission'] = 'widget'
+    meta['al']['computation'] = True
     from reflection_widgets import reflection_code
     reflection = "## Your reflection\n\nRun the next cell to enter your reflection. Select **Record** to save it in this browser. Your response is unscored."
     notebook = {
-        "cells": [cell("markdown", INTRO, "0"), cell("code", setup, "1"), cell("code", exercise, "2", meta), cell("markdown", reflection, "3"),
+        "cells": [cell("markdown", INTRO, "0"), cell("code", setup, "1"), cell("code", exercise, "2", meta),
+                  cell("code", submission_code('2', fields=('priority_district', 'increase', 'recommended_step')), "submit", {"jupyter": {"source_hidden": True}, "al": {**meta['al'], "computation": False}}), cell("markdown", reflection, "3"),
                   cell("code", reflection_code("exercise:u01-n01", ["Why is the chosen action justified, and what remains uncertain?"]), "reflection-fields", {"jupyter": {"source_hidden": True}}),
                   cell("markdown", ENDING, "continue")],
         "metadata": {"kernelspec": {"name": "python", "display_name": "Python (Pyodide)", "language": "python"}, "language_info": {"name": "python"}, "al": {"activity": EX + "act-u01-data-to-decision", "language": "python", "generatedBy": "scripts/make_unit01_pilot.py"}, "title": "Unit 01 Notebook 01: From data to a public health decision (Python)"},

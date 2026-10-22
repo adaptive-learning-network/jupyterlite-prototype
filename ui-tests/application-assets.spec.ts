@@ -1,4 +1,16 @@
 import { expect, test } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+
+test('site loader and frontend bytes match the current compiled extension', async ({ request }) => {
+  const built = JSON.parse(readFileSync('al_engine/labextension/package.json', 'utf8'));
+  const load = built.jupyterlab._build.load.replace(/\\+/g, '/');
+  const config = await (await request.get('/jupyter-lite.json')).json();
+  const extension = config['jupyter-config-data'].federated_extensions.find((item: {name: string}) => item.name === 'jupyterlite-al-engine');
+  expect(extension.load).toBe(load);
+  const response = await request.get('/extensions/jupyterlite-al-engine/' + load);
+  expect(response.ok()).toBe(true);
+  expect(await response.body()).toEqual(readFileSync('al_engine/labextension/' + load));
+});
 
 test('adaptive resources load outside the learner contents drive', async ({ page, request }) => {
   const listing = await (await request.get('/api/contents/all.json')).json();
@@ -38,6 +50,11 @@ test('an unavailable check preserves the learner record and can be retried', asy
   await exercise.scrollIntoViewIfNeeded();
   await exercise.locator('.cm-content').click();
   await page.keyboard.press('Shift+Enter');
+  const submission = page.locator('.jp-Notebook .jp-Cell[data-windowed-list-index="3"]');
+  await submission.scrollIntoViewIfNeeded();
+  await submission.click();
+  await page.keyboard.press('Shift+Enter');
+  await submission.getByRole('button', {name:'Submit',exact:true}).click();
   await expect(panel.locator('.al-feedback')).toContainText('Not finished yet');
   const before = await page.evaluate(() => localStorage.getItem('al-engine:learner-record:v0.1'));
   // Inject the failed response at fetch: service-worker-controlled requests do
@@ -55,14 +72,12 @@ test('an unavailable check preserves the learner record and can be retried', asy
       return original(input, init);
     };
   });
-  await exercise.locator('.cm-content').click();
-  await page.keyboard.press('Shift+Enter');
+  await submission.getByRole('button', {name:'Submit',exact:true}).click();
   await expect(panel.locator('.al-feedback')).toContainText('HTTP 503');
   expect(await page.evaluate(() => localStorage.getItem('al-engine:learner-record:v0.1'))).toBe(before);
 
   await page.evaluate(() => { (window as unknown as { alAssetProbe: { fail: boolean } }).alAssetProbe.fail = false; });
-  await exercise.locator('.cm-content').click();
-  await page.keyboard.press('Shift+Enter');
+  await submission.getByRole('button', {name:'Submit',exact:true}).click();
   await expect(panel.locator('.al-feedback')).toContainText('Not finished yet');
   await expect(panel.locator('.al-footer')).toContainText('2 observations');
   const requests = await page.evaluate(() => (window as unknown as { alAssetProbe: { requests: string[] } }).alAssetProbe.requests);

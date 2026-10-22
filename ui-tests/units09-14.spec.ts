@@ -7,6 +7,7 @@ const scenarios = JSON.parse(readFileSync('test/fixtures/units09-14-scenarios.js
   unit: number; id: string; path: string;
   controls: {key: string; label: string; kind: string; options: [string, string][] | null}[];
   correct: Record<string, string | number | string[]>;
+  reflectionCount: number;
 }[];
 
 async function currentOutcomes(page: Page, id: string) {
@@ -48,11 +49,85 @@ for (const scenario of scenarios) {
     await expect.poll(() => page.locator('.jp-Notebook img').evaluateAll(images =>
       images.every(img => (img as HTMLImageElement).complete && (img as HTMLImageElement).naturalWidth > 0)), { timeout: 30_000 }).toBe(true);
     await page.screenshot({ path: testInfo.outputPath('intro.png') });
-    // Run All also exposes the reflection controls. The first exercise attempt
-    // is intentionally untouched, so it must be recorded as incomplete.
+    // Run All initializes the controls; only Submit may record an attempt.
     await page.getByRole('menuitem', { name: 'Run', exact: true }).click();
     await page.getByRole('menuitem', { name: 'Run All Cells', exact: true }).click();
-    await expect.poll(() => currentOutcomes(page, scenario.id), { timeout: 180_000 }).toEqual(['Incomplete']);
+    await expect.poll(() => currentOutcomes(page, scenario.id), { timeout: 180_000 }).toEqual([]);
+
+    async function revealCell(id: string) {
+      const supplied = await (await page.request.get('/files/' + scenario.path)).json();
+      const index = supplied.cells.findIndex((cell: {id: string}) => cell.id === id);
+      expect(index).toBeGreaterThanOrEqual(0);
+      const target = page.locator(`.jp-Cell[data-windowed-list-index="${index}"]`);
+      await page.locator('.jp-Notebook').hover();
+      await page.mouse.wheel(0, -100000);
+      await expect.poll(async () => {
+        if (await target.count()) return true;
+        await page.mouse.wheel(0, 650);
+        return false;
+      }).toBe(true);
+      await target.scrollIntoViewIfNeeded();
+      return { target, supplied, index };
+    }
+
+    if (scenario.unit === 12 || scenario.unit === 13) {
+      const id = scenario.unit === 12 ? 'link-validated' : 'time-plot';
+      const { target, supplied, index } = await revealCell(id);
+      const assertions = scenario.unit === 12 ? [
+        'assert len(case_records) == 4 and len(direct_link) == 5',
+        'assert len(linked_cases) == 4 and linked_cases["case_id"].is_unique',
+        'assert linked_cases["lab_status"].tolist() == ["positive", "conflict", "unmatched", "unmatched"]',
+        'assert accepted_results["case_id"].tolist() == ["C01"]'
+      ] : [
+        'assert onset_counts["cases"].tolist() == [1, 1, 2]',
+        'assert district_counts.set_index("district")["cases"].to_dict() == {"Kambia": 3, "Port Loko": 1}',
+        'assert age_counts.set_index("age_group")["cases"].to_dict() == {"under5": 1, "5plus": 3, "unknown": 0}',
+        'assert sex_counts.set_index("sex")["cases"].to_dict() == {"F": 2, "M": 2}'
+      ];
+      const editor = target.locator('.cm-content');
+      await editor.click();
+      await page.keyboard.press('ControlOrMeta+a');
+      await page.keyboard.insertText(supplied.cells[index].source.join('') + '\n' + assertions.join('\n') + '\nprint("Local workflow verified.")');
+      await page.keyboard.press('Shift+Enter');
+      await expect(target.locator('.jp-OutputArea')).toContainText('Local workflow verified.');
+      await expect(target.locator('.jp-OutputArea')).not.toContainText('Traceback');
+      if (scenario.unit === 13) {
+        for (const plot of ['person-plot', 'place-plot', 'time-plot']) {
+          const { target: plotCell } = await revealCell(plot);
+          const chart = plotCell.locator('.jp-OutputArea img[src^="data:image/svg+xml"]');
+          await expect(chart).toHaveCount(plot === 'person-plot' ? 2 : 1);
+          await expect.poll(() => chart.evaluateAll(images => images.every(node => {
+            const img = node as HTMLImageElement;
+            const output = img.closest('.jp-OutputArea')!;
+            return img.complete && img.naturalWidth > 300 &&
+              img.getBoundingClientRect().right <= output.getBoundingClientRect().right + 1;
+          }))).toBe(true);
+          await expect(plotCell.locator('.jp-OutputArea')).not.toContainText(/Warning|Traceback/);
+          await plotCell.locator('.jp-OutputArea').screenshot({path: testInfo.outputPath(plot + '.png')});
+        }
+      }
+      await expect.poll(() => currentOutcomes(page, scenario.id)).toEqual([]);
+    }
+
+    if (scenario.unit === 11) {
+      const example = page.locator('.jp-CodeCell').filter({ hasText: '# Run this worked example:' });
+      await page.locator('.jp-Notebook').hover();
+      await page.mouse.wheel(0, -100000);
+      await expect.poll(async () => {
+        if (await example.count()) return true;
+        await page.mouse.wheel(0, 400);
+        return false;
+      }).toBe(true);
+      await example.scrollIntoViewIfNeeded();
+      await expect(example.locator('.cm-content')).toBeVisible();
+      await expect(example.locator('.jp-OutputArea')).toContainText('Age 4: under5');
+      await expect(example.locator('.jp-OutputArea')).toContainText('Age 8: 5plus');
+      await expect(example.locator('.jp-OutputArea')).toContainText('Age 5: 5plus');
+      await expect(example.locator('.jp-OutputArea')).toContainText('Age Missing: unknown');
+      // Run All reached this cell before setup; the example must stand alone
+      // and must not add a scored observation of its own.
+      await expect.poll(() => currentOutcomes(page, scenario.id)).toEqual([]);
+    }
 
     // Scroll back to the setup output; JupyterLab virtualizes off-screen cells.
     await page.locator('.jp-Notebook').hover();
@@ -69,7 +144,7 @@ for (const scenario of scenarios) {
       await setup.scrollIntoViewIfNeeded();
     }
     await revealSetup();
-    await expect(setup.getByRole('listbox').or(setup.getByRole('combobox')).or(setup.getByRole('spinbutton'))).not.toHaveCount(0);
+    await expect(setup.getByRole('checkbox').or(setup.getByRole('combobox')).or(setup.getByRole('textbox'))).not.toHaveCount(0);
     async function choose(correct: boolean) {
       await revealSetup();
       for (const control of scenario.controls) {
@@ -82,7 +157,11 @@ for (const scenario of scenarios) {
         }
         const input = setup.getByLabel(control.label, { exact: true });
         if (control.kind === 'integer') await input.fill(String(value));
-        else {
+        else if (control.kind === 'multi') {
+          for (const [label, id] of control.options!) {
+            await setup.getByRole('checkbox', {name: label, exact: true}).setChecked((value as string[]).includes(id));
+          }
+        } else {
           // ipywidgets uses display labels as native option values, and puts
           // nonbreaking spaces in option text. Map semantic IDs to native values.
           const values = Array.isArray(value) ? value : [String(value)];
@@ -91,16 +170,17 @@ for (const scenario of scenarios) {
       }
     }
     async function check() {
-      const exercise = page.locator('.jp-CodeCell').filter({ hasText: '# Check my work: run after making your choices above.' });
-      await exercise.click();
-      await expect(exercise).toHaveClass(/jp-mod-active/);
-      await page.keyboard.press('Shift+Enter');
+      const exercise = page.locator('.jp-CodeCell').filter({ hasText: '# Run once to display Submit.' });
+      await exercise.scrollIntoViewIfNeeded();
+      await exercise.getByRole('button', { name: 'Submit', exact: true }).click();
     }
+    await check();
+    await expect.poll(() => currentOutcomes(page, scenario.id)).toEqual(['Incomplete']);
     await choose(false);
     await page.screenshot({ path: testInfo.outputPath('controls.png') });
     await check();
     await expect.poll(() => currentOutcomes(page, scenario.id)).toEqual(['Incomplete', 'Incorrect']);
-    const exerciseOutput = page.locator('.jp-CodeCell').filter({ hasText: '# Check my work: run after making your choices above.' }).locator('.jp-OutputArea');
+    const exerciseOutput = page.locator('.jp-CodeCell').filter({ hasText: '# Run once to display Submit.' }).locator('.jp-OutputArea').first();
     if (scenario.unit === 5) {
       await expect(exerciseOutput).toContainText('Role access denied for:');
       await expect(exerciseOutput).not.toContainText('Training contact A');
@@ -111,6 +191,10 @@ for (const scenario of scenarios) {
     await choose(true);
     await check();
     await expect.poll(() => currentOutcomes(page, scenario.id)).toEqual(['Incomplete', 'Incorrect', 'Incorrect', 'Correct']);
+    await expect(exerciseOutput).toContainText('Evidence to inspect');
+    await expect(exerciseOutput).toContainText('Meets the stated rule');
+    await expect(exerciseOutput).toContainText('Correct.');
+    await exerciseOutput.screenshot({ path: testInfo.outputPath('submission-feedback.png') });
     if (scenario.unit === 7) {
       await expect(exerciseOutput.getByRole('cell', { name: 'True', exact: true })).toHaveCount(1);
       await expect(exerciseOutput.getByRole('cell', { name: 'False', exact: true })).toHaveCount(5);
@@ -131,7 +215,7 @@ for (const scenario of scenarios) {
       return false;
     }).toBe(true);
     await reflection.scrollIntoViewIfNeeded();
-    await expect(reflection.locator('textarea')).toHaveCount(2);
+    await expect(reflection.locator('textarea')).toHaveCount(scenario.reflectionCount);
     await reflection.locator('textarea').first().fill(`My decision for unit ${scenario.unit}.`);
     await reflection.getByRole('button', { name: 'Record', exact: true }).click();
     await expect(reflection).toContainText('Recorded in this browser.');

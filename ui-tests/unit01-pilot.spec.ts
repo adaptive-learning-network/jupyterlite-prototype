@@ -6,7 +6,8 @@ const panel = (page: Page) => page.locator('#al-engine-learning');
 async function runCell(page: Page, index: number, source?: string): Promise<void> {
   const cell = page.locator(`.jp-Notebook .jp-Cell[data-windowed-list-index="${index}"]`);
   await cell.scrollIntoViewIfNeeded();
-  await cell.locator('.cm-content').click();
+  if (index === 3 && source === undefined) await cell.click();
+  else await cell.locator('.cm-content').click();
   if (source !== undefined) {
     await page.keyboard.press('ControlOrMeta+a');
     await page.keyboard.insertText(source);
@@ -34,14 +35,23 @@ test('Unit 1 pilot shows source visuals and records retry-to-success progression
   await runCell(page, 1);
 
   await runCell(page, 2);
+  await expect.poll(() => outcomes(page)).toEqual([]);
+  await runCell(page, 3);
+  async function submit() {
+    const cell = page.locator('.jp-CodeCell').filter({hasText:'# Run once to display Submit.'});
+    await cell.scrollIntoViewIfNeeded();
+    await cell.getByRole('button', {name:'Submit', exact:true}).click();
+  }
+  await submit();
   await expect.poll(() => outcomes(page)).toEqual(['Incomplete']);
   await runCell(page, 2, [
     "priority_district = 'Bombali'",
     'increase = 5',
     "recommended_step = 'verify_reports_and_investigate'"
   ].join('\n'));
+  await submit();
   await expect.poll(() => outcomes(page)).toEqual(['Incomplete', 'Incorrect']);
-  await expect(panel(page).locator('.al-gap.al-achieved').filter({ hasText: 'Justify a public health action from data' })).toHaveCount(0);
+  await expect(panel(page).locator('.al-gap.al-achieved').filter({ hasText: 'Select a public health action from reported counts' })).toHaveCount(0);
 
   await runCell(page, 2, [
     'weeks = {district: {} for district in {r["district"] for r in reports}}',
@@ -52,8 +62,9 @@ test('Unit 1 pilot shows source visuals and records retry-to-success progression
     'increase = changes[priority_district]',
     "recommended_step = 'verify_reports_and_investigate'"
   ].join('\n'));
+  await submit();
   await expect.poll(() => outcomes(page)).toEqual(['Incomplete', 'Incorrect', 'Correct']);
-  await expect(panel(page).locator('.al-gap.al-achieved').filter({ hasText: 'Justify a public health action from data' })).toHaveCount(1);
+  await expect(panel(page).locator('.al-gap.al-achieved').filter({ hasText: 'Select a public health action from reported counts' })).toHaveCount(1);
   await expect(panel(page).locator('.al-rec').filter({ hasText: 'Data or information?' })).toHaveCount(1);
 
   await page.reload();

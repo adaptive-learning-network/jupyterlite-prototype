@@ -32,6 +32,7 @@ build-jupyterlite:
   artifacts:
     paths:
       - _output/
+      - al_engine/labextension/
     expire_in: 7 days
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'

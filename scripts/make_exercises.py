@@ -212,7 +212,7 @@ EXERCISES = [
     {
         "file": "u03-n02-explore-dataset", "check": "explore-dataset", "slides": "51–57", "activity": "act-explore-dataset",
         "title": "Explore the immunization register",
-        "objective": "Use software to explore a dataset",
+        "objective": "Summarize the size, dates, locations, and ages in a register",
         "context": (
             "Laila's supervisor gave her a large surveillance file, and she does not know whether it includes the data she "
             "needs. To make data more useful, ask: What timeframe does the dataset span? What locations does it include? "
@@ -245,7 +245,7 @@ EXERCISES = [
     {
         "file": "u03-n03-filter-records", "check": "filter-records", "slides": "56–57", "activity": "act-filter-records",
         "title": "Filter the records you need",
-        "objective": OBJECTIVES[2],
+        "objective": "Filter records using several conditions",
         "context": (
             "Filtering shows or hides specific data in a list, which makes large datasets much easier to work with.\n\n"
             "Practice the same steps in this notebook:\n" + scribe_list("filter", "multisort")
@@ -264,7 +264,7 @@ EXERCISES = [
     {
         "file": "u03-n04-coverage", "check": "coverage", "slides": "7–17", "activity": "act-coverage",
         "title": "Turn data into information: vaccination coverage",
-        "objective": OBJECTIVES[2],
+        "objective": "Calculate a vaccination proportion",
         "context": (
             "Data transformed into information looks like this: *In District X, 92% of children under age 5 received their "
             "first dose of the MMR vaccine.* The variables in that sentence are: district, number of children vaccinated "
@@ -285,7 +285,7 @@ EXERCISES = [
     {
         "file": "u03-n05-machine-readable", "check": "machine-readable", "slides": "28–32", "activity": "act-machine-readable",
         "title": "Machine-readable or human-readable?",
-        "objective": OBJECTIVES[3],
+        "objective": "Identify the rule violated by a combined-value cell",
         "context": (
             "Machine-readable datasets enable automation of data to information. They follow three rules (listed by the setup "
             "cell). Human-readable datasets violate these rules. Every violation means more complicated code, a higher risk "
@@ -304,7 +304,7 @@ EXERCISES = [
     {
         "file": "u03-n06-case-or-aggregate", "check": "case-or-aggregate", "slides": "38–39", "activity": "act-case-or-aggregate",
         "title": "Case-based or aggregate?",
-        "objective": OBJECTIVES[3],
+        "objective": "Classify case-based and aggregate tables",
         "context": (
             "**Case-based** datasets hold one row per person or case. **Aggregate** datasets contain counts or averages, with "
             "no individual identifiers; they support trend analysis, resource allocation, and public reporting (for example, "
@@ -412,7 +412,7 @@ def notebook(ex: dict, language: str) -> dict:
     if ex["file"] == "u03-n01-data-or-information":
         pilot_outline = f"**Course outline:** Unit 03 · Notebook 01 · {name}\n\n"
         pilot_cue = (
-            "![Three-panel comic: Laila examines a line list, her supervisor points to the records, and she imagines a chart and map.](../assets/laila-unit03-notebook01-comic.png)\n\n"
+            "![Three-panel comic: Laila examines a line list, she and her supervisor review the records from separate work positions, and she imagines a chart and map.](../assets/laila-unit03-notebook01-comic.png)\n\n"
             "*Laila has ages, symptoms, and onset dates. Her supervisor asks which items already show a pattern. "
             "Help Laila tell raw data from information. (Laila needs to tell raw observations from a useful pattern.)*\n\n"
         )
@@ -421,23 +421,53 @@ def notebook(ex: dict, language: str) -> dict:
             "*Work at the **data to information** step: organize collected values into a pattern you can interpret.*\n\n"
         )
     choice_pilot = ex["file"] == "u03-n01-data-or-information" and language == "python"
+    radio_pilot = ex["file"] == "u03-n05-machine-readable" and language == "python"
+    dataset_pilot = ex["file"] == "u03-n06-case-or-aggregate" and language == "python"
+    widget_pilot = choice_pilot or radio_pilot or dataset_pilot
     if choice_pilot:
         task = (
             "Run the collapsed setup cell once to display the sorting board. Drag each of the six slide examples "
             "from **To sort** into **Data** or **Information**. You can also use each card's **Move to** menu. "
-            "Then run **Check my choices**; you do not need to type an answer. Move a card and run that cell again to retry."
+            "Select **Submit** below the board for feedback; you do not need to type an answer. Move a card and submit again to retry."
         )
         next_step = (
-            "Run the collapsed setup cell, sort all six cards, then run **Check my choices**. "
+            "Run the collapsed setup cell, sort all six cards, then select **Submit**. "
             "The **Learning** panel records each attempt and suggests what to do next. "
             "Hints are available there; using more than two lowers how much this attempt counts as evidence."
         )
+    elif radio_pilot:
+        task = ('In a human-readable register, patient 1\'s record shows **"MMR, Polio, Hepatitis B"** '
+                'in the Vaccine Type cell. Which rule does this break?')
+        next_step = ("Run the collapsed setup cell to display the choices. Select one answer and **Submit** "
+                     "for feedback below the question. You can change your answer and submit again; "
+                     "the **Learning** panel records each attempt and suggests what to do next.")
+    elif dataset_pilot:
+        task = "For each table below, select whether it is **Case-based** or **Aggregate**. Classify all five tables."
+        next_step = ("Run the collapsed setup cell to display the choices, then select **Submit** "
+                     "for feedback on each table. Change a choice and submit again to retry; "
+                     "the **Learning** panel records each attempt and suggests what to do next.")
     else:
         task = ex["task"]
         next_step = (
             "Run the setup cell, then edit and run the exercise cell. The **Learning** panel records the result and suggests "
             "what to do next. Hints are available there; using more than two lowers how much this attempt counts as evidence."
         )
+    if language == 'python' and ex['check'] in {'explore-dataset', 'filter-records', 'coverage'}:
+        ex = dict(ex)
+        if ex['check'] == 'explore-dataset':
+            ex['context'] = ('Laila needs to know what this register covers before using it. Count its rows, identify the vaccination dates and locations, and find the recorded age range. Each row records one vaccination; a row count in a real register is not automatically a count of distinct children.')
+        elif ex['check'] == 'filter-records':
+            ex['context'] = ('Laila needs first MMR vaccinations for children under five in District X. Start with one condition, then combine all four conditions. Inspect the matching rows before counting them. The supplied code demonstrates every step.')
+        else:
+            ex['context'] = ('Reconstruct the supplied **92% vaccination example** from invented records. This is guided calculation practice: explain how the numerator and denominator produce the result. It is not an unseen-answer test.\n\n'
+                'The observation period runs from **' + ANSWERS['first_date'] + '** to **' + ANSWERS['last_date'] + '**. '
+                'Assume the supplied population count describes District X children under five in this same period and each qualifying patient_id represents one distinct eligible child. '
+                'Real coverage estimates require checking eligibility, duplicate children, residence, the period, and the population estimate.')
+        preview = '| ' + ' | '.join(COLUMNS) + ' |\n|' + '|'.join(['---'] * len(COLUMNS)) + '|\n'
+        preview += ''.join('| ' + ' | '.join(map(str, row)) + ' |\n' for row in REGISTER[:5])
+        ex['context'] += '\n\n### Inspect the register\n\nFirst five supplied records (the code loads all records):\n\n' + preview
+        next_step = ('New to Python? Run the supplied setup and calculation cells unchanged first. `register["column"]` selects a column; `len` counts rows, `min` and `max` find endpoints, and `nunique` counts distinct values. '
+                     'The setup shows the input; the next cell shows the calculation and result. Select **Submit** to check that calculation. You can edit, run, and submit again. Running code alone records no attempt.')
     intro = (
         f"{pilot_outline}# {ex['title']}\n\n{pilot_cue}"
         f"*{UNIT}*. Learning objective: **{ex['objective']}**.\n\n"
@@ -460,32 +490,101 @@ except ImportError:
     import anywidget
 import traitlets
 from IPython.display import display
+import ipywidgets as widgets
+from comm import create_comm
+from html import escape
 
-items = ''' + repr({chr(97 + i): item for i, item in enumerate(DATA_OR_INFORMATION)}) + '''
-class DataBins(anywidget.AnyWidget):
-    _esm = ''' + repr((ROOT / "scripts" / "data_bins_widget.js").read_text(encoding="utf-8")) + '''
-    items = traitlets.Dict(default_value={}).tag(sync=True)
-    assignments = traitlets.Dict(default_value={}).tag(sync=True)
+def _show_classification_task():
+    items = ''' + repr({chr(97 + i): item for i, item in enumerate(DATA_OR_INFORMATION)}) + '''
+    class DataBins(anywidget.AnyWidget):
+        _esm = ''' + repr((ROOT / "scripts" / "data_bins_widget.js").read_text(encoding="utf-8")) + '''
+        items = traitlets.Dict(default_value={}).tag(sync=True)
+        assignments = traitlets.Dict(default_value={}).tag(sync=True)
+        disabled = traitlets.Bool(False).tag(sync=True)
 
-data_bins = DataBins(items=items)
-def collect_choices():
-    selected = data_bins.assignments
-    if set(selected) != set(items) or any(value not in {"data", "information"} for value in selected.values()):
-        return None
-    return [letter for letter, answer in selected.items() if answer == "information"]
-display(data_bins)
+    data_bins = DataBins(items=items)
+    def collect_choices():
+        selected = data_bins.assignments
+        if set(selected) != set(items) or any(value not in {"data", "information"} for value in selected.values()):
+            return None
+        return [letter for letter, answer in selected.items() if answer == "information"]
+    submit = widgets.Button(description="Submit", button_style="info", disabled=True)
+    feedback = widgets.HTML(value="Connecting to your learning record...")
+    channel = create_comm(target_name="al.submit", data={"cell": "1"})
+
+    def receive_submission(message):
+        data = message["content"]["data"]
+        if data.get("ready"):
+            feedback.value = "Sort the cards, then select Submit."
+        elif data.get("outcome") == "Incomplete":
+            feedback.value = "<b>Not complete yet.</b> Sort all six cards before submitting again. This attempt was recorded."
+        elif data.get("outcome") == "Incorrect":
+            feedback.value = "<b>Not yet correct.</b> Raw observations are data; organized summaries and patterns are information. Move cards and submit again. This attempt was recorded."
+        elif data.get("outcome") == "Correct":
+            feedback.value = "<b>Correct.</b> Your classifications distinguish raw observations from information. Recorded in your learning record."
+        else:
+            feedback.value = escape(data.get("error", "Could not record this attempt. Please submit again."))
+        submit.disabled = False
+        data_bins.disabled = False
+
+        if data.get("outcome") in {"Correct", "Incorrect"}:
+            reasons = {"a": "Age is one recorded observation.", "b": "The map organizes observations into a geographic pattern.", "c": "A symptom is recorded about one case.", "d": "An onset date is recorded about one case.", "e": "Counts by age group summarize several records.", "f": "An epidemic curve summarizes cases over time."}
+            rows = []
+            for letter, item in items.items():
+                expected = "information" if letter in {"b", "e", "f"} else "data"
+                chosen = submitted_categories.get(letter)
+                rows.append("<li><b>" + escape(item) + ": " + ("Correct" if chosen == expected else "Revise") + ".</b> " + reasons[letter] + "</li>")
+            feedback.value += '<ul>' + ''.join(rows) + '</ul>'
+
+    submitted_categories = {}
+    channel.on_msg(receive_submission)
+
+    def submit_choices(_):
+        global information_items
+        information_items = collect_choices()
+        submitted_categories.clear()
+        submitted_categories.update(data_bins.assignments)
+        submit.disabled = True
+        data_bins.disabled = True
+        feedback.value = "Checking and recording your submitted choices..."
+        channel.send({"submit": True})
+
+    def choices_changed(_):
+        if not data_bins.disabled:
+            feedback.value = "Choices changed. Select Submit to check them."
+
+    data_bins.observe(choices_changed, names="assignments")
+    submit.on_click(submit_choices)
+    display(data_bins, submit, feedback)
+
+_show_classification_task()
 '''
-        exercise = '''# Check my choices: run this cell after selecting all six answers.
-information_items = collect_choices()
-'''
+        al_meta["submission"] = "widget"
+        exercise = "Select **Submit** below the sorting board for feedback. Change your choices and submit again to retry."
+    elif radio_pilot:
+        from machine_readable_widgets import setup_code
+        setup = setup_code({chr(97 + i): rule for i, rule in enumerate(MACHINE_READABLE_RULES)})
+        al_meta["submission"] = "widget"
+        exercise = "Select **Submit** below the choices for feedback. Change your answer and submit again to retry."
+    elif dataset_pilot:
+        from case_aggregate_widgets import setup_code
+        setup = setup_code({chr(97 + i): table for i, table in enumerate(DATASET_TABLES)},
+                           list(ex["variables"]["aggregate_tables"][1]))
+        al_meta["submission"] = "widget"
+        exercise = "Select **Submit** below the table choices for feedback on all five classifications."
     else:
         setup = ex["setup"][language]
-        exercise = placeholder(language, ex["variables"])
-    return {
+        exercise = (scaffold(ex) if language == "python" else None) or placeholder(language, ex["variables"])
+    if language == 'python' and not widget_pilot:
+        from submission_widgets import submission_code
+        al_meta['submission'] = 'widget'
+        al_meta['computation'] = True
+        intro = intro.replace('The **Learning** panel records the result and suggests', 'Then select **Submit** in the following cell for feedback. Running code does not record an attempt. The **Learning** panel records submissions and suggests')
+    result = {
         "cells": [
             cell("markdown", intro, "0"),
-            cell("code", setup, "1", {"jupyter": {"source_hidden": True}} if choice_pilot else None),
-            cell("code", exercise, "2", {"al": al_meta, "tags": ["al-exercise"]}),
+            cell("code", setup, "1", {"al": al_meta, "tags": ["al-exercise"], "jupyter": {"source_hidden": True}} if widget_pilot else None),
+            cell("markdown" if widget_pilot else "code", "" if widget_pilot else exercise, "2", {} if widget_pilot else {"al": al_meta, "tags": ["al-exercise"]}),
             cell("markdown", references(ex, language), "3"),
         ],
         "metadata": {
@@ -497,6 +596,51 @@ information_items = collect_choices()
         "nbformat": 4,
         "nbformat_minor": 5,
     }
+    if language == 'python' and not widget_pilot:
+        result['cells'].insert(3, cell('code', submission_code('2', fields=tuple(ex['variables'])), 'submit', {'jupyter': {'source_hidden': True}, 'al': {**al_meta, 'computation': False}}))
+    return result
+
+
+def scaffold(ex):
+    """Visible, runnable supplied calculations for the first Python data tasks."""
+    if ex['check'] == 'explore-dataset':
+        return """# Run the supplied example. Each result answers one question about register.
+from IPython.display import display
+n_records = len(register)  # count rows
+first_date = register['date_given'].min()  # earliest ISO-format date
+last_date = register['date_given'].max()   # latest ISO-format date
+n_locations = register['location'].nunique()  # distinct locations
+age_min = register['age'].min()
+age_max = register['age'].max()
+display(pd.DataFrame([{'Rows': n_records, 'First date': first_date,
+    'Last date': last_date, 'Locations': n_locations,
+    'Youngest age (years)': age_min, 'Oldest age (years)': age_max}]))
+print('Locations:', ', '.join(sorted(register['location'].unique())))
+"""
+    conditions = """from IPython.display import display
+# One condition selects only MMR records. This does not yet answer the question.
+mmr = register['vaccine_type'] == 'MMR'
+display(register.loc[mmr].head(5))
+# & means all conditions must hold. Parentheses keep each comparison together.
+qualifies = (mmr & (register['dose'] == 1)
+             & (register['location'] == 'District X') & (register['age'] < 5))
+matching = register.loc[qualifies].copy()
+print('Matching records: first MMR dose, District X, age under 5')
+display(matching)
+"""
+    if ex['check'] == 'filter-records':
+        return conditions + "n_mmr_dose1_x = len(matching)\nprint('Matching row count:', n_mmr_dose1_x)\n"
+    if ex['check'] == 'coverage':
+        return conditions + """numerator = matching['patient_id'].nunique()
+denominator = population.loc[population['location'] == 'District X', 'population_under5'].item()
+coverage_x = numerator / denominator
+# A proportion of 0.92 is 92%, not 0.92%.
+display(pd.DataFrame([{'Population': 'District X children under 5',
+    'Period': str(register['date_given'].min()) + ' to ' + str(register['date_given'].max()),
+    'Vaccinated children': numerator, 'Eligible children': denominator,
+    'Proportion': coverage_x, 'Percent': coverage_x * 100}]))
+"""
+    return None
 
 
 def main() -> None:

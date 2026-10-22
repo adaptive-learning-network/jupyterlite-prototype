@@ -16,9 +16,10 @@ CHECK = ROOT / "app-assets/adaptive-learning/checks/dhis2-query.py"
 class PilotTests(unittest.TestCase):
     def setUp(self) -> None:
         notebook = json.loads(NOTEBOOK.read_text(encoding="utf-8"))
-        self.assertEqual([cell["id"] for cell in notebook["cells"][:4]], ["0", "1", "2", "3"])
+        self.cells = {cell["id"]: cell for cell in notebook["cells"]}
+        self.assertIn("summary-code", self.cells)
         self.assertEqual(notebook["cells"][-1]["id"], "references")
-        self.assertEqual(notebook["cells"][2]["metadata"]["al"]["check"], "checks/dhis2-query")
+        self.assertEqual(notebook["cells"][1]["metadata"]["al"]["check"], "checks/dhis2-query")
         self.ns: dict = {}
         exec("".join(notebook["cells"][1]["source"]), self.ns)
 
@@ -28,6 +29,15 @@ class PilotTests(unittest.TestCase):
             exec(CHECK.read_text(encoding="utf-8"), self.ns)
         line = next(line for line in buffer.getvalue().splitlines() if line.startswith("AL_OBSERVATION "))
         return json.loads(line.removeprefix("AL_OBSERVATION "))["outcome"]
+
+    def test_guided_steps_produce_the_checked_summary(self) -> None:
+        for ident in ("district-code", "dictionary-code", "events-code", "flatten-code", "summary-code"):
+            with contextlib.redirect_stdout(io.StringIO()):
+                exec("".join(self.cells[ident]["source"]), self.ns)
+        self.assertEqual(self.outcome(), "correct")
+        self.assertEqual(len(self.ns["onset_rows"]), self.ns["n_cases"])
+        self.assertTrue(any(row["onset"] == "" for row in self.ns["onset_rows"]))
+        self.assertEqual(self.ns["n_missing_onset"], 1)
 
     def test_query_scope_and_copy(self) -> None:
         api = self.ns["api"]

@@ -19,8 +19,10 @@ ROOT = Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "content"
 READINGS = CONTENT / "readings/ucsf"
 SOURCE_LABELS = {name: label for name, _, label, _, _ in SOURCES}
-# Optional source videos; YouTube oEmbed titles/publishers verified 2026-10-15.
+# Optional references: YouTube titles/publishers verified 2026-10-15;
+# Seaborn's official 0.13.2 API reference verified 2026-10-22.
 VERIFIED_EXTERNAL_REFERENCES: set[str] = {
+    "https://seaborn.pydata.org/generated/seaborn.barplot.html",
     "https://www.youtube.com/watch?v=fLUygA8Hpfo",
     "https://www.youtube.com/watch?v=Fzc3j8QG_Mw",
     "https://www.youtube.com/watch?v=KSEUh-wj7Y0",
@@ -76,6 +78,8 @@ def references(path: Path) -> str:
         prefix = "../../readings/ucsf/assets/"
 
     lines = ["## References", "", f"- {source}"]
+    if name == "u13-n01-analysis-dashboard":
+        lines.append("- [Seaborn barplot reference](https://seaborn.pydata.org/generated/seaborn.barplot.html) (optional).")
     for unit in slides:
         pdf = f"{prefix}unit-{unit}-version-2-slides.pdf"
         if not (path.parent / pdf).is_file():

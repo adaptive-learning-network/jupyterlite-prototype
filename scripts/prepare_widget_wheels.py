@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Download checksum-pinned, pure Python widget wheels for the local piplite index."""
+"""Download checksum-pinned pure Python course packages for the local piplite index."""
 
 from __future__ import annotations
 
@@ -12,6 +12,8 @@ from prepare_pyodide import download
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "pypi"
 WHEELS = {
+    "missingno": ("0.5.2", "55782621ce09ba0f0a1d08e5bd6d6fe1946469fb03951fadf7d209911ca5b072"),
+    "seaborn": ("0.13.2", "636f8336facf092165e27924f223d3c62ca560b1f2bb5dff7ab7fad265361987"),
     "anywidget": ("0.11.0", "c574d9acc6503ad27b37a9acea48f957a8ba7c9c9876cfcb37898931c098ce9d"),
     "comm": ("0.2.3", "c615d91d75f7f04f095b30d1c1711babd43bdc6419c1be9886a85f2f4e489417"),
     "ipywidgets": ("8.1.7", "764f2602d25471c213919b8a1997df04bef869251db4ca8efba1b76b1bd9f7bb"),
@@ -32,7 +34,7 @@ def main() -> None:
             raise ValueError(f"Pinned pure Python wheel not found: {name} {version}")
         wheel = matches[0]
         download(wheel["url"], OUT / wheel["filename"], digest)
-    print(f"prepared {len(WHEELS)} checksum-pinned widget wheels in {OUT}")
+    print(f"prepared {len(WHEELS)} checksum-pinned course wheels in {OUT}")
 
 
 if __name__ == "__main__":

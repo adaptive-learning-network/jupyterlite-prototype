@@ -6,7 +6,7 @@
     "controls": [
       {
         "key": "sources",
-        "label": "Sources",
+        "label": "Data sources",
         "kind": "multi",
         "options": [
           [
@@ -24,8 +24,8 @@
         ]
       },
       {
-        "key": "grain",
-        "label": "Required grain",
+        "key": "row_represents",
+        "label": "Each row should represent",
         "kind": "choice",
         "options": [
           [
@@ -33,7 +33,7 @@
             "case"
           ],
           [
-            "One district-week",
+            "One district in one week",
             "district-week"
           ]
         ]
@@ -44,7 +44,7 @@
         "case",
         "lab"
       ],
-      "grain": "case"
+      "row_represents": "case"
     }
   },
   {

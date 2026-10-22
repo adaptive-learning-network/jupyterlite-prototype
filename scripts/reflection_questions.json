@@ -1,0 +1,768 @@
+{
+  "exercise:u01-n01": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Which district change supports your chosen action, and what should be verified before calling it an outbreak?",
+      "legacyPrompts": [
+        "Which district change supports your chosen action, and what should be verified before calling it an outbreak?"
+      ]
+    }
+  ],
+  "exercise:u02-n01": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Which case and laboratory records would Laila need for the measles summary, and which systems hold them?",
+      "legacyPrompts": [
+        "Which case and laboratory records would Laila need for the measles summary, and which systems hold them?"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "Who needs the case and laboratory reports at the district level?",
+      "legacyPrompts": [
+        "Who needs the case and laboratory reports at the district level?"
+      ]
+    },
+    {
+      "id": "q3",
+      "version": 1,
+      "prompt": "What access question would you verify before obtaining these records?",
+      "legacyPrompts": [
+        "What access question would you verify before obtaining these records?"
+      ]
+    },
+    {
+      "id": "q4",
+      "version": 1,
+      "prompt": "If facility or community reports arrive late, which district responsibility is affected and what would you verify?",
+      "legacyPrompts": [
+        "If facility or community reports arrive late, which district responsibility is affected and what would you verify?"
+      ]
+    }
+  ],
+  "exercise:u03-n07": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "What does the summary tell Laila, and what can it not establish about the outbreak?",
+      "legacyPrompts": [
+        "What does the summary tell Laila, and what can it not establish about the outbreak?"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "How could using an event date in place of missing rash onset affect an epidemic curve? What would you verify with the district team?",
+      "legacyPrompts": [
+        "How could using an event date in place of missing rash onset affect an epidemic curve? What would you verify with the district team?"
+      ]
+    }
+  ],
+  "exercise:u04-source-inventory": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "What permission and data-dictionary questions would you resolve before using these data sources?",
+      "legacyPrompts": [
+        "What permission and data-dictionary questions would you resolve before using these data sources?"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "How would unmatched laboratory results affect Laila's report?",
+      "legacyPrompts": [
+        "How would unmatched laboratory results affect Laila's report?"
+      ]
+    }
+  ],
+  "exercise:u05-access-and-safe-release": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Which security features and additional working practices would you require for the internal extract?",
+      "legacyPrompts": [
+        "Which security features and additional working practices would you require for the internal extract?"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "What would you check before releasing other tables that overlap this public summary?",
+      "legacyPrompts": [
+        "What would you check before releasing other tables that overlap this public summary?"
+      ]
+    }
+  ],
+  "exercise:u06-ai-use-and-review": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Rewrite one unsupported claim using only the available evidence and its limitations.",
+      "legacyPrompts": [
+        "Rewrite one unsupported claim using only the available evidence and its limitations."
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "What data and release conditions would you check before using an AI-assisted tool for this task?",
+      "legacyPrompts": [
+        "What data and release conditions would you check before using an AI-assisted tool for this task?"
+      ]
+    }
+  ],
+  "exercise:u07-form-design-validation": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "What modifications would your investigation form need, and who would authorize them?",
+      "legacyPrompts": [
+        "What modifications would your investigation form need, and who would authorize them?"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "Which quality problems can this form prevent, and which still need review against the source?",
+      "legacyPrompts": [
+        "Which quality problems can this form prevent, and which still need review against the source?"
+      ]
+    }
+  ],
+  "exercise:u08-quality-audit-repair": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Which rows in the displayed incoming extract have missing, duplicate, invalid, or late values?",
+      "legacyPrompts": [
+        "Which rows in the displayed incoming extract have missing, duplicate, invalid, or late values?"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "Which supplied source confirmations justify the corrections, and what should the correction log retain?",
+      "legacyPrompts": [
+        "Which supplied source confirmations justify the corrections, and what should the correction log retain?"
+      ]
+    },
+    {
+      "id": "q3",
+      "version": 1,
+      "prompt": "Why does the late report remain late after correcting its values?",
+      "legacyPrompts": [
+        "Why does the late report remain late after correcting its values?"
+      ]
+    }
+  ],
+  "exercise:u09-dictionary-value-map": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Why should the case identifier be text, and what could happen to 0012 if treated as a number?",
+      "legacyPrompts": [
+        "Why should the case identifier be text, and what could happen to 0012 if treated as a number?"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "How does the supplied dictionary explain P, NEG, and PEND, and why must X remain unresolved?",
+      "legacyPrompts": [
+        "How does the supplied dictionary explain P, NEG, and PEND, and why must X remain unresolved?"
+      ]
+    }
+  ],
+  "exercise:u10-table-design-data-flow": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Where could a delayed report change the district summary?",
+      "legacyPrompts": [
+        "Where could a delayed report change the district summary?"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "Why should laboratory records have their own identifier as well as case_id?",
+      "legacyPrompts": [
+        "Why should laboratory records have their own identifier as well as case_id?"
+      ]
+    }
+  ],
+  "exercise:u11-recode-reconcile": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "What additional checks would detect a case replaced by another case?",
+      "legacyPrompts": [
+        "What additional checks would detect a case replaced by another case?"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "How would you record a change to the age-group definition?",
+      "legacyPrompts": [
+        "How would you record a change to the age-group definition?"
+      ]
+    }
+  ],
+  "exercise:u12-link-exchange": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Which laboratory rows need follow-up, and what would you verify before assigning a final result?",
+      "legacyPrompts": [
+        "Which laboratory rows need follow-up, and what would you verify before assigning a final result?"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "Which checks show that linking kept every case without adding extra copies?",
+      "legacyPrompts": [
+        "Which checks show that linking kept every case without adding extra copies?"
+      ]
+    },
+    {
+      "id": "q3",
+      "version": 1,
+      "prompt": "What would you check before sharing the accepted laboratory rows with another system?",
+      "legacyPrompts": [
+        "What would you check before sharing the accepted laboratory rows with another system?"
+      ]
+    }
+  ],
+  "exercise:u13-analysis-dashboard": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Finding: describe who, where, and when using the supplied case counts.",
+      "legacyPrompts": [
+        "Finding: describe who, where, and when using the supplied case counts."
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "Evidence: which table and Seaborn chart support your finding?",
+      "legacyPrompts": [
+        "Evidence: which table and Seaborn chart support your finding?"
+      ]
+    },
+    {
+      "id": "q3",
+      "version": 1,
+      "prompt": "Limitations: what information would you need before drawing conclusions about disease risk or an outbreak?",
+      "legacyPrompts": [
+        "Limitations: what information would you need before drawing conclusions about disease risk or an outbreak?"
+      ]
+    },
+    {
+      "id": "q4",
+      "version": 1,
+      "prompt": "Recommended action: what should the district team verify next, and who should follow up?",
+      "legacyPrompts": [
+        "Recommended action: what should the district team verify next, and who should follow up?"
+      ]
+    }
+  ],
+  "exercise:u14-interpret-with-ai": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Write a two-sentence briefing with a count, a limitation, and a follow-up action.",
+      "legacyPrompts": [
+        "Write a two-sentence briefing with a count, a limitation, and a follow-up action."
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "What would you disclose about AI assistance and human responsibility?",
+      "legacyPrompts": [
+        "What would you disclose about AI assistance and human responsibility?"
+      ]
+    }
+  ],
+  "form:unit-1": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "List the information Laila will need for her yellow fever surveillance summary report.",
+      "legacyPrompts": [
+        "List the information Laila will need for her yellow fever surveillance summary report."
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "Using the country HIS diagram, identify: Where the data Laila needs originates.",
+      "legacyPrompts": [
+        "Using the country HIS diagram, identify: Where the data Laila needs originates."
+      ]
+    },
+    {
+      "id": "q3",
+      "version": 1,
+      "prompt": "Using the country HIS diagram, identify: What paper and electronic systems are used to collect and store this data.",
+      "legacyPrompts": [
+        "Using the country HIS diagram, identify: What paper and electronic systems are used to collect and store this data."
+      ]
+    },
+    {
+      "id": "q4",
+      "version": 1,
+      "prompt": "Using the country HIS diagram, identify: Who has access to and uses the paper and electronic systems.",
+      "legacyPrompts": [
+        "Using the country HIS diagram, identify: Who has access to and uses the paper and electronic systems."
+      ]
+    }
+  ],
+  "form:unit-2": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "How big is this dataset?",
+      "legacyPrompts": [
+        "How big is this dataset?"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "What timeframe does the dataset span? How does this compare to the timeframe you are interested in?",
+      "legacyPrompts": [
+        "What timeframe does the dataset span? How does this compare to the timeframe you are interested in?"
+      ]
+    },
+    {
+      "id": "q3",
+      "version": 1,
+      "prompt": "What locations does the dataset include? How does this compare to the location(s) that you are interested in?",
+      "legacyPrompts": [
+        "What locations does the dataset include? How does this compare to the location(s) that you are interested in?"
+      ]
+    },
+    {
+      "id": "q4",
+      "version": 1,
+      "prompt": "Who is included in the dataset? How does this compare to your population of interest?",
+      "legacyPrompts": [
+        "Who is included in the dataset? How does this compare to your population of interest?"
+      ]
+    },
+    {
+      "id": "q5",
+      "version": 1,
+      "prompt": "Describe the variables in your dataset.",
+      "legacyPrompts": [
+        "Describe the variables in your dataset."
+      ]
+    },
+    {
+      "id": "q6",
+      "version": 1,
+      "prompt": "How will you use Excel and the data dictionary to locate the data you need for your analysis and create a working dataset?",
+      "legacyPrompts": [
+        "How will you use Excel and the data dictionary to locate the data you need for your analysis and create a working dataset?"
+      ]
+    },
+    {
+      "id": "q7",
+      "version": 1,
+      "prompt": "What types of data quality problems are present in your dataset?",
+      "legacyPrompts": [
+        "What types of data quality problems are present in your dataset?"
+      ]
+    },
+    {
+      "id": "q8",
+      "version": 1,
+      "prompt": "For each problem identified in Question 6, describe the steps you will take to address each one. Then use Excel to fix as many of the data quality problems you identified.",
+      "legacyPrompts": [
+        "For each problem identified in Question 6, describe the steps you will take to address each one. Then use Excel to fix as many of the data quality problems you identified."
+      ]
+    },
+    {
+      "id": "q9",
+      "version": 1,
+      "prompt": "What did you discover about this new dataset? List any actions you need to take before merging this patient dataset with the case notification dataset.",
+      "legacyPrompts": [
+        "What did you discover about this new dataset? List any actions you need to take before merging this patient dataset with the case notification dataset."
+      ]
+    },
+    {
+      "id": "q10",
+      "version": 1,
+      "prompt": "What analyses will you need to conduct? For each one, which Excel features will you use?",
+      "legacyPrompts": [
+        "What analyses will you need to conduct? For each one, which Excel features will you use?"
+      ]
+    }
+  ],
+  "reading:u01-n01-slides": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Which slide best explains why more data alone does not solve Laila's problem?",
+      "legacyPrompts": [
+        "Which slide best explains why more data alone does not solve Laila's problem?"
+      ]
+    }
+  ],
+  "reading:u01-n02-lesson": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "How can informatics help Laila turn surveillance data into useful information?",
+      "legacyPrompts": [
+        "How can informatics help Laila turn surveillance data into useful information?"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "How do information, knowledge, and a decision differ in Laila's report?",
+      "legacyPrompts": [
+        "How do information, knowledge, and a decision differ in Laila's report?"
+      ]
+    }
+  ],
+  "reading:u01-n03-knowledge-check": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "How can an informatics tool improve surveillance or an outbreak investigation?",
+      "legacyPrompts": [
+        "How can an informatics tool improve surveillance or an outbreak investigation?"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "Trace raw data through information and knowledge to action in Laila's case.",
+      "legacyPrompts": [
+        "Trace raw data through information and knowledge to action in Laila's case."
+      ]
+    },
+    {
+      "id": "q3",
+      "version": 1,
+      "prompt": "Name a component of your country's health information system and its surveillance role.",
+      "legacyPrompts": [
+        "Name a component of your country's health information system and its surveillance role."
+      ]
+    }
+  ],
+  "reading:u02-n01-slides": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Where could a delayed or missing report change a district summary?",
+      "legacyPrompts": [
+        "Where could a delayed or missing report change a district summary?"
+      ]
+    }
+  ],
+  "reading:u02-n02-knowledge-check": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Trace case information from its source through the country health information system.",
+      "legacyPrompts": [
+        "Trace case information from its source through the country health information system."
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "Who uses that information at facility, district, and national levels?",
+      "legacyPrompts": [
+        "Who uses that information at facility, district, and national levels?"
+      ]
+    },
+    {
+      "id": "q3",
+      "version": 1,
+      "prompt": "Where could reporting lose timeliness or completeness?",
+      "legacyPrompts": [
+        "Where could reporting lose timeliness or completeness?"
+      ]
+    }
+  ],
+  "reading:u02-n03-his-context": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Follow one case alert from a health facility to the district team.",
+      "legacyPrompts": [
+        "Follow one case alert from a health facility to the district team."
+      ]
+    }
+  ],
+  "reading:u02-n04-case-study": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "What is known from the first alert, and what must Laila still find out?",
+      "legacyPrompts": [
+        "What is known from the first alert, and what must Laila still find out?"
+      ]
+    }
+  ],
+  "reading:u02-n05-group-work": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Information needed for Laila's yellow fever report",
+      "legacyPrompts": [
+        "Information needed for Laila's yellow fever report"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "Where the data originates",
+      "legacyPrompts": [
+        "Where the data originates"
+      ]
+    },
+    {
+      "id": "q3",
+      "version": 1,
+      "prompt": "Paper and electronic systems",
+      "legacyPrompts": [
+        "Paper and electronic systems"
+      ]
+    },
+    {
+      "id": "q4",
+      "version": 1,
+      "prompt": "Who can access and use each system",
+      "legacyPrompts": [
+        "Who can access and use each system"
+      ]
+    }
+  ],
+  "reading:u02-n06-assignment-1": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Write two questions Laila should answer before choosing a dataset.",
+      "legacyPrompts": [
+        "Write two questions Laila should answer before choosing a dataset."
+      ]
+    }
+  ],
+  "reading:u02-n07-explore-datasets": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Which variables and time period would you check first?",
+      "legacyPrompts": [
+        "Which variables and time period would you check first?"
+      ]
+    }
+  ],
+  "reading:u02-n08-assignment-2": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Dataset size",
+      "legacyPrompts": [
+        "Dataset size"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "Time span and comparison with the period of interest",
+      "legacyPrompts": [
+        "Time span and comparison with the period of interest"
+      ]
+    },
+    {
+      "id": "q3",
+      "version": 1,
+      "prompt": "Locations and comparison with the locations of interest",
+      "legacyPrompts": [
+        "Locations and comparison with the locations of interest"
+      ]
+    },
+    {
+      "id": "q4",
+      "version": 1,
+      "prompt": "People included and comparison with the population of interest",
+      "legacyPrompts": [
+        "People included and comparison with the population of interest"
+      ]
+    }
+  ],
+  "reading:u02-n09-assignment-3": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Question 4: variables in the dataset",
+      "legacyPrompts": [
+        "Question 4: variables in the dataset"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "Question 5: use the data dictionary and Excel to create a working dataset",
+      "legacyPrompts": [
+        "Question 5: use the data dictionary and Excel to create a working dataset"
+      ]
+    }
+  ],
+  "reading:u02-n10-data-quality": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Which missing or inconsistent fields would change your interpretation?",
+      "legacyPrompts": [
+        "Which missing or inconsistent fields would change your interpretation?"
+      ]
+    }
+  ],
+  "reading:u02-n11-assignment-4": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Question 6: data quality problems and examples",
+      "legacyPrompts": [
+        "Question 6: data quality problems and examples"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "Question 7: repair steps, changes made, and remaining problems",
+      "legacyPrompts": [
+        "Question 7: repair steps, changes made, and remaining problems"
+      ]
+    }
+  ],
+  "reading:u02-n12-compile-analyze": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "What checks would you run before combining records?",
+      "legacyPrompts": [
+        "What checks would you run before combining records?"
+      ]
+    }
+  ],
+  "reading:u02-n13-analyze-visualize": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Which table or visual would help Laila explain the signal?",
+      "legacyPrompts": [
+        "Which table or visual would help Laila explain the signal?"
+      ]
+    }
+  ],
+  "reading:u02-n14-assignment-5": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Question 8: findings and preparation needed",
+      "legacyPrompts": [
+        "Question 8: findings and preparation needed"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "Question 9: prepare the patient dataset",
+      "legacyPrompts": [
+        "Question 9: prepare the patient dataset"
+      ]
+    },
+    {
+      "id": "q3",
+      "version": 1,
+      "prompt": "Question 10: merge result and checks",
+      "legacyPrompts": [
+        "Question 10: merge result and checks"
+      ]
+    }
+  ],
+  "reading:u02-n15-assignment-6": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "Question 11: analyses and tools",
+      "legacyPrompts": [
+        "Question 11: analyses and tools"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "Question 12: tables",
+      "legacyPrompts": [
+        "Question 12: tables"
+      ]
+    },
+    {
+      "id": "q3",
+      "version": 1,
+      "prompt": "Question 13: household map",
+      "legacyPrompts": [
+        "Question 13: household map"
+      ]
+    },
+    {
+      "id": "q4",
+      "version": 1,
+      "prompt": "Question 14: epi curve and event dates",
+      "legacyPrompts": [
+        "Question 14: epi curve and event dates"
+      ]
+    },
+    {
+      "id": "q5",
+      "version": 1,
+      "prompt": "Question 15: surveillance summary and recommendations",
+      "legacyPrompts": [
+        "Question 15: surveillance summary and recommendations"
+      ]
+    }
+  ],
+  "integrated:u02-n08-assignment-2": [
+    {
+      "id": "q1",
+      "version": 1,
+      "prompt": "How many vaccination records are in register, and which vaccination dates and locations does it cover?",
+      "legacyPrompts": [
+        "How many vaccination records are in register, and which vaccination dates and locations does it cover?"
+      ]
+    },
+    {
+      "id": "q2",
+      "version": 1,
+      "prompt": "What do the youngest and oldest recorded ages tell you about the population represented?",
+      "legacyPrompts": [
+        "What do the youngest and oldest recorded ages tell you about the population represented?"
+      ]
+    },
+    {
+      "id": "q3",
+      "version": 1,
+      "prompt": "What would you check before using this register to answer a question about vaccination coverage?",
+      "legacyPrompts": [
+        "What would you check before using this register to answer a question about vaccination coverage?"
+      ]
+    }
+  ]
+}

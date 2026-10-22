@@ -5,6 +5,12 @@
   color: var(--jp-ui-font-color1);
   background: var(--jp-layout-color1);
 }
+.al-RecordView { padding: 8px 12px; color: var(--jp-content-font-color1); font-family: var(--jp-content-font-family); white-space: normal; }
+.al-RecordView h2 { font-size: 1.3em; margin: 1.2em 0 0.6em; }
+.al-record-table { overflow-x: auto; }
+.al-RecordView table { border-collapse: collapse; width: 100%; }
+.al-RecordView th, .al-RecordView td { text-align: left; vertical-align: top; padding: 0.5em; border-bottom: 1px solid var(--jp-border-color2); white-space: pre-wrap; overflow-wrap: anywhere; }
+.al-RecordView .jp-Button { padding: 4px 16px; cursor: pointer; }
 .al-title { font-size: var(--jp-ui-font-size3); margin: 4px 0 8px; }
 .al-section { border-top: 1px solid var(--jp-border-color2); padding: 8px 0; }
 .al-section h3 { font-size: var(--jp-ui-font-size2); margin: 0 0 6px; }

@@ -16,30 +16,29 @@ def cell(kind, source, cell_id):
 
 
 def main():
-    viewer = (ROOT / "scripts/learning_record_view.py").read_text(encoding="utf-8")
     intro = """**Course outline:** Unit 03 | Notebook 08 | Python
 
-# My learning record: what did the adaptive system record?
+# My learning record
 
-This final, **unscored** notebook shows your own learner graph. It does not submit an answer or add an observation.
+Review your attempts, progress, suggested next activities, and recorded reflections below.
 
-1. In the **Learning** panel, choose **Export record**. Your browser downloads `learner-record.nq`.
-2. In the JupyterLite file browser, open this notebook's folder (`exercises/python`) and upload that file here.
-3. Run the next two cells. They use only files in this browser's JupyterLite workspace; there are no network requests.
-
-To see changes across retries, export after each attempt, rename each download `learner-record-01.nq`, `learner-record-02.nq`, and so on, then upload those files together. The notebook reads them in filename order. The export contains an opaque learner ID and your learning history; share it only if you choose to.
+This view is **unscored** and does not change your learning record. No code needs to run.
+Your record stays in this browser. In the Learning panel, **Download reflections** keeps a readable copy of explicitly recorded writing. **Export evidence** downloads scored attempts and progress as RDF; it excludes reflection text and notebook edits. Download edited notebooks separately from the File menu. Unrecorded text is not included. These downloads do not restore browser storage automatically. Keep your browser storage while using the course.
 """
-    run = """from IPython.display import Markdown, display
-
-files = find_exports()
-display(Markdown(render_report([(path.name, path.read_text(encoding="utf-8")) for path in files])))
-"""
-    references = """## Read your record
-
-The browser-local record contains observations from your attempts. The exported graph also contains recalculated estimates and recommendations. This notebook reads the export snapshot you upload here; it does not change your record.
-"""
+    # A saved MIME output is rendered directly by the browser extension. Its
+    # payload has no learner data: the renderer reads the current local store.
+    record = cell("code", '''from IPython.display import display
+display({"application/vnd.al.learner-record+json": {"version": 1},
+         "text/plain": "Open this notebook in the course JupyterLite site to view your learning record."}, raw=True)
+''', "record-view")
+    record["metadata"] = {"jupyter": {"source_hidden": True}, "editable": False,
+                          "al": {"view": "learner-record"}}
+    record["outputs"] = [{"output_type": "display_data", "metadata": {}, "data": {
+        "application/vnd.al.learner-record+json": {"version": 1},
+        "text/plain": ["Open this notebook in the course JupyterLite site to view your learning record."]
+    }}]
     notebook = {
-        "cells": [cell("markdown", intro, "0"), cell("code", viewer, "1"), cell("code", run, "2"), cell("markdown", references, "3")],
+        "cells": [cell("markdown", intro, "0"), record],
         "metadata": {
             "kernelspec": {"name": "python", "display_name": "Python (Pyodide)", "language": "python"},
             "language_info": {"name": "python"},

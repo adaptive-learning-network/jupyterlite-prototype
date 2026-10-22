@@ -20,6 +20,28 @@ async function currentOutcomes(page: Page, id: string) {
 for (const scenario of scenarios) {
   test(`Unit ${scenario.unit}: choices, retries, recommendation, reflection and reload`, async ({ page }, testInfo) => {
     test.setTimeout(300_000);
+    if (scenario.unit === 4) {
+      // Reproduce a returning tab using an older check with the renamed key.
+      // Its first incomplete assessment must not overwrite notebook helpers;
+      // later retries use the current check and must still work.
+      // Keep the service worker enabled: Pyodide uses it for browser files.
+      // Substitute at fetch's response boundary so its cache cannot bypass us.
+      await page.addInitScript(() => {
+        const fetchAsset = window.fetch.bind(window);
+        const state = globalThis as typeof globalThis & { legacyCheckServed?: boolean };
+        window.fetch = async (input, init) => {
+          const response = await fetchAsset(input, init);
+          const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
+          if (new URL(url, location.href).pathname.endsWith('/checks/u04-source-inventory.py') && !state.legacyCheckServed) {
+            state.legacyCheckServed = true;
+            return new Response((await response.text()).replaceAll('row_represents', 'grain'), {
+              status: response.status, headers: response.headers
+            });
+          }
+          return response;
+        };
+      });
+    }
     // Seed completed prerequisites, never the activity under test. This keeps
     // the harness about the workflow rather than answering the previous units.
     const prior = catalog.activities.filter((a: {iri: string; ordinal: number; rules: string[]}) =>
@@ -48,11 +70,10 @@ for (const scenario of scenarios) {
     await expect.poll(() => page.locator('.jp-Notebook img').evaluateAll(images =>
       images.every(img => (img as HTMLImageElement).complete && (img as HTMLImageElement).naturalWidth > 0)), { timeout: 30_000 }).toBe(true);
     await page.screenshot({ path: testInfo.outputPath('intro.png') });
-    // Run All also exposes the reflection controls. The first exercise attempt
-    // is intentionally untouched, so it must be recorded as incomplete.
+    // Run All initializes the controls; only Submit may record an attempt.
     await page.getByRole('menuitem', { name: 'Run', exact: true }).click();
     await page.getByRole('menuitem', { name: 'Run All Cells', exact: true }).click();
-    await expect.poll(() => currentOutcomes(page, scenario.id), { timeout: 180_000 }).toEqual(['Incomplete']);
+    await expect.poll(() => currentOutcomes(page, scenario.id), { timeout: 180_000 }).toEqual([]);
 
     // Scroll back to the setup output; JupyterLab virtualizes off-screen cells.
     await page.locator('.jp-Notebook').hover();
@@ -69,7 +90,15 @@ for (const scenario of scenarios) {
       await setup.scrollIntoViewIfNeeded();
     }
     await revealSetup();
-    await expect(setup.getByRole('listbox').or(setup.getByRole('spinbutton'))).not.toHaveCount(0);
+    await expect(setup.getByRole('checkbox').or(setup.getByRole('combobox')).or(setup.getByRole('textbox'))).not.toHaveCount(0);
+    if (scenario.unit === 4) {
+      const first = setup.getByRole('checkbox', {name:'Case register',exact:true});
+      await first.focus(); await page.keyboard.press('Space'); await expect(first).toBeChecked();
+      await page.keyboard.press('Space'); await expect(first).not.toBeChecked();
+    }
+    for (const control of scenario.controls.filter(control => control.kind === 'integer')) {
+      await expect(setup.getByLabel(control.label,{exact:true})).toHaveValue('');
+    }
     async function choose(correct: boolean) {
       await revealSetup();
       for (const control of scenario.controls) {
@@ -82,7 +111,11 @@ for (const scenario of scenarios) {
         }
         const input = setup.getByLabel(control.label, { exact: true });
         if (control.kind === 'integer') await input.fill(String(value));
-        else {
+        else if (control.kind === 'multi') {
+          for (const [label, id] of control.options!) {
+            await setup.getByRole('checkbox', {name: label, exact: true}).setChecked((value as string[]).includes(id));
+          }
+        } else {
           // ipywidgets uses display labels as native option values, and puts
           // nonbreaking spaces in option text. Map semantic IDs to native values.
           const values = Array.isArray(value) ? value : [String(value)];
@@ -91,16 +124,20 @@ for (const scenario of scenarios) {
       }
     }
     async function check() {
-      const exercise = page.locator('.jp-CodeCell').filter({ hasText: '# Check my work: run after making your choices above.' });
-      await exercise.click();
-      await expect(exercise).toHaveClass(/jp-mod-active/);
-      await page.keyboard.press('Shift+Enter');
+      const exercise = page.locator('.jp-CodeCell').filter({ hasText: '# Run once to display Submit.' });
+      await exercise.scrollIntoViewIfNeeded();
+      await exercise.getByRole('button', { name: 'Submit', exact: true }).click();
     }
+    await check();
+    await expect.poll(() => currentOutcomes(page, scenario.id)).toEqual(['Incomplete']);
+    const incompleteOutput = page.locator('.jp-CodeCell').filter({ hasText: '# Run once to display Submit.' }).locator('.jp-OutputArea').first();
+    await expect(incompleteOutput).toContainText(scenario.controls.some(control => control.kind === 'integer') ? 'Enter a whole number of zero or more' : 'No choice selected');
+    if (scenario.unit === 4) expect(await page.evaluate(() => (globalThis as typeof globalThis & { legacyCheckServed?: boolean }).legacyCheckServed)).toBe(true);
     await choose(false);
     await page.screenshot({ path: testInfo.outputPath('controls.png') });
     await check();
     await expect.poll(() => currentOutcomes(page, scenario.id)).toEqual(['Incomplete', 'Incorrect']);
-    const exerciseOutput = page.locator('.jp-CodeCell').filter({ hasText: '# Check my work: run after making your choices above.' }).locator('.jp-OutputArea');
+    const exerciseOutput = page.locator('.jp-CodeCell').filter({ hasText: '# Run once to display Submit.' }).locator('.jp-OutputArea').first();
     if (scenario.unit === 5) {
       await expect(exerciseOutput).toContainText('Role access denied for:');
       await expect(exerciseOutput).not.toContainText('Training contact A');
@@ -111,6 +148,11 @@ for (const scenario of scenarios) {
     await choose(true);
     await check();
     await expect.poll(() => currentOutcomes(page, scenario.id)).toEqual(['Incomplete', 'Incorrect', 'Incorrect', 'Correct']);
+    await expect(exerciseOutput).toContainText('Correct.');
+    await expect(exerciseOutput).toContainText('Evidence to inspect');
+    await expect(exerciseOutput).toContainText('Meets the stated rule');
+    await expect(exerciseOutput.getByRole('status')).toContainText('Correct.');
+    await exerciseOutput.screenshot({ path: testInfo.outputPath('submission-feedback.png') });
     if (scenario.unit === 7) {
       await expect(exerciseOutput.getByRole('cell', { name: 'True', exact: true })).toHaveCount(1);
       await expect(exerciseOutput.getByRole('cell', { name: 'False', exact: true })).toHaveCount(5);
@@ -131,7 +173,7 @@ for (const scenario of scenarios) {
       return false;
     }).toBe(true);
     await reflection.scrollIntoViewIfNeeded();
-    await expect(reflection.locator('textarea')).toHaveCount(2);
+    await expect(reflection.locator('textarea')).toHaveCount(scenario.unit === 8 ? 3 : 2);
     await reflection.locator('textarea').first().fill(`My decision for unit ${scenario.unit}.`);
     await reflection.getByRole('button', { name: 'Record', exact: true }).click();
     await expect(reflection).toContainText('Recorded in this browser.');

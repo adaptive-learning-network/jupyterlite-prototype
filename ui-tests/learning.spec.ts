@@ -13,7 +13,8 @@ async function openNotebook(page: Page, path: string): Promise<void> {
 async function runCell(page: Page, index: number, source?: string): Promise<void> {
   const cell = page.locator(`.jp-Notebook .jp-Cell[data-windowed-list-index="${index}"]`);
   await cell.scrollIntoViewIfNeeded();
-  await cell.locator('.cm-content').click();
+  if (index === 3 && source === undefined) await cell.click();
+  else await cell.locator('.cm-content').click();
   if (source !== undefined) {
     await page.keyboard.press('ControlOrMeta+a');
     await page.keyboard.type(source);
@@ -29,7 +30,16 @@ test('Python: exploring the register becomes evidence and unlocks filtering', as
   await expect(panel(page).locator('.al-rec-title').filter({ hasText: 'Data or information?' })).toHaveCount(1);
 
   await runCell(page, 1); // loads pandas and the register
-  await runCell(page, 2); // placeholders untouched
+  await runCell(page, 2); // supplied computation alone is unscored
+  await runCell(page, 2, "n_records = None\nfirst_date = None\nlast_date = None\nn_locations = None\nage_min = None\nage_max = None");
+  await expect(panel(page).locator('.al-feedback')).toHaveCount(0);
+  await runCell(page, 3);
+  async function submit() {
+    const cell = page.locator('.jp-CodeCell').filter({hasText:'# Run once to display Submit.'});
+    await cell.scrollIntoViewIfNeeded();
+    await cell.getByRole('button', {name:'Submit',exact:true}).click();
+  }
+  await submit();
   await expect(panel(page).locator('.al-feedback')).toContainText('Not finished yet');
 
   await runCell(page, 2, [
@@ -40,6 +50,7 @@ test('Python: exploring the register becomes evidence and unlocks filtering', as
     "age_min = int(register['age'].min())",
     "age_max = int(register['age'].max())"
   ].join('\n'));
+  await submit();
   await expect(panel(page).locator('.al-feedback')).toContainText('Not yet correct');
 
   await runCell(page, 2, [
@@ -50,9 +61,10 @@ test('Python: exploring the register becomes evidence and unlocks filtering', as
     "age_min = int(register['age'].min())",
     "age_max = int(register['age'].max())"
   ].join('\n'));
+  await submit();
   await expect(panel(page).locator('.al-feedback')).toContainText('Correct. Recorded as evidence.');
   await expect(panel(page).locator('.al-rec-title').filter({ hasText: 'Data or information?' })).toHaveCount(1);
-  await expect(panel(page).locator('.al-rec-title').filter({ hasText: 'Unit 2: Map Laila' })).toHaveCount(1);
+  await expect(panel(page).locator('.al-rec-title').filter({ hasText: 'Unit 2: Trace Laila' })).toHaveCount(1);
   await expect(panel(page).locator('.al-gap.al-achieved')).toContainText('Explore a dataset with software');
 });
 
@@ -66,14 +78,16 @@ test('R: coverage after a hint counts; the same engine serves the R Jupyter kern
     'coverage_x <- sum(register$vaccine_type == "MMR" & register$dose == 1 & register$location == "District X" & register$age < 5) / ' +
     'population$population_under5[population$location == "District X"]');
   await expect(panel(page).locator('.al-feedback')).toContainText('Correct. Recorded as evidence.');
-  await expect(panel(page).locator('.al-gap.al-achieved')).toContainText('Combine variables to produce information');
+  await expect(panel(page).locator('.al-gap.al-achieved')).toContainText('Calculate a vaccination proportion');
 });
 
-test('the Unit 3 knowledge check opens from the learning panel', async ({ page, context }) => {
-  await context.route('https://forms.gle/**', route => route.fulfill({ contentType: 'text/html', body: '<title>Quiz</title>' }));
+test('the Python course has no external assessment or unavailable R selector', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('al-engine:preferred-language', 'r'));
   await openNotebook(page, 'notebooks/u03-n01-data-or-information.ipynb');
-  const popup = page.waitForEvent('popup');
-  await panel(page).getByRole('button', { name: 'Open: Unit 3 knowledge check' }).click();
-  expect((await popup).url()).toBe('https://forms.gle/Y4yG5gMbFznczrBd9');
-  await expect(panel(page).locator('.al-quizzes')).toContainText('not yet recorded');
+  await expect(panel(page).locator('.al-quizzes')).toHaveCount(0);
+  await expect(panel(page).locator('.al-language')).toHaveCount(0);
+  await expect(panel(page)).toContainText('Python notebooks');
+  await expect(panel(page).getByRole('button', {name:'Open',exact:true}).first()).toBeEnabled();
+  await panel(page).getByRole('button', {name:'Open',exact:true}).first().click();
+  await expect(page.locator('.jp-Notebook:visible')).toContainText('From data to a public health decision');
 });

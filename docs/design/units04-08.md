@@ -8,7 +8,7 @@ The source and enrichment inventory remains in `fetp-phi-course/docs/notebook-en
 
 | Notebook and single-verb objective | Source parity and visual connection | Usability and artifact | Adaptive workflow |
 | --- | --- | --- | --- |
-| U04 N01: **Compare** case, laboratory, and aggregate data sources. | UCSF Assessing HIS Software Applications: reuse existing HIS data; Version 2 Unit 2 slides 29–37. Local slide 37 identifies fragmented sources. | Source catalogue, accessible multiple selection and grain dropdown; case/lab join preserves unmatched results as unknown. | `u04-source-inventory`; requires case/aggregate capability. |
+| U04 N01: **Compare** case, laboratory, and aggregate data sources. | UCSF Assessing HIS Software Applications: reuse existing HIS data; Version 2 Unit 2 slides 29–37. The bundled Unit 2 PDF page 29 frames surveillance information needs; the former page 37 preview was a section title and did not illustrate fragmented data sources. | Data source catalogue, accessible multiple selection and a dropdown asking what each row should represent; case/lab join preserves unmatched results as unknown. | `u04-source-inventory`; requires case/aggregate capability. |
 | U05 N01: **Evaluate** role-specific access and disclosure risks. | UCSF Unit 3 Assignment 3 security-feature/practice prompts; Version 2 Unit 3 slides 53–61 and 68. The local table adapts slide 60's security/confidentiality/privacy comparison. | Least-needed internal fields and a separate suppressed public summary; all records invented. | `u05-access-and-safe-release`; follows U04. |
 | U06 N01: **Evaluate** an AI-assisted draft against surveillance evidence. | Information-value pathway: Version 2 Unit 1 slide 26, locally displayed; interpretation and information bias from Version 2 Unit 7. Authoritative local Version 3 AI Unit 6 material remains missing. | Static draft, recomputed case/result counts, unsupported-claim selection and human-review decision. No model or remote API. | `u06-ai-use-and-review`; follows U05. |
 | U07 N01: **Design** a case form with validation rules. | Version 2 Unit 2 slides 65–67 (Martha), Unit 3 slides 44–49 (field controls); UCSF Unit 4 Assignment 2 asks about DHIS2 modifications. Local slide 67 connects controls to Martha's scenario. | Required fields, age limit and controlled district list; computed pass/fail/error table for valid and malformed submissions. | `u07-form-design-validation`; follows U06. |
@@ -59,7 +59,7 @@ universal prerequisite for form design.
 
 Reflections use the shared Record/restore bridge. They do not add scored evidence.
 The browser record and reflections remain local to that site/browser. The final
-navigation offers `u03-n08-my-learning-record.ipynb` to inspect exported telemetry;
+navigation offers `u03-n08-my-learning-record.ipynb` to review the current browser-local learner record;
 the existing RDF export still excludes reflection text.
 
 ## Validation harness
@@ -72,6 +72,11 @@ the existing RDF export still excludes reflection text.
 - `ui-tests/units04-08.spec.ts`: actual controls, incomplete → wrong → retry → correct,
   recording, next recommendations and persistence across reload. Prior units are
   seeded as completed so reviewers need not answer those exercises.
+  The Unit 4 scenario also serves an older checker using the retired field name
+  on the first attempt. Python checks execute with a copied global namespace,
+  so their helper definitions cannot replace notebook functions during retries.
+  This isolates names, not mutable objects or untrusted code; checks remain
+  application-owned resources. Reloading the app loads the current check assets.
 - Notebook audit: local media, attachments, references, no response placeholders,
   Record controls and Python Jupyter kernel metadata.
 

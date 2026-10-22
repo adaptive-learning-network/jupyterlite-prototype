@@ -29,6 +29,11 @@ test('local review replaces a supplied copy while learner mode retains saved wor
  review=true;await page.goto(`/lab/index.html?path=${path}`);
  await expect(page.locator('.jp-Notebook h1')).toContainText(title);
  expect(await page.evaluate(()=>localStorage.getItem('al-engine:learner-record:v0.1'))).toBe(record);
+ // A current marker must not prevent repair of a stale saved/restored tab.
+ await edit(0,'# Stale copy with a current version marker');
+ await page.goto(`/lab/index.html?path=${path}`);
+ await expect(page.locator('.jp-Notebook h1')).toContainText(title);
+ expect(await page.evaluate(()=>localStorage.getItem('al-engine:learner-record:v0.1'))).toBe(record);
  review=false;await edit(2,'## My reflection\n\nLearner notes retained across updates.');
  await page.evaluate(path=>localStorage.setItem(`al-engine:course-copy:${path}`,'old-version'),path);
  await page.goto(`/lab/index.html?path=${path}`);await expect(page.locator('.jp-Notebook')).toContainText('Learner notes retained across updates.');

@@ -36,6 +36,38 @@ TARGETS={
 LESSONS={'u01-n02-lesson','u02-n03-his-context','u02-n04-case-study','u02-n07-explore-datasets','u02-n10-data-quality','u02-n12-compile-analyze','u02-n13-analyze-visualize'}
 ASSIGNMENTS={'u02-n05-group-work','u02-n06-assignment-1','u02-n08-assignment-2','u02-n09-assignment-3','u02-n11-assignment-4','u02-n14-assignment-5','u02-n15-assignment-6'}
 
+# Questions are authored against the destination's displayed data, never parsed
+# from procedural bullets. Source assignments remain traceable in the inventory.
+REFLECTIONS = {
+ 'u01-n01-data-to-decision': ('exercise:u01-n01', [
+  'Which district change supports your chosen action, and what should be verified before calling it an outbreak?']),
+ 'u02-n01-system-map': ('exercise:u02-n01', [
+  'Which case and laboratory records would Laila need for the measles summary, and which systems hold them?',
+  'Who needs the case and laboratory reports at the district level?',
+  'What access question would you verify before obtaining these records?',
+  'If facility or community reports arrive late, which district responsibility is affected and what would you verify?']),
+ 'u03-n02-explore-dataset': ('integrated:u02-n08-assignment-2', [
+  'How many vaccination records are in register, and which vaccination dates and locations does it cover?',
+  'What do the youngest and oldest recorded ages tell you about the population represented?',
+  'What would you check before using this register to answer a question about vaccination coverage?']),
+ 'u08-n01-quality-audit-repair': ('exercise:u08-quality-audit-repair', [
+  'Which rows in the displayed incoming extract have missing, duplicate, invalid, or late values?',
+  'Which supplied source confirmations justify the corrections, and what should the correction log retain?',
+  'Why does the late report remain late after correcting its values?']),
+ 'u09-n01-dictionary-value-map': ('exercise:u09-dictionary-value-map', [
+  'Why should the case identifier be text, and what could happen to 0012 if treated as a number?',
+  'How does the supplied dictionary explain P, NEG, and PEND, and why must X remain unresolved?']),
+}
+
+SEQUENCE = [
+ 'u00-n00-start-here','u01-n01-data-to-decision','u02-n01-system-map',
+ 'u03-n01-data-or-information','u03-n02-explore-dataset','u03-n03-filter-records',
+ 'u03-n04-coverage','u03-n05-machine-readable','u03-n06-case-or-aggregate',
+ 'u03-n07-dhis2-query','u03-n08-my-learning-record','u04-n01-source-inventory',
+ 'u05-n01-access-and-safe-release','u06-n01-ai-use-and-review','u07-n01-form-design-validation',
+ 'u08-n01-quality-audit-repair','u09-n01-dictionary-value-map','u10-n01-table-design-data-flow',
+ 'u11-n01-recode-reconcile','u12-n01-link-exchange','u13-n01-analysis-dashboard','u14-n01-interpret-with-ai']
+
 def text(cell):return ''.join(cell['source'])
 def read(path):return json.loads(path.read_text(encoding='utf-8'))
 def markdown(source,ident):return {'cell_type':'markdown','id':ident,'metadata':{},'source':source.splitlines(keepends=True)}
@@ -116,17 +148,41 @@ def main():
     added={name:[] for name in docs};coverage=[]
     for src,dest in TARGETS.items():
         doc=read(READINGS/(src+'.ipynb'));target=docs[dest]
-        if src in LESSONS:
-            s=clean_lesson(text(doc['cells'][1]))
-            target['cells'][0]['source']+=['\n\n'+transform(s,reading=True)+'\n']
-            coverage.append({'source':src,'destination':dest,'integration':'explanation and visuals in opening narrative'})
+        if src in {'u02-n12-compile-analyze','u02-n14-assignment-5','u02-n13-analyze-visualize','u02-n15-assignment-6'}:
+            # These topics are now reimagined in the canonical narrative. Keep
+            # source coverage, not a second Excel workflow or extra dataset.
+            detail=('supplied case/laboratory tables, matching checks, validated link, and Record reflections'
+                    if dest.startswith('u12-') else
+                    'supplied records, descriptive statistics, Seaborn person/place/time charts, explicit data limitations, and structured Record briefing')
+            coverage.append({'source':src,'destination':dest,'integration':detail})
+        elif src == 'u02-n07-explore-datasets':
+            coverage.append({'source':src,'destination':dest,'integration':'exploration concepts adapted to the supplied immunization register and authored Record questions; no separate Excel task'})
+        elif src in LESSONS:
+            if src == 'u01-n02-lesson':
+                target['cells'][0]['source'] += ['\n\nPublic health informatics applies information and computer science to collecting, managing, analyzing, and using public health data. A pattern can suggest a question to investigate; it does not establish why disease occurred.\n']
+                added[dest].append(markdown("""## Explore the concepts further
+
+<details><summary>How informatics supports surveillance</summary>
+
+![Laila faces data overload](assets/slide-previews/unit-1-022.jpg)
+
+![What public health informatics does](assets/slide-previews/unit-1-019.jpg)
+
+![From data to wisdom](assets/slide-previews/unit-1-025.jpg)
+
+Use these diagrams to connect the reported counts, their interpretation, and the next action. An interpretation still needs verification.
+
+</details>
+""", 'concept-visuals'))
+            elif src == 'u02-n03-his-context':
+                target['cells'][0]['source'] += ['\n\nAt each reporting step, check who records the data, who reviews it, and who is authorized to access it. Patient and community records feed case reports; laboratory records feed laboratory reports. Both branches reach the district system.\n']
+            elif src == 'u02-n04-case-study':
+                target['cells'][0]['source'] += ['\n\nThis is a practice scenario set in October 2021. The district team collects reports, checks quality, summarizes person/place/time, and follows up signals. The diagram is the reporting arrangement for this scenario; verify the actual systems and responsibilities in your own setting.\n']
+            elif src == 'u02-n10-data-quality':
+                target['cells'][0]['source'] += ['\n\nA shared data dictionary and entry checks can prevent some missing or invalid values. Repeated entry into separate systems can introduce inconsistencies. These are scenario examples; inspect the incoming rows and supplied confirmations before changing a value.\n']
+            coverage.append({'source':src,'destination':dest,'integration':'essential concepts rewritten into concise canonical scenario; duplicate diagrams, task directions, and historical operational assertions omitted'})
         elif src in ASSIGNMENTS:
-            s=clean_lesson(text(doc['cells'][1]))
-            # The questions become writable reflections rather than another assignment notebook.
-            added[dest].append(markdown('## Apply the decision\n\nWrite a response for each prompt below, then select **Record**. These reflections are unscored.',src+'-intro'))
-            code=reflection_code('integrated:'+src,prompts(s))
-            added[dest].append({'cell_type':'code','id':src+'-response','metadata':{'jupyter':{'source_hidden':True}},'source':code.splitlines(keepends=True),'outputs':[],'execution_count':None})
-            coverage.append({'source':src,'destination':dest,'integration':'question-by-question Record fields'})
+            coverage.append({'source':src,'destination':dest,'integration':'concepts adapted into the destination task and explicit Record questions about its supplied data; procedural bullets and cross-assignment numbering omitted'})
         elif src.endswith('-slides'):
             added[dest].append(markdown('## Explore the slides\n\nOpen a page range below to connect the diagrams to your work.',src+'-intro'))
             for i,c in enumerate(doc['cells']):
@@ -134,18 +190,16 @@ def main():
                     added[dest].append(markdown(transform(text(c),reading=True),src+'-'+str(i)))
             coverage.append({'source':src,'destination':dest,'integration':'local collapsible slide previews and PDF page links'})
         elif 'knowledge-check' in src:
-            # Keep the already implemented response fields and storage section IDs.
-            for i,c in enumerate(doc['cells']):
-                if c['cell_type']=='code':
-                    c=copy.deepcopy(c);c['id']=src+'-'+str(i);added[dest].append(c)
-            coverage.append({'source':src,'destination':dest,'integration':'knowledge-check reflection fields'})
+            coverage.append({'source':src,'destination':dest,'integration':'knowledge-check concepts consolidated in the destination task and authored reflection fields'})
         else:coverage.append({'source':src,'destination':dest,'integration':'navigation replaced by unified course contents'})
     library=read(READINGS/'u00-n02-version3-form-library.ipynb')
     current=None
     for i,c in enumerate(library['cells']):
         s=text(c)
         match=re.match(r'## Unit (\d+)',s)
-        if match:
+        if match and 'Written case study' in s:
+            current=None
+        elif match:
             u=int(match.group(1));current=next(k for k in docs if k.startswith(f'u{u:02d}-n01-'))
         elif s.startswith('## References'):current=None
         if current:
@@ -159,9 +213,16 @@ def main():
                     scoped=s[:split]+'def _show_practice_quiz():\n'+textwrap.indent(s[split:],'    ')+'\n_show_practice_quiz()\n'
                     c['source']=scoped.splitlines(keepends=True)
             added[current].append(c)
-    coverage.append({'source':'u00-n02-version3-form-library','destination':'Units 1, 2, 4, 5, 7','integration':'interactive quiz and written-case sections within their units; provisional feedback retained'})
+    coverage.append({'source':'u00-n02-version3-form-library','destination':'Units 1, 2, 4, 5, 7','integration':'interactive quizzes with provisional feedback; written case concepts adapted into canonical task reflections rather than repeating later assignments'})
     for name,doc in docs.items():
         refs=doc['cells'].pop()
+        if name in REFLECTIONS:
+            section,questions=REFLECTIONS[name]
+            response={'cell_type':'code','id':'reflection-fields','metadata':{'jupyter':{'source_hidden':True}},'source':reflection_code(section,questions).splitlines(keepends=True),'outputs':[],'execution_count':None}
+            existing=next((i for i,c in enumerate(doc['cells']) if c['id']=='reflection-fields'),None)
+            if existing is None:
+                doc['cells'].extend([markdown('## Reflect on the records\n\nRun the next cell, write your answers, and select **Record** to save them in this browser. These reflections are unscored.','reflection-intro'),response])
+            else:doc['cells'][existing]=response
         doc['cells'].extend(added[name]);doc['cells'].append(refs)
         for c in doc['cells']:
             c['source']=transform(text(c)).splitlines(keepends=True)
@@ -181,9 +242,18 @@ def main():
         # The orientation is the one table of contents, not a link to a second library.
         if name=='u00-n00-start-here':
             doc['cells']=[c for c in doc['cells'] if not text(c).startswith('## Optional course source library')]
-            s=text(doc['cells'][2]).replace('The readings are optional source material.','Explanations, slides, practice questions, and computation are in this one sequence.')
-            s=re.sub(r'^3\. If you want fuller.*$', '3. Use the slides, explanations, and practice questions within each course notebook.',s,flags=re.M)
+            s='## Course contents\n\nFollow this sequence, or use the Learning panel to revisit recommended practice.\n\n'
+            for stem in SEQUENCE:
+                title=re.search(r'(?m)^# (.+)',text(docs[stem]['cells'][0])).group(1)
+                s+=f'- [{stem[:7].upper()}: {title}]({stem}.ipynb)\n'
+            s+='\nRun supplied computation cells with **Shift+Enter**. Select **Submit** to check an answer and **Record** to save an unscored reflection. Running setup or computation alone does not record an attempt.\n\nUse **Download reflections** in the Learning panel to keep a readable copy of recorded writing. **Export evidence** downloads scored attempts and progress as RDF; it excludes reflection text and notebook edits. Download an edited notebook separately from the File menu. These downloads do not provide automatic restoration.\n'
             doc['cells'][2]['source']=s.splitlines(keepends=True)
+        # One explicit onward route, after optional practice and before References.
+        doc['cells']=[c for c in doc['cells'] if c.get('id')!='continue' and not text(c).startswith(("## Continue Laila", "## Continue the case", "## Continue learning"))]
+        index=SEQUENCE.index(name)
+        next_name=SEQUENCE[index+1] if index+1<len(SEQUENCE) else 'u03-n08-my-learning-record'
+        nav=markdown(f'## Continue learning\n\n[Next: {next_name[:7].upper()}]({next_name}.ipynb) · [Course start](u00-n00-start-here.ipynb) · [Review your learning record](u03-n08-my-learning-record.ipynb)','continue')
+        doc['cells'].insert(len(doc['cells'])-1,nav)
         (course/(name+'.ipynb')).write_text(json.dumps(doc,indent=1,ensure_ascii=False)+'\n',encoding='utf-8')
     for p in (SOURCE/'exercises/r').glob('*.ipynb'):
         doc=read(p)

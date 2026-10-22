@@ -1,6 +1,6 @@
 {
   "schema": "al-catalog-projection/0.1",
-  "sourceDigest": "7b39fa964f4bc8ecf54e2fb496c00043f7d1070d222c799f557fa262658c98e2",
+  "sourceDigest": "e26e12eeac4b95c169a21bda3509b89163b9b671606ac8361cc95558b777073a",
   "framework": {
     "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#framework",
     "title": "Public health informatics: Units 1–14 prototype",
@@ -42,7 +42,7 @@
     {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-data-to-decision",
       "notation": "data-to-decision",
-      "label": "Justify a public health action from data",
+      "label": "Select a public health action from reported counts",
       "ordinal": 0,
       "prerequisites": []
     },
@@ -79,7 +79,7 @@
     {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-combine-variables",
       "notation": "combine-variables",
-      "label": "Combine variables to produce information",
+      "label": "Calculate a vaccination proportion",
       "ordinal": 5,
       "prerequisites": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-data-vs-information",
@@ -134,7 +134,7 @@
     {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u07-form-design-validation",
       "notation": "u07-form-design-validation",
-      "label": "Design and test case-form validation",
+      "label": "Select and test case-form validation rules",
       "ordinal": 13,
       "prerequisites": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u06-ai-use-and-review"
@@ -152,7 +152,7 @@
     {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u09-dictionary-value-map",
       "notation": "u09-dictionary-value-map",
-      "label": "Give every field and code a meaning",
+      "label": "Select field meanings and code mappings",
       "ordinal": 15,
       "prerequisites": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u08-quality-audit-repair"
@@ -161,7 +161,7 @@
     {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u10-table-design-data-flow",
       "notation": "u10-table-design-data-flow",
-      "label": "Follow a case through linked tables",
+      "label": "Select keys and relationships for linked tables",
       "ordinal": 16,
       "prerequisites": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u09-dictionary-value-map"
@@ -170,7 +170,7 @@
     {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u11-recode-reconcile",
       "notation": "u11-recode-reconcile",
-      "label": "Transform a copy without losing cases",
+      "label": "Evaluate recoding while preserving cases",
       "ordinal": 17,
       "prerequisites": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u10-table-design-data-flow"
@@ -179,7 +179,7 @@
     {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u12-link-exchange",
       "notation": "u12-link-exchange",
-      "label": "Link records before an exchange",
+      "label": "Review linked records before an exchange",
       "ordinal": 18,
       "prerequisites": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u11-recode-reconcile"
@@ -188,7 +188,7 @@
     {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u13-analysis-dashboard",
       "notation": "u13-analysis-dashboard",
-      "label": "Build a district briefing from the records",
+      "label": "Interpret supplied person, place, and time summaries",
       "ordinal": 19,
       "prerequisites": [
         "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-u12-link-exchange"
@@ -401,7 +401,7 @@
     },
     {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u02-system-map",
-      "title": "Unit 2: Map Laila's reporting systems",
+      "title": "Unit 2: Trace Laila's reporting pathways",
       "ordinal": 1,
       "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
       "capabilities": [
@@ -511,23 +511,6 @@
       ]
     },
     {
-      "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-unit-03-quiz",
-      "title": "Unit 3 knowledge check",
-      "ordinal": 8,
-      "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#Assessment",
-      "capabilities": [
-        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-case-vs-aggregate",
-        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-combine-variables",
-        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-data-vs-information",
-        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-explore-dataset",
-        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-filter-records",
-        "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#cap-machine-readable"
-      ],
-      "notebooks": {},
-      "rules": [],
-      "url": "https://forms.gle/Y4yG5gMbFznczrBd9"
-    },
-    {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-dhis2-query",
       "title": "Explore synthetic case events through a DHIS2 adapter",
       "ordinal": 9,
@@ -619,7 +602,7 @@
     },
     {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u09-dictionary-value-map",
-      "title": "Unit 9: Give every field and code a meaning",
+      "title": "Unit 9: Select field meanings and code mappings",
       "ordinal": 15,
       "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
       "capabilities": [
@@ -634,7 +617,7 @@
     },
     {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u10-table-design-data-flow",
-      "title": "Unit 10: Follow a case through linked tables",
+      "title": "Unit 10: Select keys and relationships for linked tables",
       "ordinal": 16,
       "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
       "capabilities": [
@@ -649,7 +632,7 @@
     },
     {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u11-recode-reconcile",
-      "title": "Unit 11: Transform a copy without losing cases",
+      "title": "Unit 11: Evaluate recoding while preserving cases",
       "ordinal": 17,
       "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
       "capabilities": [
@@ -664,7 +647,7 @@
     },
     {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u12-link-exchange",
-      "title": "Unit 12: Link records before an exchange",
+      "title": "Unit 12: Review linked records before an exchange",
       "ordinal": 18,
       "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
       "capabilities": [
@@ -679,7 +662,7 @@
     },
     {
       "iri": "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#act-u13-analysis-dashboard",
-      "title": "Unit 13: Build a district briefing from the records",
+      "title": "Unit 13: Interpret supplied person, place, and time summaries",
       "ordinal": 19,
       "kind": "https://adaptive-learning-network.github.io/adaptive-learning-ontology/al#SimulationActivity",
       "capabilities": [

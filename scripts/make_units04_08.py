@@ -23,9 +23,9 @@ EX = "https://adaptive-learning-network.github.io/jupyterlite-prototype/catalog#
 # Entirely invented records. Stable IDs carry the case across all five tasks.
 DATA = {
     "sources": [
-        {"id": "case", "grain": "case", "fields": ["case_id", "district", "onset_date", "age"], "access": "district analyst"},
-        {"id": "lab", "grain": "case", "fields": ["case_id", "specimen_date", "result"], "access": "authorized laboratory extract"},
-        {"id": "weekly", "grain": "district-week", "fields": ["district", "week", "count"], "access": "public summary"},
+        {"id": "case", "row_represents": "case", "fields": ["case_id", "district", "onset_date", "age"], "access": "district analyst"},
+        {"id": "lab", "row_represents": "case", "fields": ["case_id", "specimen_date", "result"], "access": "authorized laboratory extract"},
+        {"id": "weekly", "row_represents": "district-week", "fields": ["district", "week", "count"], "access": "public summary"},
     ],
     "required_fields": ["case_id", "district", "onset_date", "result"],
     "cases": [
@@ -70,8 +70,8 @@ def expected_answers(unit, data):
     if unit == 4:
         # Each selected source must add a required field; the aggregate lacks case IDs.
         required = set(data["required_fields"])
-        selected = [s["id"] for s in data["sources"] if s["grain"] == "case" and required & set(s["fields"])]
-        return {"sources": selected, "grain": "case"}
+        selected = [s["id"] for s in data["sources"] if s["row_represents"] == "case" and required & set(s["fields"])]
+        return {"sources": selected, "row_represents": "case"}
     if unit == 5:
         counts = Counter(row["district"] for row in data["cases"])
         return {"fields": sorted(set(data["task_fields"]) & set(data["role_fields"])),
@@ -116,27 +116,43 @@ UNITS = [
     dict(unit=4, slug="source-inventory", title="Find the data Laila needs",
          objective="Compare case, laboratory, and aggregate data sources.",
          capability="Compare data sources for an investigation", prerequisite="case-vs-aggregate",
-         cue=[("Laila", "My case file has no laboratory result."), ("Supervisor", "Which source has the missing field?"), ("Laila", "I will check the grain and identifiers first.")],
-         slide=37,
-         lesson="""## A question before an extraction
+         cue=[("Laila", "My case file has no laboratory result."), ("Supervisor", "Which data source has the missing field?"), ("Laila", "I will check the rows and case identifiers.")],
+         slide=29,
+         lesson="""## Find the data for Laila's report
 
-Laila needs a district summary of suspected measles cases and their laboratory status.
-The course describes the problem: **the variables and data she needs are stored in different databases—or not available at all**.
-Existing HIS applications may collect data epidemiologists need; reuse starts with a question about fitness for purpose.
+Laila is preparing a district summary of suspected measles cases. For each case,
+she needs these **four fields**:
 
-**One row represents the grain of a source.** A case register has a row per case;
-a laboratory extract can connect results through `case_id`. A district-week total
-cannot tell you which case has a result. A missing laboratory row means **unknown**,
-not a negative result. Access permission must be checked before extraction.
+1. Case identifier (`case_id`)
+2. District (`district`)
+3. Date of onset (`onset_date`)
+4. Laboratory result (`result`)
 
-Run the next cell to inspect a local source catalogue. Select the smallest set
-that supplies `case_id`, `district`, `onset_date`, and `result` at case level.
-Hold **Ctrl** (or **Command**) to select more than one source. Then run **Check my work**.
+The example provides **three data sources**: a case register, a laboratory extract,
+and a weekly summary. The catalogue below lists the fields available in each.
+Compare those fields with the four fields Laila needs. Which data sources would
+you use together?
+
+In this example, the case register has one row per case. The laboratory extract
+uses the same case identifiers, so its results can be linked to the case register.
+The weekly summary contains counts for each district and week; it does not identify
+individual cases or their laboratory results.
+
+If a case has no matching row in the laboratory extract, its result is **unknown
+in this extract**. Do not label it negative. Check with the laboratory whether a
+result is available. Before obtaining real data, confirm that you are authorized
+to access the fields you need.
+
+Run the next cell to view the data source catalogue. Choose data sources that
+together contain the four fields listed above. Use as few data sources as needed.
+Then select what each row
+in the combined table should represent. Check each data source you need, then select **Submit**.
+
 """,
-         controls=[("sources", "Sources", "multi", [("Case register", "case"), ("Laboratory extract", "lab"), ("Weekly aggregate", "weekly")]),
-                   ("grain", "Required grain", "choice", [("One case", "case"), ("One district-week", "district-week")])],
-         reflection=["What permission and data-dictionary questions would you resolve before using these sources?", "How would unmatched laboratory results affect Laila's report?"],
-         hints=["Start from the required fields and the meaning of one row, rather than the software name.", "A case ID can connect a case register and a laboratory extract. A weekly total cannot replace a missing individual result.", "Compare the fields of the two case-level sources with the required field list; retain the case grain."],
+         controls=[("sources", "Data sources", "multi", [("Case register", "case"), ("Laboratory extract", "lab"), ("Weekly aggregate", "weekly")]),
+                   ("row_represents", "Each row should represent", "choice", [("One case", "case"), ("One district in one week", "district-week")])],
+         reflection=["What permission and data-dictionary questions would you resolve before using these data sources?", "How would unmatched laboratory results affect Laila's report?"],
+         hints=["Start from the required fields and the meaning of one row, rather than the software name.", "A case ID can connect a case register and a laboratory extract. A weekly total cannot replace a missing individual result.", "Compare the fields in the two data sources with the required field list. Keep one row per case in the combined table."],
          references="UCSF FETP, Assessing HIS Software Applications; FETP Version 2 Unit 2, slides 29–37."),
     dict(unit=5, slug="access-and-safe-release", title="Give access without releasing too much",
          objective="Evaluate role-specific access and disclosure risks.",
@@ -200,7 +216,7 @@ object of review; you do not need an AI account or to submit any records to a se
          hints=["Compare each sentence with a computed count or with the evidence needed to establish causation.", "Count positive results, pending results, and cases without a matching laboratory record separately.", "All three statements go beyond these records. Human review must precede release."],
          references="FETP Version 2 Unit 1, slides 26–27 (information value); Unit 7, interpretation and information bias. AI review is an authored practice scenario."),
     dict(unit=7, slug="form-design-validation", title="Design a form and test its rules",
-         objective="Design a case form with validation rules.",
+         objective="Select validation rules for a supplied case form.",
          capability="Design and test case-form validation", prerequisite="u06-ai-use-and-review",
          cue=[("Martha", "The old form accepted almost anything."), ("Laila", "Let's define the fields and test errors."), ("Martha", "And keep a valid report easy to submit.")],
          slide=67,
@@ -217,7 +233,7 @@ Design a small training form. Its dictionary requires `case_id`, `district`, and
 An unexpected value needs verification, not an invented replacement.
 
 Run the next cell. Choose the required fields, maximum age, and district control.
-Then run **Check my work** to test the form against a valid submission, a missing
+Then select **Submit** to test the form against a valid submission, a missing
 identifier, an out-of-range age, an unrecognized district, and missing district or age. Watch which records
 are accepted. A form that rejects everything is not a successful form.
 
@@ -250,7 +266,7 @@ Audit this incoming extract using its stated dictionary:
 
 Run the next cell to inspect the rows and the Python audit function. You may call
 `audit_quality(training_data)` in your own code cell to inspect its report. Enter
-your counts, choose a repair approach, and run **Check my work**.
+your counts, choose a repair approach, and select **Submit**.
 
 For this training extract, the source review confirms Q02's district as **Port Loko**,
 Q03's age as **18 years**, and the two identical Q01 rows as the **same report**.
@@ -261,7 +277,7 @@ The late report remains late; correcting values cannot undo a reporting delay.
 Do not replace a missing district with a guess, turn an impossible age into zero,
 or silently delete a repeated ID. Check the source, retain the original values,
 and log the reason and evidence for a correction. A repeated ID may represent a
-repeat report or a separate event; the record grain determines the right action.
+repeat report or a separate event. Check what the rows describe before deciding what to do.
 """,
          controls=[("missing", "Missing district rows", "integer", None), ("duplicates", "Extra duplicate-ID rows", "integer", None),
                    ("invalid", "Invalid age rows", "integer", None), ("late", "Late report rows", "integer", None),
@@ -296,7 +312,8 @@ def build_artifact(unit, response, data):
     if unit == 4:
         selected = response["sources"]
         fields = set().union(*(set(s["fields"]) for s in data["sources"] if s["id"] in selected))
-        print("Required fields not covered:", sorted(set(data["required_fields"]) - fields))
+        missing = sorted(set(data["required_fields"]) - fields)
+        print("Missing required fields: " + ", ".join(missing) if missing else "The selected data sources cover all four required fields.")
         if "case" in selected:
             lab = {row["case_id"]: row for row in data["lab"]} if "lab" in selected else {}
             return [{"case_id": row["case_id"], "district": row["district"], "onset_date": row["onset_date"],
@@ -399,8 +416,37 @@ from IPython.display import display
 from html import escape
 from collections import Counter
 from datetime import date
+import traitlets
+
+class CourseChoices(widgets.VBox):
+    value = traitlets.Tuple(default_value=())
+    disabled = traitlets.Bool(False)
+    def __init__(self, label, options):
+        self.options = options
+        self.boxes = [widgets.Checkbox(description=text, value=False, indent=False, layout=widgets.Layout(width="100%", height="auto")) for text, value in options]
+        super().__init__([widgets.HTML("<b>" + escape(label) + "</b>"), *self.boxes], layout=widgets.Layout(width="100%"))
+        for box in self.boxes:
+            box.observe(self.collect, names="value")
+        self.observe(self.lock, names="disabled")
+    def collect(self, change):
+        self.value = tuple(value for box, (text, value) in zip(self.boxes, self.options) if box.value)
+    def lock(self, change):
+        for box in self.boxes:
+            box.disabled = self.disabled
+
+def control_answer(control):
+    if isinstance(control, CourseChoices):
+        return list(control.value)
+    if getattr(control, "course_integer", False):
+        text = control.value.strip()
+        return int(text) if text.isascii() and text.isdigit() else None
+    return control.value
+
 display(widgets.HTML("""<style>
 .course-task-control { height: auto !important; margin-bottom: 0.75rem; gap: 0.25rem; }
+.course-task-control .widget-checkbox { height: auto !important; min-height: 2rem; }
+.course-task-control .widget-checkbox label { white-space: normal !important; height: auto !important; overflow: visible !important; text-overflow: clip !important; line-height: 1.5; align-items: flex-start; }
+.course-task-control .widget-checkbox input { flex-shrink: 0; margin-top: 0.3rem; }
 .course-task-control > label { width: auto !important; text-align: left; white-space: normal; line-height: 1.4; }
 .course-task-control > select, .course-task-control > input { width: 100% !important; min-width: 0; max-width: 100%; flex: 0 0 auto !important; }
 </style>"""))
@@ -410,12 +456,10 @@ display(widgets.HTML("""<style>
         code += "\n" + inspect.getsource(function) + "\n"
     unit = spec["unit"]
     code += f"unit{unit:02d}_response = None\ncontrols = {{}}\n"
-    if any(control[2] == "multi" for control in spec["controls"]):
-        code += "display(widgets.HTML('<p>For multiple choices, hold Ctrl (Command on Mac) while selecting items.</p>'))\n"
     if any(control[2] == "integer" for control in spec["controls"]):
-        code += "display(widgets.HTML('<p>In numeric fields, enter a non-negative number; -1 means unanswered.</p>'))\n"
+        code += "display(widgets.HTML('<p>Enter a whole number of zero or more. Leave a field blank if you have not answered it yet.</p>'))\n"
     if unit == 4:
-        code += "show_table(training_data['sources'])\n"
+        code += "show_table([{'Data source': {'case': 'Case register', 'lab': 'Laboratory extract', 'weekly': 'Weekly aggregate'}[item['id']], 'Each row represents': {'case': 'One case', 'district-week': 'One district in one week'}[item['row_represents']], 'Fields': ', '.join(item['fields']), 'Access': item['access']} for item in training_data['sources']])\n"
     elif unit == 5:
         code += "print('Role permits:', training_data['role_fields'])\nprint('Task needs:', training_data['task_fields'])\nshow_table([{'district': k, 'count': v} for k, v in Counter(row['district'] for row in training_data['cases']).items()])\n"
     elif unit == 6:
@@ -428,24 +472,54 @@ display(widgets.HTML("""<style>
         code += preview
     for key, label, kind, options in spec["controls"]:
         if kind == "multi":
-            code += f"controls[{key!r}] = widgets.SelectMultiple(description={label!r}, options={options!r}, value=(), rows={len(options)}, style={{'description_width': 'initial'}}, layout=widgets.Layout(width='100%', flex_flow='column', align_items='stretch'))\n"
+            code += f"controls[{key!r}] = CourseChoices({label!r}, {options!r})\n"
         elif kind == "integer":
-            code += f"controls[{key!r}] = widgets.BoundedIntText(description={label!r}, value=-1, min=-1, max=999, style={{'description_width': 'initial'}}, layout=widgets.Layout(width='240px', flex_flow='column', align_items='stretch'))\n"
+            code += f"controls[{key!r}] = widgets.Text(description={label!r}, value='', placeholder='Enter a whole number', style={{'description_width': 'initial'}}, layout=widgets.Layout(width='100%', flex_flow='column', align_items='stretch'))\ncontrols[{key!r}].course_integer = True\n"
         else:
             code += f"controls[{key!r}] = widgets.Dropdown(description={label!r}, options={[('Select an answer', None), *options]!r}, value=None, style={{'description_width': 'initial'}}, layout=widgets.Layout(width='100%', flex_flow='column', align_items='stretch'))\n"
         code += f"controls[{key!r}].add_class('course-task-control')\ndisplay(controls[{key!r}])\n"
     return code
 
 
+def feedback_evidence(unit, key):
+    evidence = {
+        4: {'sources': 'Compare the four required fields with each data source catalogue row.', 'row_represents': 'The report links laboratory results to individual cases using case_id.'},
+        5: {'fields': 'Compare task needs with role permission; permission alone does not make a field necessary.', 'suppress': 'Compare each displayed district count with the minimum release count of 3.'},
+        6: {'claims': 'Compare each claim with positive, pending, and unmatched laboratory records; descriptive counts do not establish cause.', 'review': 'Check evidence and disclosure before sharing.'},
+        7: {'required': 'Inspect the required fields in the training dictionary.', 'age_max': 'Inspect the allowed age range in completed years.', 'district_control': 'The dictionary lists the two allowed districts.'},
+        8: {'missing': 'Count rows with a blank district.', 'duplicates': 'Count extra copies of a case row, not all rows in a repeated pair.', 'invalid': 'Compare each age with the 0 to 120 training range.', 'late': 'Compare report date minus onset date with the two-day limit.', 'repair': 'Use the supplied source confirmations and retain a correction log.'},
+        9: {'id_type': 'Check what happens to the leading zeros in 0012.', 'pending': 'Read the supplied definition of PEND.', 'unknown': 'X has no agreed meaning in this dictionary.'},
+        10: {'key': 'Check whether the field uniquely identifies each case.', 'relationship': 'Count laboratory records for each case identifier.', 'flow': 'Follow records from collection to a district summary.'},
+        11: {'case_group': 'Compare the age of C01 with the fixed five-year boundary.', 'under5': 'Count supplied cases with age strictly below five.', 'rows': 'Adding an age-group column should preserve every case row.', 'missing': 'An unknown age does not remove a case.'},
+        12: {'join': 'Compare which join retains cases without laboratory matches.', 'conflicts': 'Count case identifiers with more than one laboratory row.', 'unknown': 'Review conflicting results and undefined codes before exchange.'},
+        13: {'kambia': 'Count Kambia rows in the supplied case table.', 'denominator': 'A share describes these supplied reports.', 'chart': 'Use onset dates for the timing of illness.', 'rate': 'Population and time at risk are not provided.'},
+        14: {'supported': 'Compare each draft claim with the counts and limitations in the evidence table.', 'action': 'Follow up unresolved evidence before sharing a briefing.'},
+    }
+    return evidence.get(unit, {}).get(key, 'Compare this decision with its stated rule and the displayed evidence table.')
+
+
 def exercise_code(spec):
+    from submission_widgets import submission_code
     unit = spec["unit"]
-    return f'''# Check my work: run after making your choices above. Revise and run again to retry.
-unit{unit:02d}_response = {{key: (list(control.value) if isinstance(control, widgets.SelectMultiple)
-                       else None if isinstance(control, widgets.BoundedIntText) and control.value < 0
-                       else control.value) for key, control in controls.items()}}
+    prepare = f'''
+unit{unit:02d}_response = {{key: control_answer(control) for key, control in controls.items()}}
+expected = expected_answers({unit}, training_data)
+labels = { {key: label for key, label, kind, options in spec['controls']}!r}
+option_labels = { {key: dict((value, text) for text, value in (options or [])) for key, label, kind, options in spec['controls']}!r}
+evidence = { {key: feedback_evidence(unit, key) for key, label, kind, options in spec['controls']}!r}
+feedback_rows = []
+for key, target in expected.items():
+    actual = unit{unit:02d}_response.get(key)
+    unanswered = actual is None or actual == []
+    correct = (sorted(actual) == sorted(target) if isinstance(target, list) and isinstance(actual, list) else actual == target)
+    shown = ', '.join(option_labels[key].get(value, str(value)) for value in actual) if isinstance(actual, list) else option_labels[key].get(actual, str(actual))
+    feedback_rows.append({{"Question": labels[key], "Submitted": ("Enter a whole number of zero or more" if getattr(controls[key], "course_integer", False) else "No choice selected") if unanswered else shown,
+                          "Feedback": "Answer needed" if unanswered else "Meets the stated rule" if correct else "Revise this decision",
+                          "Evidence to inspect": evidence[key]}})
+show_table(feedback_rows)
 result = evaluate_answer({unit}, unit{unit:02d}_response, training_data)
 if result == "incomplete":
-    print("Incomplete: answer every field, then check again.")
+    print("Complete every field before submitting again.")
 else:
     artifact = build_artifact({unit}, unit{unit:02d}_response, training_data)
     if isinstance(artifact, dict):
@@ -454,9 +528,8 @@ else:
             show_table(rows)
     else:
         show_table(artifact)
-    print("Correct: your result follows the stated evidence and training rules." if result == "correct"
-          else "Not yet correct: compare the artifact with the task and rules. Revise your choices and retry; the Learning panel offers hints.")
 '''
+    return submission_code('2', prepare)
 
 
 def main():
@@ -479,16 +552,16 @@ def main():
         if spec["slide"]:
             deck = 1 if unit == 6 else 2
             page = spec["slide"]
-            intro += f"\n\n![Course visual: {'the information value pathway' if unit == 6 else 'Laila and Martha: source and quality context'}](../../readings/ucsf/assets/slide-previews/unit-{deck}-{page:03d}.jpg)\n\n"
-            intro += f"*Slide connection: Unit {deck}, Version 2, slide {page}. Use this visual as you compare the source, control, or evidence in the task.*\n"
+            intro += f"\n\n![Course visual: {'the information value pathway' if unit == 6 else ('surveillance information needs' if unit == 4 else 'Laila and Martha: data source and quality context')}](../../readings/ucsf/assets/slide-previews/unit-{deck}-{page:03d}.jpg)\n\n"
+            intro += f"*Slide connection: Unit {deck}, Version 2, slide {page}. Use this visual as you compare the data source, control, or evidence in the task.*\n"
         else:
             intro += "\n\n| Security | Confidentiality | Privacy |\n| --- | --- | --- |\n| Protection against unauthorized access, change, and disclosure | Secrecy of health data | Individual control of personal health information |\n\n*Slide connection: Version 2 Unit 3, slide 60 compares these three concepts.*\n"
         meta = {"al": {"activity": EX + "act-" + ident, "object": EX + "act-" + ident + "-exercise", "check": "checks/" + ident,
-                       "hints": spec["hints"]}, "tags": ["al-exercise"]}
+                       "hints": spec["hints"], "submission": "widget"}, "tags": ["al-exercise"], "jupyter": {"source_hidden": True}}
         next_name = f"u{unit+1:02d}-n01-{UNITS[unit-3]['slug']}.ipynb" if unit < 8 else "u09-n01-dictionary-value-map.ipynb"
         continuation = f"## Continue Laila's case\n\n[{'Next notebook'}]({next_name}) · [Course start](u00-n00-start-here.ipynb)\n\nUse the **Learning** panel to see what this attempt recorded and what it recommends. Your learning record keeps attempts and hints used."
         cells = [cell("markdown", intro, "0"), cell("code", setup_code(spec), "1", {"jupyter": {"source_hidden": True}}),
-                 cell("markdown", "## Check my work\n\nRun the next cell after making your choices. Incomplete and incorrect attempts remain in your learning record. You can revise your choices and try again.", "check-instructions"),
+                 cell("markdown", "## Submit your decision\n\nRun the next cell to display **Submit**, then select the button for feedback. Only an explicit submission records an attempt. Revise your choices and submit again to retry.", "check-instructions"),
                  cell("code", exercise_code(spec), "2", meta),
                  cell("markdown", "## Reflect on the decision\n\nRun the next cell to write your reflections. Select **Record** to save them with your learner record in this browser. Reflections are unscored.", "3"),
                  cell("code", reflection_code("exercise:" + ident, spec["reflection"]), "reflection-fields", {"jupyter": {"source_hidden": True}}),

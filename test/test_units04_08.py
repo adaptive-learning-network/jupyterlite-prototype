@@ -38,7 +38,7 @@ class NewNarratives(unittest.TestCase):
         joined = build_artifact(4, expected_answers(4, DATA), DATA)
         self.assertEqual(len(joined), len(DATA["cases"]))
         self.assertEqual(sum(row["result"] == "unknown" for row in joined), 2)
-        incomplete = build_artifact(4, {"sources": ["case"], "grain": "case"}, DATA)
+        incomplete = build_artifact(4, {"sources": ["case"], "row_represents": "case"}, DATA)
         self.assertTrue(all(row["result"] == "unknown" for row in incomplete))
 
     def test_release_uses_counts_and_the_explicit_training_threshold(self):

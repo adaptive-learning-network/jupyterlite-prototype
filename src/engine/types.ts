@@ -96,7 +96,7 @@ export interface LearnerRecord {
   /** Highest facilitation-ladder level revealed per activity. */
   guidance: Record<string, number>;
   /** Unscored, explicitly recorded reflections, grouped by stable course section. */
-  reflections?: Record<string, { prompt: string; answer: string; savedAt: string }[]>;
+  reflections?: Record<string, ReflectionEntry[]>;
   /** Present only after the learner consents to link an external identity. */
   identity?: IdentityBinding;
 }
@@ -158,4 +158,14 @@ export class EngineInputError extends Error {
     super(`${code}: ${message}`);
     this.name = 'EngineInputError';
   }
+}
+
+/** Question identity survives wording edits; a meaning change needs a new version. */
+export interface ReflectionEntry {
+  id?: string;
+  version?: number;
+  prompt: string;
+  answer: string;
+  savedAt: string;
+  history?: { prompt: string; answer: string; savedAt: string }[];
 }

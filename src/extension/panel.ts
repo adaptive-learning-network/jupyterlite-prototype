@@ -13,6 +13,7 @@ import { OidcConfig, OidcError, signIn } from './oidc';
 import { ExerciseContext, INotebookGuide } from './guide';
 import { exerciseMetadata, ExerciseObserver, kernelLanguage, ObserverEvent } from './observer';
 import { LearnerStore } from './store';
+import { reflectionText } from './reflection-export';
 
 const REASON_TEXT: Readonly<Record<string, string>> = {
   [REASON.notAssessed]: 'not assessed yet',
@@ -30,7 +31,6 @@ const STATE_TEXT: Readonly<Record<string, string>> = {
   [STATUS.notAssessed]: 'Not assessed'
 };
 
-const LANGUAGE_TEXT: Readonly<Record<string, string>> = { python: 'Python', r: 'R' };
 
 function el<K extends keyof HTMLElementTagNameMap>(tag: K, props: Record<string, unknown> = {}, ...children: (Node | string)[]): HTMLElementTagNameMap[K] {
   const node: HTMLElementTagNameMap[K] = document.createElement(tag);
@@ -136,6 +136,15 @@ export class LearningPanel extends Widget {
     URL.revokeObjectURL(url);
   }
 
+  private exportReflections(): void {
+    const url = URL.createObjectURL(new Blob([reflectionText(this.store.record)], { type: 'text/plain;charset=utf-8' }));
+    const link = el('a', { href: url, download: 'recorded-reflections.txt' });
+    document.body.append(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
   private async linkOrVerify(): Promise<void> {
     if (!this.oidc || this.signInAbort) return;
     const existing = this.store.record.identity;
@@ -219,7 +228,7 @@ export class LearningPanel extends Widget {
   private async reset(): Promise<void> {
     const result = await showDialog({
       title: 'Reset learning record?',
-      body: 'This deletes your observations and hint history in this browser. Export first if you want to keep them.',
+      body: 'This deletes your scored attempts, hint history, and recorded reflections in this browser. Use Export evidence and Download reflections first if you want copies. These downloads do not automatically restore browser storage.',
       buttons: [Dialog.cancelButton(), Dialog.warnButton({ label: 'Reset' })]
     });
     if (result.button.accept) this.store.reset();
@@ -227,7 +236,7 @@ export class LearningPanel extends Widget {
 
   private render(): void {
     const { catalog, assessment, store } = this;
-    const preferred = store.preferredLanguage;
+    const preferred = 'python';
     const node = this.node;
     node.replaceChildren();
 
@@ -243,7 +252,7 @@ export class LearningPanel extends Widget {
             ? 'Correct. Recorded, but with this much help it does not count as evidence.'
             : 'Correct. Recorded as evidence.'
           : o!.outcome.endsWith('#Incomplete')
-            ? 'Not finished yet: complete your response, then run the check cell again.'
+            ? 'Not finished yet: complete your response, then select Submit again.'
             : 'Not yet correct. Try again or use a hint.';
       node.append(el('div', { className: `al-feedback ${o?.outcome.endsWith('#Correct') ? 'al-ok' : ''}` }, text));
     }
@@ -251,12 +260,7 @@ export class LearningPanel extends Widget {
     // Recommendations.
     const recs = el('section', { className: 'al-section' }, el('h3', {}, 'Suggested next'));
     recs.append(el('p', { className: 'al-meta' }, 'These are adaptive exercise suggestions. The notebook library is available below and in the left file browser.'));
-    const languageSelect = el('select', { className: 'al-language', title: 'Exercise language' });
-    for (const [code, name] of Object.entries(LANGUAGE_TEXT)) {
-      languageSelect.append(el('option', { value: code, selected: code === preferred }, name));
-    }
-    languageSelect.onchange = () => (store.preferredLanguage = languageSelect.value);
-    recs.append(el('label', { className: 'al-language-label' }, 'Exercises in ', languageSelect));
+    recs.append(el('p', { className: 'al-meta' }, 'Python notebooks'));
     if (assessment.recommendations.length === 0) {
       recs.append(el('p', {}, 'All targets in this framework are demonstrated.'));
     }
@@ -295,7 +299,7 @@ export class LearningPanel extends Widget {
     }
 
     // Progress.
-    const progress = el('section', { className: 'al-section' }, el('h3', {}, 'Progress'));
+    const progress = el('section', { className: 'al-section' }, el('h3', {}, 'Progress'), el('p', { className: 'al-muted' }, 'Estimates describe these practice tasks, including help used; they do not certify independent proficiency.'));
     const list = el('ul', { className: 'al-progress' });
     for (const gap of assessment.gaps) {
       const estimate = assessment.estimates.find(e => e.iri === gap.estimate);
@@ -312,24 +316,13 @@ export class LearningPanel extends Widget {
     progress.append(list);
     node.append(progress);
 
-    // Knowledge checks (quizzes) declared in the catalog with a URL.
-    const quizzes = catalog.activities.filter(a => a.url && a.kind.endsWith('#Assessment'));
-    if (quizzes.length) {
-      const section = el('section', { className: 'al-section al-quizzes' }, el('h3', {}, 'Knowledge checks'));
-      for (const quiz of quizzes) {
-        const open = el('button', { className: 'jp-Button al-quiz-open' }, `Open: ${quiz.title}`);
-        open.onclick = () => window.open(quiz.url, '_blank', 'noopener');
-        section.append(open);
-      }
-      section.append(el('div', { className: 'al-meta' }, 'Opens in a new tab. Quiz results are not yet recorded in your learning record.'));
-      node.append(section);
-    }
-
     node.append(this.renderIdentity());
 
     // Record controls.
-    const exportButton = el('button', { className: 'jp-Button' }, 'Export record');
+    const exportButton = el('button', { className: 'jp-Button', title: 'Download scored attempts and progress as RDF. Excludes reflection text and notebook edits.' }, 'Export evidence');
     exportButton.onclick = () => void this.exportRecord();
+    const reflectionsButton = el('button', { className: 'jp-Button', title: 'Download recorded writing as a readable text file. Excludes unrecorded changes and notebook edits.' }, 'Download reflections');
+    reflectionsButton.onclick = () => this.exportReflections();
     const resetButton = el('button', { className: 'jp-Button' }, 'Reset');
     resetButton.onclick = () => void this.reset();
     node.append(
@@ -338,7 +331,8 @@ export class LearningPanel extends Widget {
         { className: 'al-section al-footer' },
         el('div', {}, `Learner ${store.record.learner.slice(9, 17)}… · ${store.record.observations.length} observations`),
         store.persistent ? '' : el('div', { className: 'al-warning' }, 'Browser storage is unavailable: this record lasts only for this page.'),
-        el('div', {}, exportButton, resetButton),
+        el('div', {}, exportButton, reflectionsButton, resetButton),
+        el('p', { className: 'al-meta' }, 'Export evidence: scored attempts and progress. Download reflections: recorded writing. Notebook edits need a separate download from the File menu. These files do not restore your browser automatically.'),
         el('div', { className: 'al-meta' }, `${assessment.engineVersion} · policy ${assessment.policyVersion}`)
       )
     );

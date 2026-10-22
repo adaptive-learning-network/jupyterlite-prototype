@@ -27,7 +27,7 @@ g:catalog {
                        ex:cap-combine-variables, ex:cap-machine-readable, ex:cap-case-vs-aggregate .
 
   ex:cap-data-to-decision a al:Capability ; skos:inScheme ex:framework ; skos:notation "data-to-decision" ; al:ordinal 0 ;
-      skos:prefLabel "Justify a public health action from data"@en .
+      skos:prefLabel "Select a public health action from reported counts"@en .
   ex:cap-system-map a al:Capability ; skos:inScheme ex:framework ; skos:notation "system-map" ; al:ordinal 1 ;
       skos:prefLabel "Trace a report through health information systems"@en .
   ex:cap-data-vs-information a al:Capability ; skos:inScheme ex:framework ; skos:notation "data-vs-information" ; al:ordinal 2 ;
@@ -37,7 +37,7 @@ g:catalog {
   ex:cap-filter-records a al:Capability ; skos:inScheme ex:framework ; skos:notation "filter-records" ; al:ordinal 4 ;
       skos:prefLabel "Filter records to answer a question"@en ; al:prerequisite ex:cap-explore-dataset .
   ex:cap-combine-variables a al:Capability ; skos:inScheme ex:framework ; skos:notation "combine-variables" ; al:ordinal 5 ;
-      skos:prefLabel "Combine variables to produce information"@en ;
+      skos:prefLabel "Calculate a vaccination proportion"@en ;
       al:prerequisite ex:cap-filter-records, ex:cap-data-vs-information .
   ex:cap-machine-readable a al:Capability ; skos:inScheme ex:framework ; skos:notation "machine-readable" ; al:ordinal 6 ;
       skos:prefLabel "Recognise machine-readable dataset structure"@en ; al:prerequisite ex:cap-explore-dataset .
@@ -68,7 +68,7 @@ g:activities {
   ex:act-u01-data-to-decision a al:LearningActivity ; dcterms:title "Unit 1: From data to a public health decision"@en ; al:ordinal 0 ;
       al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-data-to-decision ;
       al:usesAsset ex:nb-u01-data-to-decision-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u01-data-to-decision .
-  ex:act-u02-system-map a al:LearningActivity ; dcterms:title "Unit 2: Map Laila's reporting systems"@en ; al:ordinal 1 ;
+  ex:act-u02-system-map a al:LearningActivity ; dcterms:title "Unit 2: Trace Laila's reporting pathways"@en ; al:ordinal 1 ;
       al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-system-map ;
       al:usesAsset ex:nb-u02-system-map-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u02-system-map .
   ex:act-data-or-information a al:LearningActivity ; dcterms:title "Data or information?"@en ; al:ordinal 2 ;
@@ -97,12 +97,8 @@ g:activities {
       al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-explore-dataset ;
       al:usesAsset ex:nb-dhis2-query-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-dhis2-query .
 
-  # Knowledge check (Google Forms quiz), launched from the learning panel. Its
-  # results are not returned to the learner record, so it has no evidence rule.
-  ex:act-unit-03-quiz a al:LearningActivity ; dcterms:title "Unit 3 knowledge check"@en ; al:ordinal 8 ;
-      al:activityKind al:Assessment ; schema:url <https://forms.gle/Y4yG5gMbFznczrBd9> ;
-      al:assessesCapability ex:cap-data-vs-information, ex:cap-explore-dataset, ex:cap-filter-records,
-                            ex:cap-combine-variables, ex:cap-machine-readable, ex:cap-case-vs-aggregate .
+  # The former external Unit 3 form is retained in the repository form-link
+  # audit, pending export review. Learners use the local notebook tasks.
 
   ex:nb-u01-data-to-decision-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u01-n01-data-to-decision.ipynb" .
   ex:nb-u02-system-map-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u02-n01-system-map.ipynb" .
@@ -228,7 +224,7 @@ g:activities {
 g:catalog {
   ex:framework al:hasCapability ex:cap-u07-form-design-validation .
   ex:cap-u07-form-design-validation a al:Capability ; skos:inScheme ex:framework ; skos:notation "u07-form-design-validation" ; al:ordinal 13 ;
-    skos:prefLabel "Design and test case-form validation"@en ; al:prerequisite ex:cap-u06-ai-use-and-review .
+    skos:prefLabel "Select and test case-form validation rules"@en ; al:prerequisite ex:cap-u06-ai-use-and-review .
   ex:t-u07-form-design-validation a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-u07-form-design-validation ;
     al:targetLevel dreyfus:competent ; al:isCritical false .
 }
@@ -268,11 +264,11 @@ g:activities {
 g:catalog {
  ex:framework al:hasCapability ex:cap-u09-dictionary-value-map .
  ex:cap-u09-dictionary-value-map a al:Capability ; skos:inScheme ex:framework ; skos:notation "u09-dictionary-value-map" ; al:ordinal 15 ;
-   skos:prefLabel "Give every field and code a meaning"@en ; al:prerequisite ex:cap-u08-quality-audit-repair .
+   skos:prefLabel "Select field meanings and code mappings"@en ; al:prerequisite ex:cap-u08-quality-audit-repair .
  ex:t-u09-dictionary-value-map a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-u09-dictionary-value-map ; al:targetLevel dreyfus:competent ; al:isCritical false .
 }
 g:activities {
- ex:act-u09-dictionary-value-map a al:LearningActivity ; dcterms:title "Unit 9: Give every field and code a meaning"@en ; al:ordinal 15 ;
+ ex:act-u09-dictionary-value-map a al:LearningActivity ; dcterms:title "Unit 9: Select field meanings and code mappings"@en ; al:ordinal 15 ;
    al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-u09-dictionary-value-map ;
    al:usesAsset ex:nb-u09-dictionary-value-map-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u09-dictionary-value-map .
  ex:nb-u09-dictionary-value-map-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u09-n01-dictionary-value-map.ipynb" .
@@ -285,11 +281,11 @@ g:activities {
 g:catalog {
  ex:framework al:hasCapability ex:cap-u10-table-design-data-flow .
  ex:cap-u10-table-design-data-flow a al:Capability ; skos:inScheme ex:framework ; skos:notation "u10-table-design-data-flow" ; al:ordinal 16 ;
-   skos:prefLabel "Follow a case through linked tables"@en ; al:prerequisite ex:cap-u09-dictionary-value-map .
+   skos:prefLabel "Select keys and relationships for linked tables"@en ; al:prerequisite ex:cap-u09-dictionary-value-map .
  ex:t-u10-table-design-data-flow a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-u10-table-design-data-flow ; al:targetLevel dreyfus:competent ; al:isCritical false .
 }
 g:activities {
- ex:act-u10-table-design-data-flow a al:LearningActivity ; dcterms:title "Unit 10: Follow a case through linked tables"@en ; al:ordinal 16 ;
+ ex:act-u10-table-design-data-flow a al:LearningActivity ; dcterms:title "Unit 10: Select keys and relationships for linked tables"@en ; al:ordinal 16 ;
    al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-u10-table-design-data-flow ;
    al:usesAsset ex:nb-u10-table-design-data-flow-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u10-table-design-data-flow .
  ex:nb-u10-table-design-data-flow-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u10-n01-table-design-data-flow.ipynb" .
@@ -302,11 +298,11 @@ g:activities {
 g:catalog {
  ex:framework al:hasCapability ex:cap-u11-recode-reconcile .
  ex:cap-u11-recode-reconcile a al:Capability ; skos:inScheme ex:framework ; skos:notation "u11-recode-reconcile" ; al:ordinal 17 ;
-   skos:prefLabel "Transform a copy without losing cases"@en ; al:prerequisite ex:cap-u10-table-design-data-flow .
+   skos:prefLabel "Evaluate recoding while preserving cases"@en ; al:prerequisite ex:cap-u10-table-design-data-flow .
  ex:t-u11-recode-reconcile a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-u11-recode-reconcile ; al:targetLevel dreyfus:competent ; al:isCritical false .
 }
 g:activities {
- ex:act-u11-recode-reconcile a al:LearningActivity ; dcterms:title "Unit 11: Transform a copy without losing cases"@en ; al:ordinal 17 ;
+ ex:act-u11-recode-reconcile a al:LearningActivity ; dcterms:title "Unit 11: Evaluate recoding while preserving cases"@en ; al:ordinal 17 ;
    al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-u11-recode-reconcile ;
    al:usesAsset ex:nb-u11-recode-reconcile-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u11-recode-reconcile .
  ex:nb-u11-recode-reconcile-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u11-n01-recode-reconcile.ipynb" .
@@ -319,11 +315,11 @@ g:activities {
 g:catalog {
  ex:framework al:hasCapability ex:cap-u12-link-exchange .
  ex:cap-u12-link-exchange a al:Capability ; skos:inScheme ex:framework ; skos:notation "u12-link-exchange" ; al:ordinal 18 ;
-   skos:prefLabel "Link records before an exchange"@en ; al:prerequisite ex:cap-u11-recode-reconcile .
+   skos:prefLabel "Review linked records before an exchange"@en ; al:prerequisite ex:cap-u11-recode-reconcile .
  ex:t-u12-link-exchange a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-u12-link-exchange ; al:targetLevel dreyfus:competent ; al:isCritical false .
 }
 g:activities {
- ex:act-u12-link-exchange a al:LearningActivity ; dcterms:title "Unit 12: Link records before an exchange"@en ; al:ordinal 18 ;
+ ex:act-u12-link-exchange a al:LearningActivity ; dcterms:title "Unit 12: Review linked records before an exchange"@en ; al:ordinal 18 ;
    al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-u12-link-exchange ;
    al:usesAsset ex:nb-u12-link-exchange-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u12-link-exchange .
  ex:nb-u12-link-exchange-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u12-n01-link-exchange.ipynb" .
@@ -336,11 +332,11 @@ g:activities {
 g:catalog {
  ex:framework al:hasCapability ex:cap-u13-analysis-dashboard .
  ex:cap-u13-analysis-dashboard a al:Capability ; skos:inScheme ex:framework ; skos:notation "u13-analysis-dashboard" ; al:ordinal 19 ;
-   skos:prefLabel "Build a district briefing from the records"@en ; al:prerequisite ex:cap-u12-link-exchange .
+   skos:prefLabel "Interpret supplied person, place, and time summaries"@en ; al:prerequisite ex:cap-u12-link-exchange .
  ex:t-u13-analysis-dashboard a al:CapabilityTarget ; al:forAudience ex:aud-fetp-trainee ; al:targetCapability ex:cap-u13-analysis-dashboard ; al:targetLevel dreyfus:competent ; al:isCritical false .
 }
 g:activities {
- ex:act-u13-analysis-dashboard a al:LearningActivity ; dcterms:title "Unit 13: Build a district briefing from the records"@en ; al:ordinal 19 ;
+ ex:act-u13-analysis-dashboard a al:LearningActivity ; dcterms:title "Unit 13: Interpret supplied person, place, and time summaries"@en ; al:ordinal 19 ;
    al:activityKind al:SimulationActivity ; al:assessesCapability ex:cap-u13-analysis-dashboard ;
    al:usesAsset ex:nb-u13-analysis-dashboard-python ; al:usesRubric ex:rubric ; al:hasEvidenceRule ex:rule-u13-analysis-dashboard .
  ex:nb-u13-analysis-dashboard-python a al:LearningAsset ; schema:programmingLanguage "python" ; schema:contentUrl "notebooks/u13-n01-analysis-dashboard.ipynb" .

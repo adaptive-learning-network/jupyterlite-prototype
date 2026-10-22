@@ -34,7 +34,13 @@ class NarrativeTests(unittest.TestCase):
   self.assertEqual(art['Transformed copy'][1]['age_group'],'unknown')
   self.assertTrue(art['Reconciliation'][0]['same_ID_multiplicity'])
   bad=m.build_artifact(11,{**answer,'missing':'drop'},data)
-  self.assertFalse(bad['Reconciliation'][0]['same_ID_multiplicity'])
+  self.assertTrue(bad['Reconciliation'][0]['same_ID_multiplicity'])
+  self.assertEqual(m.evaluate_answer(11,{**answer,'missing':'drop'},data),'incorrect')
+  self.assertEqual(answer['case_group'],'5plus')
+  self.assertEqual(m.age_group(4),'under5')
+  self.assertEqual(m.age_group(5),'5plus')
+  self.assertEqual(m.age_group(8),'5plus')
+  self.assertEqual(m.age_group(None),'unknown')
   self.assertEqual(data,original)
  def test_link_rejects_conflicts_unknowns_and_unmatched(self):
   art=m.build_artifact(12,m.expected_answers(12,m.DATA),m.DATA)
@@ -47,14 +53,9 @@ class NarrativeTests(unittest.TestCase):
   self.assertEqual(bad['Candidate exchange rows'],art['Candidate exchange rows'])
  def test_computed_analysis_and_review(self):
   self.assertEqual(m.summarize(m.DATA)['onset'],{'2021-10-18':1,'2021-10-19':1,'2021-10-20':2})
-  displays=[]
-  class Sink:
-   @staticmethod
-   def HTML(value):return value
-  m.widgets=Sink;m.display=displays.append
   art=m.build_artifact(13,m.expected_answers(13,m.DATA),m.DATA)
   self.assertEqual(art['District briefing'][0]['share_of_reports'],0.75)
-  self.assertIn('Cases by onset date',displays[0])
+  self.assertEqual([r['cases'] for r in art['Time summary']],[1,1,2])
   data=copy.deepcopy(m.DATA);data['cases'].pop(0)
   self.assertEqual(m.expected_answers(13,data)['kambia'],2)
   self.assertNotIn('counts',m.expected_answers(14,data)['supported'])
