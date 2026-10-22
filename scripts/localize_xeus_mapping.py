@@ -36,15 +36,26 @@ def localize_xeus_mapping(output: Path, source: Path | None = None) -> int:
         patched = patched.replace("fetch('" + UPSTREAM_URL + "')", replacement)
         if UPSTREAM_URL in patched:
             raise ValueError("Unrecognized xeus metadata fetch: " + path.name)
+        # The upstream map no longer describes this rewritten generated bundle.
+        patched = "\n".join(line for line in patched.splitlines()
+                            if not line.startswith("//# sourceMappingURL="))
         notice = "/*! Bundled prefix.dev conda/PyPI mapping; BSD-3-Clause. License: assets/runtime/parselmouth-LICENSE */\n"
         path.write_text(notice + patched, encoding="utf-8")
+        path.with_suffix(".js.map").unlink(missing_ok=True)
         changed += 1
     if extension.exists():
         # A new base directory also invalidates cached webpack child bundles.
         # Changing only the entry URL would leave their original cache keys intact.
         static = extension / "static"
         if static.is_dir():
-            shutil.copytree(static, extension / MAPPING_REVISION / "static", dirs_exist_ok=True)
+            versioned = extension / MAPPING_REVISION / "static"
+            if (not static.resolve().is_relative_to(extension.resolve()) or
+                    not versioned.resolve().is_relative_to(extension.resolve())):
+                raise ValueError("Runtime metadata output must stay inside the built extension")
+            if versioned.exists():
+                raise ValueError("Rebuild into a fresh output directory before localizing xeus metadata")
+            versioned.parent.mkdir(parents=True, exist_ok=True)
+            static.rename(versioned)
         target = output / "assets/runtime"
         target.mkdir(parents=True, exist_ok=True)
         for name in ("parselmouth-LICENSE", "conda-pypi-mapping.source.json"):

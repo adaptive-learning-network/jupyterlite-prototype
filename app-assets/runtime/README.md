@@ -12,6 +12,8 @@ needed at runtime. This preserves the SDK's alias lookup and the existing R
 runtime rather than disabling its initialization or weakening the offline test.
 The configured frontend loads from a versioned base directory so returning
 browsers also fetch the patched child bundles instead of cached upstream copies.
+The static directory is moved into that versioned location rather than copied;
+stale source maps for rewritten bundles are omitted to keep deployment artifacts small.
 
 The source revision and checksum must be reviewed together when this data is
 updated. Changed data fails the build until its pinned checksum is updated.
