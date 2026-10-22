@@ -17,6 +17,7 @@ python scripts/add_course_references.py --check  # reject missing media, externa
 python scripts/assemble_course.py          # one integrated learner sequence
 python -m unittest discover -s test -p 'test_unified_course.py'
 python -m unittest discover -s test -p 'test_p2_interactions.py'  # supplied calculations and common controls
+python -m unittest discover -s test -p 'test_runtime_assets.py'  # pinned, offline xeus metadata
 python -m unittest discover -s test -p 'test_units09_14.py'
 python -m unittest discover -s test -p 'test_units04_08.py'  # new Python narratives
 jlpm test                                 # engine unit tests (writes test-results/learner-export.nq)

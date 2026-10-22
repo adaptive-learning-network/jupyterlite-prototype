@@ -31,6 +31,8 @@ import shutil
 import sys
 from pathlib import Path
 
+from localize_xeus_mapping import localize_xeus_mapping, localized_xeus_load
+
 ROOT = Path(__file__).resolve().parent.parent
 ALLOWED = {"issuer", "clientId", "scope", "redirectUri", "label"}
 
@@ -95,6 +97,8 @@ def main() -> int:
                         help="local reviewer mode: replace outdated supplied notebook copies on open without retaining review responses")
     args = parser.parse_args()
 
+    localize_xeus_mapping(args.output)
+
     for page in sorted((ROOT / "site").glob("*.html")):
         shutil.copy2(page, args.output / page.name)
         print(f"copied site/{page.name}")
@@ -111,6 +115,8 @@ def main() -> int:
         for extension in data.get("federated_extensions", []):
             if isinstance(extension.get("load"), str) and "\\" in extension["load"]:
                 extension["load"] = "/".join(part for part in extension["load"].replace("\\", "/").split("/") if part)
+            if extension.get("name") == "@jupyterlite/xeus-extension":
+                extension["load"] = localized_xeus_load(extension["load"])
         # Python-only review builds omit xeus environments. Do not initialize
         # their unused frontend (which fetches an optional remote package map).
         # Builds containing xeus kernels retain the existing R runtime.

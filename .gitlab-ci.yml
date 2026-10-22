@@ -55,6 +55,8 @@ test-browser:
     when: always
     paths:
       - test-results/
+    exclude:
+      - test-results/.playwright-artifacts-*/**/*
     expire_in: 7 days
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
