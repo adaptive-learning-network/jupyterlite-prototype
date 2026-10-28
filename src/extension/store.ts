@@ -6,7 +6,7 @@
 
 import { ISignal, Signal } from '@lumino/signaling';
 
-import { beginTask, CatalogActivity, CriterionResult, IdentityBinding, LearnerRecord, Observation, TaskAttempt } from '../engine';
+import { beginTask, canonicalJson, CatalogActivity, CriterionResult, IdentityBinding, LearnerRecord, Observation, TaskAttempt } from '../engine';
 import { mergeReflections, ReflectionAnswer } from './reflection-history';
 
 const KEY = 'al-engine:learner-record:v0.1';
@@ -137,6 +137,23 @@ export class LearnerStore {
 
   reset(): void {
     this.update(newRecord(this.defaultAudience));
+  }
+
+  /** Capture the exact record being previewed; detect changes from another tab. */
+  portabilitySnapshot(): string {
+    const expected=canonicalJson(this._record);
+    const stored=globalThis.localStorage.getItem(KEY);
+    if (!stored || canonicalJson(JSON.parse(stored))!==expected) throw new Error('Another tab changed this learning record. Reload before previewing the backup again.');
+    return expected;
+  }
+
+  /** The caller supplies a validated merge, confirmed by the learner. Write first. */
+  importPortable(record: LearnerRecord, expected: string): void {
+    if (this.portabilitySnapshot()!==expected) throw new Error('Your record changed after the import preview. Preview the backup again before importing.');
+    try { globalThis.localStorage.setItem(KEY,JSON.stringify(record)); }
+    catch { throw new Error('Browser storage could not save the imported record. Your earlier record is unchanged. Keep your backup and try again when storage is available.'); }
+    this._record=record;
+    this._changed.emit(record);
   }
 
   recordReflections(section: string, entries: ReflectionAnswer[]): void {

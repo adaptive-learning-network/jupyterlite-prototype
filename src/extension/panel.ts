@@ -14,6 +14,7 @@ import { ExerciseContext, INotebookGuide } from './guide';
 import { exerciseMetadata, ExerciseObserver, kernelLanguage, ObserverEvent } from './observer';
 import { LearnerStore } from './store';
 import { reflectionText } from './reflection-export';
+import { downloadBackup, restoreBackup } from './portability-ui';
 
 const REASON_TEXT: Readonly<Record<string, string>> = {
   [REASON.notAssessed]: 'not assessed yet',
@@ -46,11 +47,12 @@ export class LearningPanel extends Widget {
   private lastEvent: ObserverEvent | null = null;
   private signInAbort: AbortController | null = null;
   private identityMessage: { text: string; ok: boolean } | null = null;
+  private portabilityBusy = false;
 
   constructor(
     private readonly catalog: Catalog,
     private readonly store: LearnerStore,
-    tracker: INotebookTracker,
+    private readonly tracker: INotebookTracker,
     private readonly docManager: IDocumentManager,
     private readonly guide: INotebookGuide,
     observer: ExerciseObserver,
@@ -228,10 +230,23 @@ export class LearningPanel extends Widget {
   private async reset(): Promise<void> {
     const result = await showDialog({
       title: 'Reset learning record?',
-      body: 'This deletes your scored attempts, hint history, and recorded reflections in this browser. Use Export evidence and Download reflections first if you want copies. These downloads do not automatically restore browser storage.',
+      body: 'This deletes your scored attempts, hint history, and recorded reflections in this browser. Download an encrypted learner backup first if you want to restore them later. Notebook files are unchanged.',
       buttons: [Dialog.cancelButton(), Dialog.warnButton({ label: 'Reset' })]
     });
     if (result.button.accept) this.store.reset();
+  }
+
+  private async portability(importing: boolean): Promise<void> {
+    if (this.portabilityBusy || this.signInAbort) return;
+    this.portabilityBusy=true;this.render();
+    try {
+      if (importing) {
+        if (await restoreBackup(this.catalog,this.store)) {
+          this.lastEvent=null;
+          await this.trackExercise(this.tracker.currentWidget);
+        }
+      } else await downloadBackup(this.catalog,this.store);
+    } finally {this.portabilityBusy=false;this.render();}
   }
 
   private render(): void {
@@ -325,6 +340,15 @@ export class LearningPanel extends Widget {
 
     node.append(this.renderIdentity());
 
+    const backups=el('section',{className:'al-section al-backups'},el('h3',{},'Learner backup'));
+    const backupButton=el('button',{className:'jp-Button'},'Download learner backup');
+    const importButton=el('button',{className:'jp-Button'},'Import learner backup');
+    backupButton.disabled=importButton.disabled=this.portabilityBusy || !!this.signInAbort;
+    backupButton.onclick=()=>void this.portability(false);importButton.onclick=()=>void this.portability(true);
+    backups.append(el('p',{},'Move your saved learning record between browsers using a password-encrypted file.'),backupButton,importButton,
+      el('p',{className:'al-meta'},'Includes recorded attempts, help used, task sessions, and reflections. Download edited notebooks separately.'));
+    node.append(backups);
+
     // Record controls.
     const exportButton = el('button', { className: 'jp-Button', title: 'Download scored attempts and progress as RDF. Excludes reflection text and notebook edits.' }, 'Export evidence');
     exportButton.onclick = () => void this.exportRecord();
@@ -339,7 +363,7 @@ export class LearningPanel extends Widget {
         el('div', {}, `Learner ${store.record.learner.slice(9, 17)}… · ${store.record.observations.length} observations`),
         store.persistent ? '' : el('div', { className: 'al-warning' }, 'Browser storage is unavailable: this record lasts only for this page.'),
         el('div', {}, exportButton, reflectionsButton, resetButton),
-        el('p', { className: 'al-meta' }, 'Export evidence: scored attempts and progress. Download reflections: recorded writing. Notebook edits need a separate download from the File menu. These files do not restore your browser automatically.'),
+        el('p', { className: 'al-meta' }, 'Export evidence and Download reflections provide readable copies. Use Learner backup to restore a saved record. Download notebook edits separately from the File menu.'),
         el('div', { className: 'al-meta' }, `${assessment.engineVersion} · policy ${assessment.policyVersion}`)
       )
     );

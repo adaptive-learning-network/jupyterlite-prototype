@@ -51,7 +51,7 @@ test('the integrated Unit 1 quiz gives feedback and case reflections record in t
   await page.locator('#al-engine-learning').getByRole('button', {name:'Reset',exact:true}).click();
   const dialog = page.getByRole('dialog');
   await expect(dialog).toContainText('recorded reflections');
-  await expect(dialog).toContainText('Download reflections');
+  await expect(dialog).toContainText('Download an encrypted learner backup');
   await dialog.getByRole('button', {name:'Cancel',exact:true}).click();
   await page.reload();await expect(page.locator('#al-engine-learning')).toBeVisible();
   const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('al-engine:learner-record:v0.1')!));
