@@ -20,7 +20,9 @@ async function preview(page:Page,file:string|{name:string;mimeType:string;buffer
  await d.getByLabel('Backup password',{exact:true}).fill(pw);await d.getByRole('button',{name:'Preview backup',exact:true}).click();
 }
 async function runAll(page:Page) {
- await expect(page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]:visible')).toHaveCount(1,{timeout:180000});
+ // A narrow notebook toolbar may hide its status indicator in overflow. Kernel
+ // readiness belongs to the active notebook even when that control is hidden.
+ await expect(page.locator('.jp-NotebookPanel:visible .jp-Notebook-ExecutionIndicator[data-status="idle"]')).toHaveCount(1,{timeout:180000});
  await page.getByRole('menuitem',{name:'Run',exact:true}).click();await page.getByRole('menuitem',{name:'Run All Cells',exact:true}).click();
 }
 test('encrypted transfer restores actual practice, different-case state and reflections in a fresh browser',async({page,browser},info)=>{
