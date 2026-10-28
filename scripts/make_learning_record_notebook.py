@@ -23,7 +23,9 @@ def main():
 Review your attempts, progress, suggested next activities, and recorded reflections below.
 
 This view is **unscored** and does not change your learning record. No code needs to run.
-Your record stays in this browser. In the Learning panel, **Download reflections** keeps a readable copy of explicitly recorded writing. **Export evidence** downloads scored attempts and progress as RDF; it excludes reflection text and notebook edits. Download edited notebooks separately from the File menu. Unrecorded text is not included. These downloads do not restore browser storage automatically. Keep your browser storage while using the course.
+Your record stays in this browser. To continue in another browser, select **Download learner backup** in the Learning panel and choose a backup password. In the other browser, select **Import learner backup**, enter the password, review the preview, and confirm. The encrypted backup includes submitted attempts, help used, task sessions, and recorded reflections. Keep your password separately; the course cannot recover it. Re-run activity or reflection setup cells after import to restore their controls and saved writing.
+
+**Download reflections** keeps a readable copy of recorded writing. **Export evidence** downloads scored attempts and progress as RDF. These readable copies cannot be imported. Download edited notebook files separately from the File menu. Unrecorded text and notebook files are not included in the learner backup.
 """
     # A saved MIME output is rendered directly by the browser extension. Its
     # payload has no learner data: the renderer reads the current local store.

@@ -1,12 +1,12 @@
 # Browser storage and application assets
 
-Updated 2026-10-22.
+Updated 2026-10-28.
 
 | Resource | Location | Update behavior |
 | --- | --- | --- |
 | Notebooks, datasets, slides, illustrations | JupyterLite contents drive | Supplied files come from the site; browser-saved learner copies take precedence. |
 | Adaptive-learning engine | Bundled JupyterLab extension | Updated with the application. |
-| Curriculum catalog and Python/R checks | Versioned `assets/adaptive-learning/<digest>/` site assets | Loaded directly by the extension, outside the contents drive. |
+| Curriculum catalog and Python checks | Versioned `assets/adaptive-learning/<digest>/` site assets | Loaded directly by the extension, outside the contents drive. |
 | Learner record and language preference | Browser `localStorage` | Existing keys and records are retained across this migration. |
 
 The source catalog remains `catalog/informatics-unit-03.trig`. Generation writes
@@ -63,7 +63,11 @@ scored attempts and progress; it excludes reflection text. **Download reflection
 creates `recorded-reflections.txt` with all explicitly recorded section entries,
 their question text, answers, and save times, including older sections retained
 in storage. It does not mutate the record or include unsaved drafts. Edited
-notebooks require a separate File-menu download. These files do not provide
-automatic restoration; cross-device import remains future work. Reworded questions
-still need stable IDs/version preservation, as recorded in audit finding C11.
+notebooks require a separate File-menu download. These readable files do not
+provide restoration. **Download learner backup** creates a separate encrypted
+file that **Import learner backup** can preview and restore in another browser,
+or merge into the same learner's record. It includes reflection history and task
+sessions, excludes notebook files and sign-in links, and preserves seen-case and
+hint history. See [learner record portability](learner-record-portability.md).
+Stable reflection IDs and version history address C11.
 Automatic replacement of learner notebooks remains disabled in published builds.

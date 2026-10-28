@@ -9,6 +9,8 @@ Start with Notebook 00 and follow the course table of contents. The Learning pan
 - **[CDC GitLab Pages: launch JupyterLite](https://jupyterlite-prototype-4a4d87.gitpages.cdc.gov/)** (CDC sign-in required)
 - **[GitHub Pages: launch JupyterLite](https://adaptive-learning-network.github.io/jupyterlite-prototype/)** (public)
 
+For facilitators: [field demonstration slides, PDF, and presenter notes](docs/presentations/README.md).
+
 A JupyterLite site in which learners work through exercises in **Python**
 while an **ontology-driven adaptive-learning engine** observes results, builds
 evidence, estimates capabilities, and recommends what to do next.
@@ -47,7 +49,7 @@ communication narrative still needs a course home. New R variants are deferred.
 The site is rebuilt and published by CI on every push to `main` on GitHub and
 GitLab.
 
-Notebook 00 provides the cast and complete clickable course contents. Units 1, 2, 4, 5, and 7 include local practice quizzes with **provisional feedback**, pending course-owner review. Canonical task reflections have response fields and **Record** buttons; responses stay with the browser-local learner record. Run those cells again to restore recorded text. **Download reflections** keeps a readable local text copy. **Export evidence** downloads scored attempts and progress as RDF and excludes reflection text and notebook edits. Download edited notebooks separately. These downloads do not provide automatic restoration.
+Notebook 00 provides the cast and complete clickable course contents. Units 1, 2, 4, 5, and 7 include local practice quizzes with **provisional feedback**, pending course-owner review. Canonical task reflections have response fields and **Record** buttons; responses stay with the browser-local learner record. Run those cells again to restore recorded text. **Download learner backup** creates a password-encrypted file containing attempts, guidance, task sessions, and recorded reflection history. Use **Import learner backup** in the destination browser to preview and continue the record or merge into that same learner's record. **Download reflections** and **Export evidence** remain readable copies, not restorable backups. Download edited notebooks separately. See [learner record portability](docs/design/learner-record-portability.md).
 
 All scored Python tasks use an explicit **Submit** action with inline feedback. Running setup or computation alone does not record an attempt. Computation intended for learning remains visible; choice/assessment infrastructure stays collapsed. The Learning panel offers the Python route; existing R files remain deferred alternatives.
 
@@ -275,8 +277,9 @@ lite/requirements.txt            pinned build tooling
   and contain the expected values, so a determined learner can fake them. This
   evidence is formative and capped at the simulation stage.
 - **Storage is not durable.** The learner record lives in browser storage, which
-  can be cleared or evicted. Export is the durable copy, and there is no import
-  yet.
+  can be cleared or evicted. Download an encrypted learner backup for restoration
+  in another browser. Keep its password separately; notebook edits require their
+  own download.
 - **Hints are static.** The guide shows authored hints from the cell metadata. A
   local-model guide can implement the same `INotebookGuide` interface
   (`src/extension/guide.ts`) and must respect the same ladder.
