@@ -113,10 +113,11 @@ scripted tests do not establish learner comprehension or cross-browser support.
   scenarios passed after this test synchronization fix. The two sign-in tests
   require the hosted mock provider and were unavailable in the local run.
 - The first hosted release exposed a second test-layout assumption: at the
-  destination viewport, toolbar overflow hid the idle kernel indicator. The
-  transfer test now reads that state within the active notebook without
-  requiring the indicator itself to be visible. Both local transfer scenarios
-  passed again after this test-only correction.
+  destination viewport, toolbar overflow moved the idle kernel indicator into
+  a popup attached outside the notebook panel. The transfer test opens the active
+  notebook's **More commands** popup when needed, then reads the visible kernel
+  state without assuming a fixed DOM location. Both local transfer scenarios
+  passed with a deliberately narrower 900-pixel destination viewport.
 - The local review preview was updated. These results cover local checks;
   deployment verification is a separate release step. Firefox, WebKit, and
   transfer between physical devices remain unverified for this change.

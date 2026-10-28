@@ -20,9 +20,13 @@ async function preview(page:Page,file:string|{name:string;mimeType:string;buffer
  await d.getByLabel('Backup password',{exact:true}).fill(pw);await d.getByRole('button',{name:'Preview backup',exact:true}).click();
 }
 async function runAll(page:Page) {
- // A narrow notebook toolbar may hide its status indicator in overflow. Kernel
- // readiness belongs to the active notebook even when that control is hidden.
- await expect(page.locator('.jp-NotebookPanel:visible .jp-Notebook-ExecutionIndicator[data-status="idle"]')).toHaveCount(1,{timeout:180000});
+ // Overflow reparents toolbar items into a popup attached to the document body.
+ // Open the active notebook's popup so its kernel status can be read through UI.
+ await expect.poll(async()=>{
+  const more=page.locator('.jp-NotebookPanel:visible .jp-Toolbar-responsive-opener');
+  if(await more.isVisible() && !(await page.locator('.jp-Toolbar-responsive-popup:visible').count())) await more.click();
+  return page.locator('.jp-Notebook-ExecutionIndicator[data-status="idle"]:visible').count();
+ },{timeout:180000}).toBe(1);
  await page.getByRole('menuitem',{name:'Run',exact:true}).click();await page.getByRole('menuitem',{name:'Run All Cells',exact:true}).click();
 }
 test('encrypted transfer restores actual practice, different-case state and reflections in a fresh browser',async({page,browser},info)=>{
@@ -48,7 +52,7 @@ test('encrypted transfer restores actual practice, different-case state and refl
  const downloading=page.waitForEvent('download');await d.getByRole('button',{name:'Download encrypted backup',exact:true}).click();
  const download=await downloading;const file=info.outputPath('learning-record.albackup');await download.saveAs(file);
  const raw=readFileSync(file,'utf8');expect(raw).not.toContain(writing);expect(raw).not.toContain(source.learner);
- const destination=await browser.newContext({baseURL:'http://127.0.0.1:8765',viewport:{width:1100,height:900}});
+ const destination=await browser.newContext({baseURL:'http://127.0.0.1:8765',viewport:{width:900,height:900}});
  try {
   const target=await destination.newPage();await open(target);
   const before=JSON.stringify(await read(target));await preview(target,file);
